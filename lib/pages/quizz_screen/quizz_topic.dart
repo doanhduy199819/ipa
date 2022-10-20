@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/QuizSet.dart';
 import 'package:flutter_interview_preparation/objects/QuizTopic.dart';
+import 'package:flutter_interview_preparation/pages/quizz_screen/quiz_discription.dart';
 import 'package:flutter_interview_preparation/values/Quizz_Screen_Assets.dart';
 import '../../values/Home_Screen_Assets.dart';
 import '../../values/Quizz_Screen_Fonts.dart';
@@ -80,57 +80,68 @@ class _QuizTopicScreenState extends State<QuizTopicScreen> {
         numberOfQuizzDone++;
       }
     }
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: widthOfDevice / 10 * 3.5,
-              height: widthOfDevice / 10 * 3.7,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: Colors.white,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: false,
+            builder: (context) => const QuizDiscription(),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: widthOfDevice / 10 * 3.5,
+                height: widthOfDevice / 10 * 3.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    // Image bloc
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 25, left: 30),
+                          height: widthOfDevice / 10 * 3.5 / 10 * 5,
+                          width: widthOfDevice / 10 * 3.5 / 10 * 4.6,
+                          child: Image.asset(QuizScreenAssets.img_topic),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          width: 30,
+                          height: 30,
+                          child: quizTopic.favourite == true
+                              ? Image.asset(
+                                  QuizScreenAssets.img_favourite_topic)
+                              : Image.asset(
+                                  QuizScreenAssets.img_unfavourite_topic),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '$numberOfQuizzDone / ${quizTopic.listQuiz!.length} Questions',
+                      style: QuizzScreenFont.numberOfQuizDone,
+                    ),
+                    Text(
+                      '${quizTopic.topic}',
+                      style: QuizzScreenFont.topic,
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  // Image bloc
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 25, left: 30),
-                        height: widthOfDevice / 10 * 3.5 / 10 * 5,
-                        width: widthOfDevice / 10 * 3.5 / 10 * 4.6,
-                        child: Image.asset(QuizScreenAssets.img_topic),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        width: 30,
-                        height: 30,
-                        child: quizTopic.favourite == true
-                            ? Image.asset(
-                                QuizScreenAssets.img_favourite_topic)
-                            : Image.asset(
-                                QuizScreenAssets.img_unfavourite_topic),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '$numberOfQuizzDone / ${quizTopic.listQuiz!.length} Questions',
-                    style: QuizzScreenFont.numberOfQuizDone,
-                  ),
-                  Text(
-                    '${quizTopic.topic}',
-                    style: QuizzScreenFont.topic,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-      ],
+            ],
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }
