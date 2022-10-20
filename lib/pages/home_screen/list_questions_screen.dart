@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article_tab_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/qa_detail_screen.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/qa_tab_screen.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
@@ -31,8 +32,14 @@ class _ListQuetionsScreenState extends State<ListQuetionsScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        floatingActionButton:
-            FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PostAQuestion()));
+            },
+            child: Icon(Icons.add)),
         body: Column(
           children: [
             Expanded(
@@ -234,7 +241,10 @@ class _ListQuetionsScreenState extends State<ListQuetionsScreen> {
                               padding:
                                   const EdgeInsets.only(left: 5, bottom: 2),
                               child: Text(
-                                display_list_question[index].comment!.length.toString(),
+                                display_list_question[index]
+                                    .comment!
+                                    .length
+                                    .toString(),
                                 style: const TextStyle(
                                   fontSize: 11,
                                 ),

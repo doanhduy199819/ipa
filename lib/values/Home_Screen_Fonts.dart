@@ -59,4 +59,15 @@ class HomeScreenFonts{
     fontSize: 9,
     color: const Color(0xff000000),
   );
+  static TextStyle h2=TextStyle(
+    fontFamily: FontFamily.arial,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: const Color(0xff000000),
+  );
+  static TextStyle header=TextStyle(
+    fontFamily: FontFamily.inter,
+    fontWeight: FontWeight.bold,
+    color: const Color(0xff000000),
+  );
 }
