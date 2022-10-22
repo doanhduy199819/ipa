@@ -6,12 +6,12 @@ import 'package:flutter_interview_preparation/values/Quizz_Screen_Fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 import '../../objects/Account.dart';
-import '../../objects/Articles.dart';
+import '../../objects/ArticlePost.dart';
 import '../../objects/Comment.dart';
 import '../../objects/Questions.dart';
 import '../../values/Home_Screen_Fonts.dart';
-import '../home_screen/article_detail_screen.dart';
-import '../home_screen/qa_detail_screen.dart';
+import '../home_screen/article/article_detail_screen.dart';
+import '../home_screen/questions_answers/qa_detail_screen.dart';
 
 class SearchPage extends StatefulWidget {
   @override

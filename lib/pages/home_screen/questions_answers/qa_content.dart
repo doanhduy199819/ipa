@@ -1,107 +1,36 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article_tab_screen.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/qa_detail_screen.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/qa_tab_screen.dart';
-import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_interview_preparation/objects/Questions.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_detail_screen.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
-import '../../objects/Questions.dart';
 
-class ListQuetionsScreen extends StatefulWidget {
-  const ListQuetionsScreen({Key? key}) : super(key: key);
+class QAContent extends StatefulWidget {
+  const QAContent({Key? key}) : super(key: key);
 
   @override
-  State<ListQuetionsScreen> createState() => _ListQuetionsScreenState();
+  State<QAContent> createState() => _QAContentState();
 }
 
-class _ListQuetionsScreenState extends State<ListQuetionsScreen> {
-  static int isArticleTab = 0;
+class _QAContentState extends State<QAContent> {
   List<Question> display_list_question = List.from(listQuestion);
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isArticleTab = 0;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        floatingActionButton:
-            FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                width: double.infinity,
-                child: Image.asset(
-                  HomeScreenAssets.banner,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: tabViewContent(),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                color: Colors.white,
-                child: isArticleTab == 0 ? QA() : searchPart(),
-              ),
-            ),
-            Expanded(
-              flex: 7,
-              child: Container(
-                color: const Color(0xffEDEAEA),
-                child: isArticleTab == 0 ? Articles() : contentListQuestions(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget tabViewContent() {
-    return DefaultTabController(
-      length: 2,
-      child: Material(
-        color: HomeScreenColors.primaryColor,
-        child: TabBar(
-          onTap: (index) {
-            onTapHandle(index);
-          },
-          indicatorColor: const Color(0xffF0B10E),
-          indicatorWeight: 5,
-          tabs: const [
-            Tab(
-              child: Text(
-                'Articles',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Tab(
-              child: Text(
-                'Questions & Answers',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.all(4.0),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: searchPart(),
+          ),
+          Expanded(
+            flex: 7,
+            child: contentListQuestions(),  
+          ),
+        ],
       ),
     );
   }
@@ -234,7 +163,10 @@ class _ListQuetionsScreenState extends State<ListQuetionsScreen> {
                               padding:
                                   const EdgeInsets.only(left: 5, bottom: 2),
                               child: Text(
-                                display_list_question[index].comment!.length.toString(),
+                                display_list_question[index]
+                                    .comment!
+                                    .length
+                                    .toString(),
                                 style: const TextStyle(
                                   fontSize: 11,
                                 ),
@@ -367,19 +299,5 @@ class _ListQuetionsScreenState extends State<ListQuetionsScreen> {
         childCount: display_list_question.length,
       ),
     );
-  }
-
-  void onTapHandle(int index) {
-    setState(() {
-      {
-        // ignore: avoid_print
-        print('Index: $index , isArticleTab: $isArticleTab');
-        if (index != 0) {
-          isArticleTab = 1;
-        } else {
-          isArticleTab = 0;
-        }
-      }
-    });
   }
 }
