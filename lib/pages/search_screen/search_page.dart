@@ -11,7 +11,7 @@ import '../../objects/Comment.dart';
 import '../../objects/Questions.dart';
 import '../../values/Home_Screen_Fonts.dart';
 import '../home_screen/article/article_detail_screen.dart';
-import '../home_screen/qa_detail_screen.dart';
+import '../home_screen/questions_answers/qa_detail_screen.dart';
 
 class SearchPage extends StatefulWidget {
   @override

@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 
-class ArticleDetailScreen extends StatefulWidget {
-  const ArticleDetailScreen({Key? key}) : super(key: key);
+class QaDetailScreen extends StatefulWidget {
+  const QaDetailScreen({Key? key}) : super(key: key);
 
   @override
-  State<ArticleDetailScreen> createState() => _QaDetailScreenState();
+  State<QaDetailScreen> createState() => _QaDetailScreenState();
 }
 
-class _QaDetailScreenState extends State<ArticleDetailScreen> {
+class _QaDetailScreenState extends State<QaDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
 
   @override
   Widget build(BuildContext context) {
-    final ArticlePost articlePost =
-        ModalRoute.of(context)!.settings.arguments as ArticlePost;
+    final Question question =
+        ModalRoute.of(context)!.settings.arguments as Question;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40.0),
         child: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Image.asset(
+              HomeScreenAssets.backButton,
+            ),
+          ),
           iconTheme: const IconThemeData(
             color: Colors.black,
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xffEDEAEA),
           title: Text(
-            'Detail Article',
+            'Detail Question',
             style: HomeScreenFonts.h1.copyWith(
                 fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -43,32 +50,61 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
           top: 4,
         ),
         child: Container(
+          width: MediaQuery.of(context).size.width,
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                postOwner(articlePost),
-
+                // Author bloc
+                Row(
+                  children: [
+                    authorBloc(question),
+                  ],
+                ),
                 //Content of Question
                 Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: title(articlePost),
-                      ),
-                      Padding(padding: EdgeInsets.all(8),
-                      child: Text(
-                        articlePost.detail +
-                            ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                        style: HomeScreenFonts.content,
-                      ),)
-                    ],
+                  padding: const EdgeInsets.only(bottom: 20),
+                  decoration:
+                      const BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      blurRadius: 2,
+                      offset: Offset(0.0, 3),
+                      color: Colors.grey,
+                    ),
+                  ]),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            voteBloc(question),
+                          ],
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 2 / 3,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: titleAndTagBloc(question),
+                              ),
+                              Text(
+                                question.content!,
+                                style: HomeScreenFonts.content,
+                              ),
+                            ],
+                          ),
+                        ),
+                        companyBloc(question),
+                      ],
+                    ),
                   ),
                 ),
 
-                answersAndSortByBloc(articlePost),
-                commentBlocColumn(articlePost),
+                answersAndSortByBloc(question),
+                commentBlocColumn(question),
               ],
             ),
           ),
@@ -77,60 +113,69 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget postOwner(ArticlePost articlePost) {
-    return Padding(
-      padding: EdgeInsets.all(10),
+  Widget authorBloc(Question question) {
+    return Container(
+      margin: const EdgeInsets.only(top: 15),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage('${articlePost.account.avatar}'),
-          ),
-          SizedBox(width: 20,),
+          // Avatar
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${articlePost.account.name}',
-              style: TextStyle(
-                color: Color(0xff00BE2A),
-                fontSize: 14,
-                fontWeight: FontWeight.bold
-              ),),
-              SizedBox(height: 5,),
-              Text('${articlePost.time}',
-                style: TextStyle(
-                    fontSize: 10,
-                ),),
-
-
-
+              Container(
+                margin: const EdgeInsets.only(left: 65, top: 10),
+                width: 30,
+                height: 30,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage('${question.author!.avatar}'),
+                ),
+              ),
             ],
           ),
-          Spacer(),
-          
-          Column(
-            children: [
-              Icon(articlePost.love?Icons.favorite:Icons.favorite_outline,color: Colors.red,),
-
-              Text('${articlePost.favorite}',
-                style: TextStyle(
-                  fontSize: 10,
-                ),),
-            ],
+          //Details time, profile, bloc ...
+          Container(
+            padding: const EdgeInsets.only(left: 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.only(top: 4, bottom: 4),
+                        child: Text(
+                          question.author!.name!,
+                          style: HomeScreenFonts.nameAccount.copyWith(
+                            fontSize: 18,
+                            color: const Color(0xff000000),
+                            fontFamily: 'Urbanist',
+                          ),
+                        )),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '@tronghuyhihi',
+                      style: HomeScreenFonts.timePost,
+                    ),
+                  ],
+                ),              
+              ],
+            ),
           ),
-          SizedBox(width: 20,),
-          Icon(articlePost.bookmark?Icons.bookmark:Icons.bookmark_border,color: Colors.blue,size: 24,),
-
         ],
       ),
     );
   }
 
-  Widget commentBlocColumn(ArticlePost articlePost) {
+  Widget commentBlocColumn(Question question) {
     return Column(
       children: <Widget>[
-        ...articlePost.comment.map((item) {
+        //Map => add vào toList xong rã ra từng Widget = ...
+        ...(question.comment!.map((item) {
           return commentBloc(item);
-        }).toList(),
+        }).toList()),
       ],
     );
   }
@@ -320,10 +365,9 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget answersAndSortByBloc(ArticlePost articlePost) {
+  Widget answersAndSortByBloc(Question question) {
     return Container(
       height: 37,
-      width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
         color: Color(0xffEDEAEA),
       ),
@@ -332,7 +376,7 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              '${articlePost.comment.length} Comments',
+              '${question.comment!.length} Answers',
               style: const TextStyle(
                 color: Color(0xff000000),
                 fontWeight: FontWeight.bold,
@@ -342,7 +386,7 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
           Row(
             children: [
               Container(
-                margin: const EdgeInsets.only(left: 96, right: 5, top: 10),
+                margin: const EdgeInsets.only(left: 106, right: 5, top: 10),
                 // ignore: prefer_const_constructors
                 child: Text(
                   "Sort by:",
@@ -396,19 +440,112 @@ class _QaDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget title(ArticlePost articlePost) {
+  Widget titleAndTagBloc(Question question) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //Title
         Container(
           padding: const EdgeInsets.only(top: 2, bottom: 4),
+          width: MediaQuery.of(context).size.width * 9 / 15 - 5,
           child: Text(
-            articlePost.title,
-            style: HomeScreenFonts.titleArticle,
+            question.title!,
+            style: HomeScreenFonts.titleQuestion,
           ),
         ),
+        //Tags
+        Row(
+          children: [
+            for (var item in question.tags!)
+              Padding(
+                padding: const EdgeInsets.only(right: 3, bottom: 2, top: 2),
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    color: const Color(0xffDFE2EB),
+                    child: Text(item, style: HomeScreenFonts.tagsName)),
+              )
+          ],
+        ),
       ],
+    );
+  }
+
+//Widget companybloc
+  Widget companyBloc(Question question) {
+    return SizedBox(
+      //color: Colors.red,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //Company Icon
+          SizedBox(
+            // padding: EdgeInsets.only(left: 15),
+            child: Image.asset(
+                alignment: Alignment.centerRight,
+                fit: BoxFit.contain,
+                width: 50,
+                height: 40,
+                question.company!),
+          ),
+          //TimePost
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              question.time!,
+              style: const TextStyle(
+                fontSize: 8,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //Widget VoteBloc
+  Widget voteBloc(Question question) {
+    return Container(
+      padding: const EdgeInsets.only(left: 4),
+      // color:Colors.red,
+      width: MediaQuery.of(context).size.width / 6.2,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Vote
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
+            child: Row(
+              children: [
+                Icon(question.upvote! > 0
+                    ? Icons.arrow_upward
+                    : Icons.arrow_downward),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    question.upvote.toString(),
+                    style: HomeScreenFonts.upvote,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Comment
+          Row(
+            children: [
+              const Icon(Icons.comment),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, bottom: 2),
+                child: Text(
+                  question.comment!.length.toString(),
+                  style: HomeScreenFonts.comment,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

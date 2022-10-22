@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article_tab_screen.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/qa_detail_screen.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/qa_tab_screen.dart';
-import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import '../../objects/Questions.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,14 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static int isArticleTab = 0;
+  late bool isArticleTab;
   List<Question> display_list_question = List.from(listQuestion);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    isArticleTab = 0;
+    isArticleTab = true;
   }
 
   @override
@@ -44,24 +40,9 @@ class _HomePageState extends State<HomePage> {
           ),
           // Expanded(child: Container(color: Colors.pink.shade200), flex: 7)
           Expanded(
-            child: ArticleContent(),
+            child: isArticleTab ? ArticleContent() : QAContent(),
             flex: 7,
           )
-          // Expanded(
-          //   flex: 1,
-          //   child: Container(
-          //     width: MediaQuery.of(context).size.width,
-          //     color: Colors.white,
-          //     child: isArticleTab == 0 ? QA() : searchPart(),
-          //   ),
-          // ),
-          // Expanded(
-          //   flex: 7,
-          //   child: Container(
-          //     color: const Color(0xffEDEAEA),
-          //     child: isArticleTab == 0 ? Articles() : contentListQuestions(),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -71,8 +52,6 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: [
         Expanded(
-          // color: Colors.yellow,
-          // padding: EdgeInsets.all(16.0),
           child: Image.asset(
             HomeScreenAssets.banner,
             fit: BoxFit.fitWidth,
@@ -125,9 +104,9 @@ class _HomePageState extends State<HomePage> {
         // ignore: avoid_print
         print('Index: $index , isArticleTab: $isArticleTab');
         if (index != 0) {
-          isArticleTab = 1;
+          isArticleTab = false;
         } else {
-          isArticleTab = 0;
+          isArticleTab = true;
         }
       }
     });
