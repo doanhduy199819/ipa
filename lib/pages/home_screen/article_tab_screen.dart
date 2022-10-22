@@ -3,7 +3,7 @@ import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article_detail_screen.dart';
 
-import '../../objects/Articles.dart';
+import '../../objects/ArticlePost.dart';
 
 class Articles extends StatefulWidget {
   const Articles({Key? key}) : super(key: key);
@@ -23,21 +23,10 @@ class _ArticlesState extends State<Articles> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _post..add(new ArticlePost(title: 'What clothes we should use in the interview day', detail: 'Clothes are one of the easiest impressive point to the interviewers', bookmark: true, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'OOP is a must for a C++ developer', detail: 'Most of us have studied Object-Oriented Programming at the university', bookmark: false, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'Apple SDE Sheet: Interview Question & Answer', detail: 'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies', bookmark: true, favorite: 2871,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)', detail: 'Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi ', bookmark: true, favorite: 666,time: '28/07/2022',comment: listComment,account: listAccount[1],love: true))
-      ..add(new ArticlePost(title: 'What clothes we should use in the interview day', detail: 'Clothes are one of the easiest impressive point to the interviewers', bookmark: true, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'OOP is a must for a C++ developer', detail: 'Most of us have studied Object-Oriented Programming at the university', bookmark: false, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: true))
-      ..add(new ArticlePost(title: 'Apple SDE Sheet: Interview Question & Answer', detail: 'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies', bookmark: true, favorite: 2871,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)', detail: 'Nguyen Duy Nhat Tan luoi viet lam roi....', bookmark: true, favorite: 666,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'What clothes we should use in the interview day', detail: 'Clothes are one of the easiest impressive point to the interviewers', bookmark: true, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: true))
-      ..add(new ArticlePost(title: 'OOP is a must for a C++ developer', detail: 'Most of us have studied Object-Oriented Programming at the university', bookmark: false, favorite: 1412,time: '28/07/2022',comment: listComment,account: listAccount[1],love: true))
-      ..add(new ArticlePost(title: 'Apple SDE Sheet: Interview Question & Answer', detail: 'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies', bookmark: true, favorite: 2871,time: '28/07/2022',comment: listComment,account: listAccount[1],love: false))
-      ..add(new ArticlePost(title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)', detail: 'Nguyen Duy Nhat Tan luoi viet lam roi....', bookmark: true, favorite: 666,time: '28/07/2022',comment: listComment,account: listAccount[1],love: true))
-
-    ;
+    // _initSampleData();
   }
+
+  
 
 
   @override
@@ -143,7 +132,5 @@ class _ArticlesState extends State<Articles> {
           },
           childCount: _post.length,
         ));
-
-
   }
 }

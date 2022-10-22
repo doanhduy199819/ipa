@@ -12,10 +12,10 @@ class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({Key? key}) : super(key: key);
 
   @override
-  State<ArticleDetailScreen> createState() => _QaDetailScreenState();
+  State<ArticleDetailScreen> createState() => _ArticleDetailScreenState();
 }
 
-class _QaDetailScreenState extends State<ArticleDetailScreen> {
+class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
 
