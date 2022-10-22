@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Quiz.dart';
 
 import '../../values/Home_Screen_Assets.dart';
 
@@ -10,6 +11,21 @@ class QuizResult extends StatefulWidget {
 }
 
 class _QuizResultState extends State<QuizResult> {
+  int correct=0;
+  int incorrect=0;
+
+  @override
+  void initState() {
+    for(int i=0;i<listQuiz.length;i++)
+      {
+        if(listQuiz[i].myAnswer==listQuiz[i].correctAnswer)
+          correct++;
+        else
+          incorrect++;
+      }
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +88,7 @@ class _QuizResultState extends State<QuizResult> {
                     children: [
                       Image(image: AssetImage('assets/images/correct.png'),height: 35,),
                       Text(
-                        '36 correct',
+                        '$correct correct',
                         style: TextStyle(fontSize: 18),
                       ),
                     ],
@@ -92,7 +108,7 @@ class _QuizResultState extends State<QuizResult> {
                     children: [
                       Image(image: AssetImage('assets/images/incorrect.png'),height: 35,),
                       Text(
-                        '18 incorrect',
+                        '$incorrect incorrect',
                         style: TextStyle(fontSize: 18),
                       ),
                     ],
@@ -101,24 +117,30 @@ class _QuizResultState extends State<QuizResult> {
               ],
             ),
             SizedBox(height: 80,),
-            Container(
-              width: MediaQuery.of(context).size.width/2,
-              padding: const EdgeInsets.only(
-                  top: 4, bottom: 4, left: 4, right: 4),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(232, 242, 249, 0.75),
-                borderRadius: BorderRadius.circular(10),
+            InkWell(
+              child: Container(
+                width: MediaQuery.of(context).size.width/2,
+                padding: const EdgeInsets.only(
+                    top: 4, bottom: 4, left: 4, right: 4),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(232, 242, 249, 0.75),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage('assets/images/reset.png'),height: 35,),
+                    Text(
+                      'Redo the quiz',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(image: AssetImage('assets/images/reset.png'),height: 35,),
-                  Text(
-                    'Redo the quiz',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
+              onTap: (){
+                listQuiz.clear();
+                Navigator.of(context).pop();
+              },
             ),
             SizedBox(height: 20,),
             Container(

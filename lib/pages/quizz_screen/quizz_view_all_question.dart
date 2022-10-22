@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Quiz.dart';
+import 'package:flutter_interview_preparation/pages/quizz_screen/view_single_question.dart';
 import 'package:flutter_interview_preparation/values/Quizz_Screen_Fonts.dart';
 
 import '../../values/Home_Screen_Assets.dart';
@@ -12,13 +14,13 @@ class ViewAllQuestion extends StatefulWidget {
 class _ViewAllQuestionState extends State<ViewAllQuestion> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: const Color(0xffD8F5F5),
         appBar: AppBar(
           backgroundColor: const Color(0xffD8F5F5),
           title: Text(
-            'Question 1 of 30',
+            'View all questions',
             style: QuizzScreenFont.titleAppBar,
           ),
           leading: IconButton(
@@ -72,16 +74,19 @@ class _ViewAllQuestionState extends State<ViewAllQuestion> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5, mainAxisSpacing: 10, crossAxisSpacing: 10),
       children: [
-        for (var i = 1; i <= 30; i++)
+        for (var i = 0; i < listQuiz.length; i++)
           Card(
-              color: Colors.lightGreen,
+              color: isDone==false?
+              (listQuiz[i].myAnswer>-1? Colors.lightGreen : Colors.white) :
+              (listQuiz[i].myAnswer==listQuiz[i].correctAnswer?Colors.green:Colors.red),
               margin: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25.0),
               ),
               child: InkWell(
                 onTap: (() {
-                  //do something;
+                  currentQuestion=i;
+                  Navigator.of(context).pop();
                 }),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +95,7 @@ class _ViewAllQuestionState extends State<ViewAllQuestion> {
                       width: 5,
                     ),
                     Text(
-                      '$i',
+                      '${i+1}',
                       style: QuizzScreenFont.topic,
                     ),
                     SizedBox(

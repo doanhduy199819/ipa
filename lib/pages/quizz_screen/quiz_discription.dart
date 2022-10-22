@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Quiz.dart';
 import 'package:flutter_interview_preparation/objects/QuizTopic.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_topic.dart';
+import 'package:flutter_interview_preparation/pages/quizz_screen/view_single_question.dart';
 
 class QuizDiscription extends StatefulWidget {
   const QuizDiscription({super.key});
@@ -166,15 +168,15 @@ class ButtonStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      // onTap: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       fullscreenDialog: false,
-      //       builder: (context) => ????;
-      //     ),
-      //   );
-      // },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            fullscreenDialog: false,
+            builder: (context) => ViewSingleQuestionWidget()
+          ),
+        ).then((value) {listQuiz.clear();});
+      },
       child: Container(
         margin: EdgeInsets.only(top: 10),
         height: 50,
