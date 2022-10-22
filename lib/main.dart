@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/home_container.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/list_questions_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/interest_screen/Interest_Page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
@@ -47,22 +47,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   final screens = [HomePage(), SearchPage(), QuizzPage(), ProfilePage()];
-//   int sc = 0;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return homePage();
-//   }
-// }

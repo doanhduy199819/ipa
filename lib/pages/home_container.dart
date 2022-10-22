@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/list_questions_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
@@ -19,7 +19,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
 
   Widget _getBodyWidget(int index) {
     if (index == 0) {
-      return ListQuetionsScreen();
+      return HomePage();
       // return SafeArea(
       //     child: Container(
       //   child: Text('This is article and q&a screen'),
@@ -36,16 +36,6 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              AuthService().signOut();
-            },
-            icon: Icon(Icons.exit_to_app_outlined),
-          )
-        ],
-      ),
       body: _getBodyWidget(tabIndex),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Colors.blue,
