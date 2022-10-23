@@ -2,9 +2,9 @@ class Quiz{
   String content;
   List<String> listSuggest;
   int correctAnswer;
-  int myAnswer;
+  String explanation;
 
-  Quiz(this.content,this.listSuggest,this.correctAnswer,this.myAnswer);
+  Quiz(this.content,this.listSuggest,this.correctAnswer,this.explanation);
 }
 List<Quiz> listQuiz=[
 ];

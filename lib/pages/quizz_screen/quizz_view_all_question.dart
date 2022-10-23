@@ -76,9 +76,9 @@ class _ViewAllQuestionState extends State<ViewAllQuestion> {
       children: [
         for (var i = 0; i < listQuiz.length; i++)
           Card(
-              color: isDone==false?
-              (listQuiz[i].myAnswer>-1? Colors.lightGreen : Colors.white) :
-              (listQuiz[i].myAnswer==listQuiz[i].correctAnswer?Colors.green:Colors.red),
+              color: isCompleted==false?
+              (selectedAnswers[i]>-1? Colors.lightGreen : Colors.white) :
+              (selectedAnswers[i]==listQuiz[i].correctAnswer?Colors.green:Colors.red),
               margin: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25.0),

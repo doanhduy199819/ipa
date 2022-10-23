@@ -75,11 +75,11 @@ class _QuizTopicScreenState extends State<QuizTopicScreen> {
 
   Widget topicRowBloc(QuizTopic quizTopic, double widthOfDevice) {
     int numberOfQuizzDone = 0;
-    for (var e in quizTopic.listQuiz!) {
-      if (e.myAnswer >0) {
-        numberOfQuizzDone++;
-      }
-    }
+    // for (var e in quizTopic.listQuiz!) {
+    //   if (e.myAnswer >0) {
+    //     numberOfQuizzDone++;
+    //   }
+    // }
     return InkWell(
       onTap: () {
         Navigator.push(
