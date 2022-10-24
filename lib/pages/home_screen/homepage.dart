@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
-  List<Question> display_list_question = List.from(listQuestion);
+  List<Question> display_list_question = List.from(Question.getSampleQuestion());
 
   @override
   void initState() {
