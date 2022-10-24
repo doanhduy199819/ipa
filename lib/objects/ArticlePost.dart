@@ -32,7 +32,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -42,7 +42,7 @@ class ArticlePost {
           bookmark: false,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -52,7 +52,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 2871,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -62,7 +62,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 666,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: true))
       ..add(new ArticlePost(
@@ -72,7 +72,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -82,7 +82,7 @@ class ArticlePost {
           bookmark: false,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: true))
       ..add(new ArticlePost(
@@ -92,7 +92,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 2871,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -101,7 +101,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 666,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -111,7 +111,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: true))
       ..add(new ArticlePost(
@@ -121,7 +121,7 @@ class ArticlePost {
           bookmark: false,
           favorite: 1412,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: true))
       ..add(new ArticlePost(
@@ -131,7 +131,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 2871,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: false))
       ..add(new ArticlePost(
@@ -140,7 +140,7 @@ class ArticlePost {
           bookmark: true,
           favorite: 666,
           time: '28/07/2022',
-          comment: listComment,
+          comment: Comment.getSampleCommentsList(),
           account: listAccount[1],
           love: true));
 
