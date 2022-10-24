@@ -1,17 +1,94 @@
-import 'package:flutter_interview_preparation/objects/Account.dart';
+import 'dart:html';
 
-class Comment{
-  int? upvote;
-  bool? answerAccepted;
+import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Account.dart';
+import 'package:intl/intl.dart';
+
+class Comment {
+  String? id;
+  String? author_id;
   String? content;
-  String? timeComment;
-  Account? account;
-  Comment(this.upvote,this.answerAccepted,this.content,this.timeComment,this.account);
+  final DateTime? created_at;
+  List<String> upvote_users;
+  List<String> downvote_users;
+  bool? is_accepted;
+
+  Comment({
+    this.id,
+    this.author_id,
+    this.content,
+    this.created_at,
+    this.upvote_users = const <String>[],
+    this.downvote_users = const <String>[],
+    this.is_accepted,
+  });
+
+  factory Comment.fromJson(Map<String, dynamic> data) {
+    final String? id = data['id'] as String?;
+    final String? author_id = data['author_id'] as String?;
+    final String? content = data['content'] as String?;
+    final List<String> upvote_users = data['upvote_users'] as List<String>;
+    final List<String> downvote_users = data['downvote_users'] as List<String>;
+    final bool? is_accepted = data['is_accepted'] as bool;
+
+    final String? date_string_created = data['created_at'] as String?;
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateTime created_at =
+        formatter.parse(date_string_created ?? '1/1/2001');
+
+    return Comment(
+        id: id,
+        author_id: author_id,
+        content: content,
+        created_at: created_at,
+        upvote_users: upvote_users,
+        downvote_users: downvote_users,
+        is_accepted: is_accepted);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'author_id': author_id,
+        'content': content,
+        'created_at': created_at,
+        'upvote_users': upvote_users,
+        'downvote_users': downvote_users,
+        'is_accepted': is_accepted
+      };
+
+  void addUpvoteUser(String userId) => upvote_users.add(userId);
+
+  void addDownvoteUser(String userId) => downvote_users.add(userId);
+
+  void setAccepted(bool is_accepted) {
+    this.is_accepted = is_accepted;
+  }
+
+  int get upvote {
+    return (upvote_users?.length ?? 0);
+  }
+
+  int get downvote {
+    return (downvote_users?.length ?? 0);
+  }
+
+  static List<Comment> getSampleCommentsList() {
+    List<Comment> list = [
+      Comment(
+          content: 'Sau tat ca minh lai tro ve voi nhau',
+          created_at: DateTime.now()),
+      Comment(
+          content: 'Nang vuong tren canh hong kho nhung ki niem xua kia',
+          created_at: DateTime.now()),
+      Comment(
+          content: 'Chieu mua ben hien vang buon', created_at: DateTime.now()),
+      Comment(
+          content: 'Dieu anh luon giu kin trong tim',
+          created_at: DateTime.now()),
+      Comment(
+          content: 'Teo teo teo teo teo teo teo teo teo teo teo teo',
+          created_at: DateTime.now()),
+    ];
+    return list;
+  }
 }
-List<Comment> listComment=[
-  Comment(50, true, 'Sau tat ca minh lai tro ve voi nhau', 'answered Dec 15 2021 at 13:45', listAccount[1]),
-  Comment(12, false, 'Nang vuong tren canh hong kho nhung ki niem xua kia', 'answered Dec 15 2021 at 13:45', listAccount[0]),
-  Comment(12, false, 'Chieu mua ben hien vang buon', 'answered Dec 15 2021 at 13:45', listAccount[0]),
-  Comment(12, false, 'Dieu anh luon giu kin trong tim', 'answered Dec 15 2021 at 13:45', listAccount[0]),
-  Comment(12, false, 'Teo teo teo teo teo teo teo teo teo teo teo teo', 'answered Dec 15 2021 at 13:45', listAccount[0]),
-];
