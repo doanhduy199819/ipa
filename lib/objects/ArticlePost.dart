@@ -1,148 +1,78 @@
 import 'package:flutter_interview_preparation/objects/Account.dart';
 
 import 'Comment.dart';
+import 'package:intl/intl.dart';
+
 
 class ArticlePost {
-  String title;
-  String detail;
-  bool bookmark;
-  int favorite;
-  String time;
-  List<Comment> comment;
-  Account account;
-  bool love;
+  String? id;
+  String? title;
+  DateTime? post_time;
+  String? content;
+  List<String>? categories;
+  String? author_id;
+  List<String>? liked_users;
+  List<Comment>? comments;
 
   ArticlePost(
-      {required this.title,
-      required this.detail,
-      required this.bookmark,
-      required this.favorite,
-      required this.time,
-      required this.comment,
-      required this.account,
-      required this.love});
 
-  static List<ArticlePost> getSampleArticlePostList() {
+        this.id,
+        this.title,
+       this.post_time,
+      this.content,
+        this.categories,
+        this.author_id,
+        this.liked_users,
+        this.comments
+           );
+
+  factory ArticlePost.fromJson(Map<String, dynamic> data) {
+    final String? id = data['id'] as String?;
+    final String? title = data['title'] as String?;
+
+    final String? date_string_created = data['post_time'] as String?;
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateTime post_time =
+    formatter.parse(date_string_created ?? '1/1/2001');
+
+    final String? content= data['content'] as String;
+    final List<String> categories = data['categories'] as List<String>;
+    final String? author_id= data['author_id'] as String;
+    final List<String> liked_users = data['liked_users'] as List<String>;
+    final List<Comment> comments = data['comments'] as List<Comment>;
+
+
+    return ArticlePost(id, title, post_time, content, categories, author_id, liked_users, comments);
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'post_time':post_time,
+    'content':content,
+    'categories': categories,
+    'author_id': author_id,
+    'liked_users': liked_users,
+    'comments': comments,
+  };
+
+  void addLikedUser(String userId) => liked_users!.add(userId);
+
+  void addCategories(String category)=>categories!.add(category);
+
+  int get numberOfLile {
+    return (liked_users?.length ?? 0);
+  }
+
+static List<ArticlePost> getSampleArticlePostList() {
+    var listCategory=<String>['Algorithm','Java'];
+    var listAccount=<String>['id1','id2','id3'];
+    var listComment=Comment.getSampleCommentsList();
     var _post = <ArticlePost>[];
-    _post
-      ..add(ArticlePost(
-          title: 'What clothes we should use in the interview day',
-          detail:
-              'Clothes are one of the easiest impressive point to the interviewers',
-          bookmark: true,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'OOP is a must for a C++ developer',
-          detail:
-              'Most of us have studied Object-Oriented Programming at the university',
-          bookmark: false,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'Apple SDE Sheet: Interview Question & Answer',
-          detail:
-              'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies',
-          bookmark: true,
-          favorite: 2871,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)',
-          detail:
-              'Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi Nguyen Duy Nhat Tan luoi viet lam roi ',
-          bookmark: true,
-          favorite: 666,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: true))
-      ..add(new ArticlePost(
-          title: 'What clothes we should use in the interview day',
-          detail:
-              'Clothes are one of the easiest impressive point to the interviewers',
-          bookmark: true,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'OOP is a must for a C++ developer',
-          detail:
-              'Most of us have studied Object-Oriented Programming at the university',
-          bookmark: false,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: true))
-      ..add(new ArticlePost(
-          title: 'Apple SDE Sheet: Interview Question & Answer',
-          detail:
-              'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies',
-          bookmark: true,
-          favorite: 2871,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)',
-          detail: 'Nguyen Duy Nhat Tan luoi viet lam roi....',
-          bookmark: true,
-          favorite: 666,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'What clothes we should use in the interview day',
-          detail:
-              'Clothes are one of the easiest impressive point to the interviewers',
-          bookmark: true,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: true))
-      ..add(new ArticlePost(
-          title: 'OOP is a must for a C++ developer',
-          detail:
-              'Most of us have studied Object-Oriented Programming at the university',
-          bookmark: false,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: true))
-      ..add(new ArticlePost(
-          title: 'Apple SDE Sheet: Interview Question & Answer',
-          detail:
-              'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies',
-          bookmark: true,
-          favorite: 2871,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'How to Prepare for eLitmus Hiring Potential Test(pH Test)',
-          detail: 'Nguyen Duy Nhat Tan luoi viet lam roi....',
-          bookmark: true,
-          favorite: 666,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: true));
+    _post.add(ArticlePost('1','What clothes we should use in the interview day',
+        DateTime.now(),
+        'Clothes are one of the easiest impressive point to the interviewers',listCategory,'authorid1',listAccount,listComment
+    ));
 
     return _post;
   }

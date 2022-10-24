@@ -165,7 +165,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                       style: HomeScreenFonts.timePost,
                     ),
                   ],
-                ),              
+                ),
               ],
             ),
           ),
@@ -213,7 +213,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0),
                       child: Text(
-                        comment.upvote!.toString(),
+                        comment.upvote.toString(),
                         style: HomeScreenFonts.upvote,
                       ),
                     ),
@@ -226,7 +226,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    comment.is_accepted == true
+                    comment.is_accepted
                         ? const Icon(
                             Icons.beenhere,
                             color: Colors.green,
@@ -267,11 +267,11 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                             width: 30,
                             height: 30,
                             child: CircleAvatar(
-                              // Task:Image avatar comment
-                              // backgroundImage:
-                              //     NetworkImage('${comment.account!.avatar}'),
-                              backgroundImage: 
-                              NetworkImage('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
+                              backgroundImage:
+                                  // Task: Account avatar
+                                  // NetworkImage('${comment.account!.avatar}'),
+                                  NetworkImage(
+                                      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
                             ),
                           ),
                         ],
@@ -296,9 +296,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                                     padding: const EdgeInsets.only(
                                         top: 4, bottom: 4),
                                     child: Text(
-                                      // Task: Pass an account name
-                                     // comment.account!.name!,
-                                     'Huy',
+                                      // Task: accouunt name
+                                      // comment.account!.name!,
+                                      'Duy',
                                       style: HomeScreenFonts.nameAccount,
                                     )),
                               ],
@@ -306,9 +306,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  // Task: Pass an account.numberOfPost
-                                  //comment.account!.numberOfPost!.toString(),
-                                  '20',
+                                  // Task
+                                  // comment.account!.numberOfPost!.toString(),
+                                  10.toString(),
                                   style: HomeScreenFonts.numberOfPost,
                                 ),
 
@@ -326,9 +326,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      // Task: Pass an account.numberofGold
-                                     // comment.account!.numberOfGold!.toString(),
-                                     '200',
+                                      // Task
+                                      // comment.account!.numberOfGold!.toString(),
+                                      20.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -342,9 +342,10 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      // Task: Pass an account.numberofSilver
-                                     // comment.account!.numberOfSilver!.toString(),
-                                     '40',
+                                      // Task
+                                      // comment.account!.numberOfSilver!
+                                      //     .toString(),
+                                      20.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -358,9 +359,10 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      //  Task: Pass an account.numberofBronze
-                                      //comment.account!.numberOfBronze! .toString(),
-                                      '80',
+                                      // Task
+                                      // comment.account!.numberOfBronze!
+                                      //     .toString(),
+                                      20.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                   ],

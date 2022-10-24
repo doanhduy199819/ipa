@@ -89,7 +89,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 - 5,
+            width: MediaQuery.of(context).size.width / 4 -5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -117,7 +117,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 - 5,
+            width: MediaQuery.of(context).size.width / 4 -5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -143,38 +143,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Column articlePart() {
-    List _post = <ArticlePost>[];
-    _post
-      ..add(new ArticlePost(
-          title: 'What clothes we should use in the interview day',
-          detail:
-              'Clothes are one of the easiest impressive point to the interviewers',
-          bookmark: true,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'OOP is a must for a C++ developer',
-          detail:
-              'Most of us have studied Object-Oriented Programming at the university',
-          bookmark: false,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'Apple SDE Sheet: Interview Question & Answer',
-          detail:
-              'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies',
-          bookmark: true,
-          favorite: 2871,
-          time: '28/07/2022',
-          comment: Comment.getSampleCommentsList(),
-          account: listAccount[1],
-          love: false));
+    List _post = ArticlePost.getSampleArticlePostList();
 
     return Column(
         children: List.generate(_post.length, (index) {
@@ -228,7 +197,7 @@ class _SearchPageState extends State<SearchPage> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        text: _post[index].detail,
+                        text: _post[index].content,
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 12,
@@ -243,9 +212,7 @@ class _SearchPageState extends State<SearchPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Icon(
-                    _post[index].bookmark
-                        ? Icons.bookmark
-                        : Icons.bookmark_border,
+                         Icons.bookmark,
                     color: Colors.blue,
                     size: 24,
                   ),
@@ -264,12 +231,12 @@ class _SearchPageState extends State<SearchPage> {
                           width: 5,
                         ),
                         Text(
-                          _post[index].favorite.toString(),
+                          _post[index].liked_users.length.toString(),
                           style: TextStyle(fontSize: 12),
                         )
                       ],
                     ),
-                    visible: _post[index].bookmark,
+                    visible: true,
                   )
                 ],
               ),
@@ -481,75 +448,81 @@ class _SearchPageState extends State<SearchPage> {
     }));
   }
 
-  Column companyPart() {
+  Column companyPart()
+  {
     List _companyList = <Company>[];
-    _companyList
-      ..add(new Company('0', 'LG VCS DANANG', 'assets/images/lg_is.png'))
-      ..add(new Company(
-          '1', 'SAM SUNG ELECTRONIC VIETNAM', 'assets/images/samsung_is.png'))
-      ..add(new Company(
-          '2', 'TRONG HUY COMPUTER COMPANY', 'assets/images/fujitsu_is.png'));
+    _companyList..add(new Company('0','LG VCS DANANG','assets/images/lg_is.png'))
+    ..add(new Company('1', 'SAM SUNG ELECTRONIC VIETNAM', 'assets/images/samsung_is.png'))
+      ..add(new Company('2', 'TRONG HUY COMPUTER COMPANY', 'assets/images/fujitsu_is.png'))
+
+    ;
     return Column(
         children: List.generate(_companyList.length, (index) {
-      return InkWell(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 5),
-          decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-              blurRadius: 2,
-              offset: Offset(0.0, 3),
-              color: Colors.grey,
-            ),
-          ]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(12),
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 9 - 20,
-                  width: MediaQuery.of(context).size.height / 9 + 30,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.black),
-                  child: Center(
-                      child: Image(
-                    image: AssetImage(_companyList[index].logo),
-                    height: MediaQuery.of(context).size.height / 9,
-                    width: MediaQuery.of(context).size.width / 10,
-                  )),
+          return InkWell(
+            onTap: () {
+
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 5),
+              decoration:
+              const BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                  blurRadius: 2,
+                  offset: Offset(0.0, 3),
+                  color: Colors.grey,
                 ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                child: RichText(
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
-                    text: _companyList[index].name,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
+              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 9-20,
+                      width: MediaQuery.of(context).size.height / 9 +30,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.black),
+                      child: Center(
+
+                          child: Image(
+                            image: AssetImage(_companyList[index].logo),
+                            height: MediaQuery.of(context).size.height / 9,
+                            width: MediaQuery.of(context).size.width / 10,
+
+
+                          )),
+                    ),
                   ),
-                ),
+                  Container(
+                    width: MediaQuery.of(context).size.width/2,
+                    child:  RichText(
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: _companyList[index].name,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+
+                  Icon(Icons.chevron_right,size: 40,),
+                ],
               ),
-              Icon(
-                Icons.chevron_right,
-                size: 40,
-              ),
-            ],
-          ),
-        ),
-      );
-    }));
+            ),
+          );
+        }));
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         backgroundColor: Colors.grey.shade50,
         body: ListView(
           children: [
@@ -574,7 +547,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
             searchFilter(),
             Visibility(
-                visible: choice == 0,
+                visible: choice==0,
                 child: Column(
                   children: [
                     Padding(
@@ -584,8 +557,8 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Article',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
@@ -601,15 +574,18 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Questions And Answers',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           qaPart(),
+
+
                         ],
                       ),
+
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -618,20 +594,23 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Company',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           companyPart()
+
+
                         ],
                       ),
+
                     ),
                   ],
                 )),
             Visibility(
-                visible: choice == 1,
+                visible: choice==1,
                 child: Column(
                   children: [
                     Padding(
@@ -641,8 +620,8 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Article',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
@@ -654,7 +633,7 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 )),
             Visibility(
-                visible: choice == 2,
+                visible: choice==2,
                 child: Column(
                   children: [
                     Padding(
@@ -664,22 +643,26 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Questions And Answers',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           qaPart(),
+
+
                         ],
                       ),
+
                     ),
                   ],
                 )),
             Visibility(
-                visible: choice == 3,
+                visible: choice==3,
                 child: Column(
                   children: [
+
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Column(
@@ -687,15 +670,18 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Company',
-                            style: HomeScreenFonts.h1.copyWith(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1
+                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           companyPart()
+
+
                         ],
                       ),
+
                     ),
                   ],
                 )),
