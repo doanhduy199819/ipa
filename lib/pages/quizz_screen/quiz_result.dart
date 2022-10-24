@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Quiz.dart';
+import 'package:flutter_interview_preparation/pages/quizz_screen/view_single_question.dart';
 
 import '../../values/Home_Screen_Assets.dart';
 
@@ -18,7 +19,7 @@ class _QuizResultState extends State<QuizResult> {
   void initState() {
     for(int i=0;i<listQuiz.length;i++)
       {
-        if(listQuiz[i].myAnswer==listQuiz[i].correctAnswer)
+        if(selectedAnswers[i]==listQuiz[i].correctAnswer)
           correct++;
         else
           incorrect++;
@@ -139,6 +140,7 @@ class _QuizResultState extends State<QuizResult> {
               ),
               onTap: (){
                 listQuiz.clear();
+                selectedAnswers.clear();
                 Navigator.of(context).pop();
               },
             ),

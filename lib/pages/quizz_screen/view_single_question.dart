@@ -13,37 +13,48 @@ class ViewSingleQuestionWidget extends StatefulWidget {
 int currentQuestion =0;
 int totalNumberOfQuestions = 0;
 String? _selectedValue = '';
-late bool isDone;
+late bool isCompleted;
+late List<int> selectedAnswers;
 class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
 
   @override
   void initState() {
     // TODO: implement initState
-    if(listQuiz.isEmpty)
-      {
-        listQuiz..add(
-            new Quiz('HTML(Hypertext Markup Language) has language elements which permit certain actions other than describing the structure of the web document. Which one of the following actions is NOT supported by pure HTML (without any server or client side scripting)pages?', ['Embed web objects from different sites into the same page',
-              'Refresh the page automatically after a specified interval',
-              'Automatically redirect to another page upon download',
-              'Display the client time as part of the page',],1,-1))
-          ..add(new Quiz('1+1=?', ['2','4','3','14'],0,-1))
-          ..add(new Quiz('2+2=?', ['3','4','5','6'],1,-1))
-          ..add(new Quiz('3+7', ['13','12','11','10'],3,-1))
-          ..add(new Quiz('8-8 ', ['14','0','16','7'],1,-1))
-          ..add(new Quiz('5*7', ['44','27','40','35'],3,-1))
-          ..add(new Quiz('2*4', ['8','4','3','2'],0,-1))
-          ..add(new Quiz('7*8', ['65','56','2','1'],1,-1))
-          ..add(new Quiz('7*6', ['42','24','84','82'],0,-1))
-          ..add(new Quiz('8*10', ['80','88','74','44'],0,-1))
-        ;
-        isDone=false;
-        currentQuestion =0;
-      }
-
+    selectedAnswers=[];
+    createQuiz();
     totalNumberOfQuestions=listQuiz.length;
     super.initState();
   }
 
+  void createQuiz()
+  {
+    if(listQuiz.isEmpty)
+    {
+      listQuiz..add(
+          new Quiz('HTML(Hypertext Markup Language) has language elements which permit certain actions other than describing the structure of the web document. Which one of the following actions is NOT supported by pure HTML (without any server or client side scripting)pages?', ['Embed web objects from different sites into the same page',
+            'Refresh the page automatically after a specified interval',
+            'Automatically redirect to another page upon download',
+            'Display the client time as part of the page',],1,"Explan 1"))
+        ..add(new Quiz('1+1=?', ['2','4','3','14'],0,"Explan 2"))
+        ..add(new Quiz('2+2=?', ['3','4','5','6'],1,"Explan 3"))
+        ..add(new Quiz('3+7', ['13','12','11','10'],3,"Explan 4"))
+        ..add(new Quiz('8-8 ', ['14','0','16','7'],1,"Explan 5"))
+        ..add(new Quiz('5*7', ['44','27','40','35'],3,"Explan 6"))
+        ..add(new Quiz('2*4', ['8','4','3','2'],0,"Explan 7"))
+        ..add(new Quiz('7*8', ['65','56','2','1'],1,"Explan 8"))
+        ..add(new Quiz('7*6', ['42','24','84','82'],0,"Explan 9"))
+        ..add(new Quiz('8*10', ['80','88','74','44'],0,"Explan 10"))
+      ;
+      isCompleted=false;
+
+      currentQuestion =0;
+
+      for(int i=0;i<listQuiz.length;i++)
+        selectedAnswers.add(-1);
+
+
+    }
+  }
   Container _buildQuestionNumber() {
     return Container(
       child: RichText(
@@ -154,8 +165,8 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
   {
     List<String> _sampleAnswers=listQuiz[currentQuestion%totalNumberOfQuestions].listSuggest;
 
-    if(listQuiz[currentQuestion].myAnswer>-1)
-       _selectedValue=listQuiz[currentQuestion].myAnswer.toString();
+    if(selectedAnswers[currentQuestion]>=-1)
+       _selectedValue=selectedAnswers[currentQuestion].toString();
     else
       _selectedValue='';
 
@@ -180,7 +191,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
           selected: false,
           title: Text(
             text,style: TextStyle(
-            color: isDone==false? Colors.black:
+            color: isCompleted==false? Colors.black:
             (listQuiz[currentQuestion].correctAnswer==value?Colors.green:Colors.red),
           ),
           ),
@@ -190,10 +201,10 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
           onChanged: (String? value) {
             setState(() {
 
-              if(isDone==false)
+              if(isCompleted==false)
                 {
                   _selectedValue=value;
-                  listQuiz[currentQuestion].myAnswer=int.parse(value!);
+                  selectedAnswers[currentQuestion]=int.parse(value!);
                   print(_selectedValue);
                 }
             });
@@ -245,7 +256,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                isDone=true;
+                isCompleted=true;
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>QuizResult())).then((value) {Navigator.of(context, rootNavigator: true).pop();setState(() {
                   currentQuestion=0;
                 });;});
@@ -260,10 +271,11 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
 
   Row _buildExplanation()
   {
+    String explanation=listQuiz[currentQuestion].explanation;
     return Row(
       children: [
         Text('Explanation:',style: TextStyle(fontWeight: FontWeight.bold),),
-        listQuiz[currentQuestion].myAnswer==listQuiz[currentQuestion].correctAnswer?Text('True',style: TextStyle(color: Colors.green),):Text('False',style: TextStyle(color: Colors.red),),
+        selectedAnswers[currentQuestion]==listQuiz[currentQuestion].correctAnswer?Text('$explanation',style: TextStyle(color: Colors.green),):Text('$explanation',style: TextStyle(color: Colors.red),),
       ],
     );
   }
@@ -285,7 +297,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
 
           Visibility(child: InkWell(
             onTap: () {
-              _showMyDialog();
+              _showMyDialog().then((value) {createQuiz();});
             },
             child: Container(
               decoration: BoxDecoration(
@@ -305,7 +317,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
                 ),
               ),
             ),
-          ),visible: !isDone,)
+          ),visible: !isCompleted,)
         ],
       ),
       body: SingleChildScrollView(
@@ -324,7 +336,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
             ),
             _buildAnswers(), // For answer a,b,c,d
             const SizedBox(height: 40.0),
-            Visibility(child: _buildExplanation(),visible: isDone,)
+            Visibility(child: _buildExplanation(),visible: isCompleted,)
             ,
           ],
         ),
