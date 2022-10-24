@@ -106,6 +106,7 @@ class Question {
         categories: ['C++', 'C#', 'Algorithm'],
         upvote_users: ['0', '1', '2'],
         downvote_users: ['5'],
+        answers: Comment.getSampleCommentsList(),
       ))
       ..add(Question(
         id: '1',
@@ -117,6 +118,7 @@ class Question {
         categories: ['c++', 'string', 'algorithm'],
         upvote_users: ['0', '1', '2'],
         downvote_users: ['5'],
+        answers: Comment.getSampleCommentsList(),
       ))
       ..add(Question(
         id: '0',

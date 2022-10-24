@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter_interview_preparation/objects/Company.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Questions.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_detail_screen.dart';
+import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 
 class QAContent extends StatefulWidget {
@@ -15,8 +17,8 @@ class QAContent extends StatefulWidget {
 }
 
 class _QAContentState extends State<QAContent> {
-  List<Question> display_list_question = List.from(listQuestion);
-
+  List<Question> display_list_question = List.from(Question.getSampleQuestion());
+  final List<Company> _sampleListCompany=List.from(Company.getSampleCompany());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -165,7 +167,7 @@ class _QAContentState extends State<QAContent> {
                                   const EdgeInsets.only(left: 5, bottom: 2),
                               child: Text(
                                 display_list_question[index]
-                                    .comment!
+                                    .answers
                                     .length
                                     .toString(),
                                 style: const TextStyle(
@@ -211,7 +213,7 @@ class _QAContentState extends State<QAContent> {
                         //Tags
                         Row(
                           children: [
-                            for (var item in display_list_question[index].tags!)
+                            for (var item in display_list_question[index].categories)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(right: 3, bottom: 2),
@@ -277,13 +279,15 @@ class _QAContentState extends State<QAContent> {
                               fit: BoxFit.contain,
                               width: 50,
                               height: 50,
-                              display_list_question[index].company!),
+                              // Task: Change idCompany to picture of Company, default logo company is LG logo
+                              Company.haveIdCompanyInSample(display_list_question[index].company_id!)?.logo ?? HomeScreenAssets.lgLogo
+                              ),
                         ),
                         //TimePost
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
-                            display_list_question[index].time!,
+                            display_list_question[index].created_at!.toString(),
                             style: const TextStyle(
                               fontSize: 8,
                             ),
@@ -301,4 +305,5 @@ class _QAContentState extends State<QAContent> {
       ),
     );
   }
+
 }

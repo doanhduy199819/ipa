@@ -9,6 +9,7 @@ import '../../objects/Account.dart';
 import '../../objects/ArticlePost.dart';
 import '../../objects/Comment.dart';
 import '../../objects/Questions.dart';
+import '../../values/Home_Screen_Assets.dart';
 import '../../values/Home_Screen_Fonts.dart';
 import '../home_screen/article/article_detail_screen.dart';
 import '../home_screen/questions_answers/qa_detail_screen.dart';
@@ -283,7 +284,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Column qaPart() {
-    List<Question> display_list_question = List.from(listQuestion);
+    List<Question> display_list_question = List.from(Question.getSampleQuestion());
     return Column(
         children: List.generate(3, (index) {
       return InkWell(
@@ -348,7 +349,7 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.only(left: 5, bottom: 2),
                           child: Text(
                             display_list_question[index]
-                                .comment!
+                                .answers!
                                 .length
                                 .toString(),
                             style: const TextStyle(
@@ -393,7 +394,7 @@ class _SearchPageState extends State<SearchPage> {
                     //Tags
                     Row(
                       children: [
-                        for (var item in display_list_question[index].tags!)
+                        for (var item in display_list_question[index].categories!)
                           Padding(
                             padding: const EdgeInsets.only(right: 3, bottom: 2),
                             child: Container(
@@ -458,13 +459,13 @@ class _SearchPageState extends State<SearchPage> {
                           fit: BoxFit.contain,
                           width: 50,
                           height: 50,
-                          display_list_question[index].company!),
+                          Company.haveIdCompanyInSample(display_list_question[index].company_id!)?.logo ?? HomeScreenAssets.lgLogo),
                     ),
                     //TimePost
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        display_list_question[index].time!,
+                        display_list_question[index].created_at.toString()!,
                         style: const TextStyle(
                           fontSize: 8,
                         ),
