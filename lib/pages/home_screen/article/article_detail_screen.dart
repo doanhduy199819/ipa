@@ -57,12 +57,14 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                         padding: const EdgeInsets.only(top: 4),
                         child: title(articlePost),
                       ),
-                      Padding(padding: EdgeInsets.all(8),
-                      child: Text(
-                        articlePost.detail +
-                            ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                        style: HomeScreenFonts.content,
-                      ),)
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          articlePost.detail +
+                              ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
+                          style: HomeScreenFonts.content,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -85,41 +87,53 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           CircleAvatar(
             backgroundImage: NetworkImage('${articlePost.account.avatar}'),
           ),
-          SizedBox(width: 20,),
+          SizedBox(
+            width: 20,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${articlePost.account.name}',
-              style: TextStyle(
-                color: Color(0xff00BE2A),
-                fontSize: 14,
-                fontWeight: FontWeight.bold
-              ),),
-              SizedBox(height: 5,),
-              Text('${articlePost.time}',
+              Text(
+                '${articlePost.account.name}',
                 style: TextStyle(
-                    fontSize: 10,
-                ),),
-
-
-
+                    color: Color(0xff00BE2A),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                '${articlePost.time}',
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
             ],
           ),
           Spacer(),
-          
           Column(
             children: [
-              Icon(articlePost.love?Icons.favorite:Icons.favorite_outline,color: Colors.red,),
-
-              Text('${articlePost.favorite}',
+              Icon(
+                articlePost.love ? Icons.favorite : Icons.favorite_outline,
+                color: Colors.red,
+              ),
+              Text(
+                '${articlePost.favorite}',
                 style: TextStyle(
                   fontSize: 10,
-                ),),
+                ),
+              ),
             ],
           ),
-          SizedBox(width: 20,),
-          Icon(articlePost.bookmark?Icons.bookmark:Icons.bookmark_border,color: Colors.blue,size: 24,),
-
+          SizedBox(
+            width: 20,
+          ),
+          Icon(
+            articlePost.bookmark ? Icons.bookmark : Icons.bookmark_border,
+            color: Colors.blue,
+            size: 24,
+          ),
         ],
       ),
     );
@@ -176,7 +190,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    comment.answerAccepted == true
+                    comment.is_accepted == true
                         ? const Icon(
                             Icons.beenhere,
                             color: Colors.green,
@@ -217,9 +231,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             width: 30,
                             height: 30,
                             child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage('${comment.account!.avatar}'),
-                            ),
+                                backgroundImage:
+                                    // NetworkImage('${comment.account!.avatar}'),
+                                    NetworkImage('')),
                           ),
                         ],
                       ),
@@ -232,7 +246,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.timeComment!,
+                                  comment.created_at.toString(),
                                   style: HomeScreenFonts.timePost,
                                 ),
                               ],
@@ -243,7 +257,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                     padding: const EdgeInsets.only(
                                         top: 4, bottom: 4),
                                     child: Text(
-                                      comment.account!.name!,
+                                      // Task: Ten cua account comment
+                                      // comment.account!.name!,
+                                      'Duy',
                                       style: HomeScreenFonts.nameAccount,
                                     )),
                               ],
@@ -251,7 +267,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.account!.numberOfPost!.toString(),
+                                  // Task: account Achievements
+                                  // comment.account!.numberOfPost!.toString(),
+                                  20.toString(),
                                   style: HomeScreenFonts.numberOfPost,
                                 ),
 
@@ -269,7 +287,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfGold!.toString(),
+                                      // Task: account Achievements
+                                      // comment.account!.numberOfGold!.toString(),
+                                      20.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -283,8 +303,11 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfSilver!
-                                          .toString(),
+                                      // Task: account Achievements
+                                      20.toString(),
+                                      // comment.account!.numberOfSilver!
+                                      //     .toString(),
+
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -298,8 +321,8 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfBronze!
-                                          .toString(),
+                                      // comment.account!.numberOfBronze!
+                                      20.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                   ],
