@@ -113,7 +113,7 @@ class _ArticleContentState extends State<ArticleContent> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
-                          text: _post[index].detail,
+                          text: _post[index].content,
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 12,
@@ -128,9 +128,7 @@ class _ArticleContentState extends State<ArticleContent> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Icon(
-                      _post[index].bookmark
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
+                       Icons.bookmark,
                       color: Colors.blue,
                       size: 24,
                     ),
@@ -138,7 +136,7 @@ class _ArticleContentState extends State<ArticleContent> {
                       height: 20,
                     ),
                     Visibility(
-                      visible: _post[index].bookmark,
+                      visible: true,
                       child: Row(
                         children: [
                           Icon(
@@ -150,7 +148,7 @@ class _ArticleContentState extends State<ArticleContent> {
                             width: 5,
                           ),
                           Text(
-                            _post[index].favorite.toString(),
+                            _post[index].liked_users.length.toString(),
                             style: TextStyle(fontSize: 12),
                           )
                         ],

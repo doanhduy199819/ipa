@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
@@ -18,7 +19,7 @@ class ArticleDetailScreen extends StatefulWidget {
 class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
-
+  Account account=new Account('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360', 'Nhat Tan', 2871, 100 , 100, 100);
   @override
   Widget build(BuildContext context) {
     final ArticlePost articlePost =
@@ -59,7 +60,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                       ),
                       Padding(padding: EdgeInsets.all(8),
                       child: Text(
-                        articlePost.detail +
+                        articlePost.content! +
                             ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
                         style: HomeScreenFonts.content,
                       ),)
@@ -83,20 +84,20 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage('${articlePost.account.avatar}'),
+            backgroundImage: NetworkImage('${account.avatar}'),
           ),
           SizedBox(width: 20,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${articlePost.account.name}',
+              Text('${account.name}',
               style: TextStyle(
                 color: Color(0xff00BE2A),
                 fontSize: 14,
                 fontWeight: FontWeight.bold
               ),),
               SizedBox(height: 5,),
-              Text('${articlePost.time}',
+              Text('${articlePost.post_time.toString()}',
                 style: TextStyle(
                     fontSize: 10,
                 ),),
@@ -109,16 +110,16 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           
           Column(
             children: [
-              Icon(articlePost.love?Icons.favorite:Icons.favorite_outline,color: Colors.red,),
+              Icon(Icons.favorite_outline,color: Colors.red,),
 
-              Text('${articlePost.favorite}',
+              Text('${articlePost.liked_users?.length}',
                 style: TextStyle(
                   fontSize: 10,
                 ),),
             ],
           ),
           SizedBox(width: 20,),
-          Icon(articlePost.bookmark?Icons.bookmark:Icons.bookmark_border,color: Colors.blue,size: 24,),
+          Icon(Icons.bookmark_border,color: Colors.blue,size: 24,),
 
         ],
       ),
@@ -128,7 +129,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   Widget commentBlocColumn(ArticlePost articlePost) {
     return Column(
       children: <Widget>[
-        ...articlePost.comment.map((item) {
+        ...articlePost.comments!.map((item) {
           return commentBloc(item);
         }).toList(),
       ],
@@ -176,7 +177,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    comment.answerAccepted == true
+                    comment.is_accepted == true
                         ? const Icon(
                             Icons.beenhere,
                             color: Colors.green,
@@ -218,7 +219,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             height: 30,
                             child: CircleAvatar(
                               backgroundImage:
-                                  NetworkImage('${comment.account!.avatar}'),
+                                  NetworkImage('${account!.avatar}'),
                             ),
                           ),
                         ],
@@ -232,7 +233,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.timeComment!,
+                                  comment.created_at.toString()!,
                                   style: HomeScreenFonts.timePost,
                                 ),
                               ],
@@ -243,7 +244,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                     padding: const EdgeInsets.only(
                                         top: 4, bottom: 4),
                                     child: Text(
-                                      comment.account!.name!,
+                                      account!.name!,
                                       style: HomeScreenFonts.nameAccount,
                                     )),
                               ],
@@ -251,7 +252,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.account!.numberOfPost!.toString(),
+                                  account!.numberOfPost!.toString(),
                                   style: HomeScreenFonts.numberOfPost,
                                 ),
 
@@ -269,7 +270,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfGold!.toString(),
+                                      account!.numberOfGold!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -283,7 +284,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfSilver!
+                                      account!.numberOfSilver!
                                           .toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
@@ -298,7 +299,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      comment.account!.numberOfBronze!
+                                      account!.numberOfBronze!
                                           .toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
@@ -332,7 +333,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              '${articlePost.comment.length} Comments',
+              '${articlePost.comments?.length} Comments',
               style: const TextStyle(
                 color: Color(0xff000000),
                 fontWeight: FontWeight.bold,
@@ -404,7 +405,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         Container(
           padding: const EdgeInsets.only(top: 2, bottom: 4),
           child: Text(
-            articlePost.title,
+            articlePost.title!,
             style: HomeScreenFonts.titleArticle,
           ),
         ),

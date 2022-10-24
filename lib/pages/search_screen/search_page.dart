@@ -142,38 +142,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Column articlePart() {
-    List _post = <ArticlePost>[];
-    _post
-      ..add(new ArticlePost(
-          title: 'What clothes we should use in the interview day',
-          detail:
-              'Clothes are one of the easiest impressive point to the interviewers',
-          bookmark: true,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: listComment,
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'OOP is a must for a C++ developer',
-          detail:
-              'Most of us have studied Object-Oriented Programming at the university',
-          bookmark: false,
-          favorite: 1412,
-          time: '28/07/2022',
-          comment: listComment,
-          account: listAccount[1],
-          love: false))
-      ..add(new ArticlePost(
-          title: 'Apple SDE Sheet: Interview Question & Answer',
-          detail:
-              'Apple is obe of the worlds favorite tech brand, holding a tight spot as one of the tech Big Four companies',
-          bookmark: true,
-          favorite: 2871,
-          time: '28/07/2022',
-          comment: listComment,
-          account: listAccount[1],
-          love: false));
+    List _post = ArticlePost.getSampleArticlePostList();
 
     return Column(
         children: List.generate(_post.length, (index) {
@@ -227,7 +196,7 @@ class _SearchPageState extends State<SearchPage> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        text: _post[index].detail,
+                        text: _post[index].content,
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 12,
@@ -242,9 +211,7 @@ class _SearchPageState extends State<SearchPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Icon(
-                    _post[index].bookmark
-                        ? Icons.bookmark
-                        : Icons.bookmark_border,
+                         Icons.bookmark,
                     color: Colors.blue,
                     size: 24,
                   ),
@@ -263,12 +230,12 @@ class _SearchPageState extends State<SearchPage> {
                           width: 5,
                         ),
                         Text(
-                          _post[index].favorite.toString(),
+                          _post[index].liked_users.length.toString(),
                           style: TextStyle(fontSize: 12),
                         )
                       ],
                     ),
-                    visible: _post[index].bookmark,
+                    visible: true,
                   )
                 ],
               ),
