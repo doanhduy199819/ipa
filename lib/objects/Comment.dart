@@ -11,7 +11,7 @@ class Comment {
   final DateTime? created_at;
   List<String> upvote_users;
   List<String> downvote_users;
-  bool? is_accepted;
+  bool is_accepted;
 
   Comment({
     this.id,
@@ -20,7 +20,7 @@ class Comment {
     this.created_at,
     this.upvote_users = const <String>[],
     this.downvote_users = const <String>[],
-    this.is_accepted,
+    this.is_accepted = false,
   });
 
   factory Comment.fromJson(Map<String, dynamic> data) {
@@ -29,7 +29,7 @@ class Comment {
     final String? content = data['content'] as String?;
     final List<String> upvote_users = data['upvote_users'] as List<String>;
     final List<String> downvote_users = data['downvote_users'] as List<String>;
-    final bool? is_accepted = data['is_accepted'] as bool;
+    final bool is_accepted = data['is_accepted'] as bool;
 
     final String? date_string_created = data['created_at'] as String?;
     DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -50,7 +50,7 @@ class Comment {
         'id': id,
         'author_id': author_id,
         'content': content,
-        'created_at': created_at,
+        'created_at': created_at.toString(),
         'upvote_users': upvote_users,
         'downvote_users': downvote_users,
         'is_accepted': is_accepted
