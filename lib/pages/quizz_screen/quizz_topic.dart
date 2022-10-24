@@ -51,15 +51,15 @@ class _QuizTopicScreenState extends State<QuizTopicScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      topicRowBloc(listQuizTopic[i], widthOfDevice),
-                      topicRowBloc(listQuizTopic[i + 1], widthOfDevice),
+                      topicRowBloc(listQuizTopic[i], widthOfDevice,quizSet),
+                      topicRowBloc(listQuizTopic[i + 1], widthOfDevice,quizSet),
                     ],
                   )
                 else if (i % 2 == 0 && i == listQuizTopic.length - 1)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      topicRowBloc(listQuizTopic[i], widthOfDevice),
+                      topicRowBloc(listQuizTopic[i], widthOfDevice,quizSet),
                       SizedBox(
                         width: widthOfDevice / 10 * 3.5,
                         height: widthOfDevice / 10 * 3.7,
@@ -73,7 +73,7 @@ class _QuizTopicScreenState extends State<QuizTopicScreen> {
     );
   }
 
-  Widget topicRowBloc(QuizTopic quizTopic, double widthOfDevice) {
+  Widget topicRowBloc(QuizTopic quizTopic, double widthOfDevice,QuizSet quizSet) {
     int numberOfQuizzDone = 0;
     for (var e in quizTopic.listQuiz!) {
       if (e.myAnswer >0) {
@@ -87,6 +87,9 @@ class _QuizTopicScreenState extends State<QuizTopicScreen> {
           MaterialPageRoute(
             fullscreenDialog: false,
             builder: (context) => const QuizDiscription(),
+             settings: RouteSettings(
+                    arguments: quizSet,
+                  ),
           ),
         );
       },

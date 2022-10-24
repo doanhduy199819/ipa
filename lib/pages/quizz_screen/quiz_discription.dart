@@ -5,6 +5,8 @@ import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_topic.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/view_single_question.dart';
 
+import '../../objects/QuizSet.dart';
+
 class QuizDiscription extends StatefulWidget {
   const QuizDiscription({super.key});
 
@@ -13,6 +15,12 @@ class QuizDiscription extends StatefulWidget {
 }
 
 class _QuizDiscriptionState extends State<QuizDiscription> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -167,15 +175,19 @@ class ButtonStart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final QuizSet quizSet =
+        ModalRoute.of(context)!.settings.arguments as QuizSet;
     return InkWell(
       onTap: () {
+        _handleRecentlyQuizSet(quizSet);
         Navigator.push(
           context,
           MaterialPageRoute(
-            fullscreenDialog: false,
-            builder: (context) => ViewSingleQuestionWidget()
-          ),
-        ).then((value) {listQuiz.clear();});
+              fullscreenDialog: false,
+              builder: (context) => ViewSingleQuestionWidget()),
+        ).then((value) {
+          listQuiz.clear();
+        });
       },
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -199,6 +211,36 @@ class ButtonStart extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleRecentlyQuizSet(QuizSet qS) {
+    //ignore: iterable_contains_unrelated_type
+    if (recentlyQuizSet.length < 6) {
+      for (var item in recentlyQuizSet) {
+        if (item.topic!.compareTo(qS.topic!) == 0) {
+          recentlyQuizSet.remove(item);
+          recentlyQuizSet.insert(0, qS);
+          return;
+        }
+      }
+      recentlyQuizSet.insert(0, qS);
+    } else {
+      for (var item in recentlyQuizSet) {
+        if (item.topic!.compareTo(qS.topic!) == 0) {
+          recentlyQuizSet.remove(item);
+          recentlyQuizSet.insert(0, qS);
+          return;
+        }
+      }
+      recentlyQuizSet.removeLast();
+      recentlyQuizSet.insert(0, qS);
+    }
+
+    // if(recentlyQuizSet.contains(qS.topic)){
+    //   recentlyQuizSet.remove(qS);
+    //   recentlyQuizSet.insert(0, qS);
+    // }
+  
   }
 }
 

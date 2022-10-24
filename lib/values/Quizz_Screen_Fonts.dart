@@ -9,7 +9,7 @@ class QuizzScreenFont{
     fontWeight: FontWeight.w500,
     color: const Color(0xff000000),
   );
-  static TextStyle titleCategory = TextStyle(
+  static TextStyle titleExperience = TextStyle(
     fontFamily: FontFamily.urbanist,
     fontSize: 20,
     fontWeight: FontWeight.w400,
