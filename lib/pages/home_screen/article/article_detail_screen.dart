@@ -19,7 +19,13 @@ class ArticleDetailScreen extends StatefulWidget {
 class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
-  Account account=new Account('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360', 'Nhat Tan', 2871, 100 , 100, 100);
+  Account account = new Account(
+      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360',
+      'Nhat Tan',
+      2871,
+      100,
+      100,
+      100);
   @override
   Widget build(BuildContext context) {
     final ArticlePost articlePost =
@@ -58,12 +64,14 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                         padding: const EdgeInsets.only(top: 4),
                         child: title(articlePost),
                       ),
-                      Padding(padding: EdgeInsets.all(8),
-                      child: Text(
-                        articlePost.content! +
-                            ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                        style: HomeScreenFonts.content,
-                      ),)
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          articlePost.content! +
+                              ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
+                          style: HomeScreenFonts.content,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -86,41 +94,53 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           CircleAvatar(
             backgroundImage: NetworkImage('${account.avatar}'),
           ),
-          SizedBox(width: 20,),
+          SizedBox(
+            width: 20,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${account.name}',
-              style: TextStyle(
-                color: Color(0xff00BE2A),
-                fontSize: 14,
-                fontWeight: FontWeight.bold
-              ),),
-              SizedBox(height: 5,),
-              Text('${articlePost.post_time.toString()}',
+              Text(
+                '${account.name}',
                 style: TextStyle(
-                    fontSize: 10,
-                ),),
-
-
-
+                    color: Color(0xff00BE2A),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                '${articlePost.created_at.toString()}',
+                style: TextStyle(
+                  fontSize: 10,
+                ),
+              ),
             ],
           ),
           Spacer(),
-          
           Column(
             children: [
-              Icon(Icons.favorite_outline,color: Colors.red,),
-
-              Text('${articlePost.liked_users?.length}',
+              Icon(
+                Icons.favorite_outline,
+                color: Colors.red,
+              ),
+              Text(
+                '${articlePost.liked_users?.length}',
                 style: TextStyle(
                   fontSize: 10,
-                ),),
+                ),
+              ),
             ],
           ),
-          SizedBox(width: 20,),
-          Icon(Icons.bookmark_border,color: Colors.blue,size: 24,),
-
+          SizedBox(
+            width: 20,
+          ),
+          Icon(
+            Icons.bookmark_border,
+            color: Colors.blue,
+            size: 24,
+          ),
         ],
       ),
     );
@@ -233,7 +253,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.created_at.toString()!,
+                                  comment.created_at.toString(),
                                   style: HomeScreenFonts.timePost,
                                 ),
                               ],
@@ -284,8 +304,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      account!.numberOfSilver!
-                                          .toString(),
+                                      account!.numberOfSilver!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -299,8 +318,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      account!.numberOfBronze!
-                                          .toString(),
+                                      account!.numberOfBronze!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                   ],

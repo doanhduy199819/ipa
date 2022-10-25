@@ -32,8 +32,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 -5,
-
+            width: MediaQuery.of(context).size.width / 4 - 5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -61,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 -5,
+            width: MediaQuery.of(context).size.width / 4 - 5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -89,7 +88,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 -5,
+            width: MediaQuery.of(context).size.width / 4 - 5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -117,7 +116,7 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 4 -5,
+            width: MediaQuery.of(context).size.width / 4 - 5,
             decoration: BoxDecoration(
               color: const Color(0xffD8D8D8),
               borderRadius: BorderRadius.circular(50),
@@ -212,7 +211,7 @@ class _SearchPageState extends State<SearchPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Icon(
-                         Icons.bookmark,
+                    Icons.bookmark,
                     color: Colors.blue,
                     size: 24,
                   ),
@@ -251,7 +250,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Column qaPart() {
-    List<Question> display_list_question = List.from(Question.getSampleQuestion());
+    List<Question> display_list_question =
+        List.from(Question.getSampleQuestion());
     return Column(
         children: List.generate(3, (index) {
       return InkWell(
@@ -293,7 +293,7 @@ class _SearchPageState extends State<SearchPage> {
                       padding: const EdgeInsets.only(top: 3.0, bottom: 12.0),
                       child: Row(
                         children: [
-                          Icon(display_list_question[index].upvote! > 0
+                          Icon(display_list_question[index].upvote> 0
                               ? Icons.arrow_upward
                               : Icons.arrow_downward),
                           Padding(
@@ -316,7 +316,7 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.only(left: 5, bottom: 2),
                           child: Text(
                             display_list_question[index]
-                                .answers!
+                                .answers
                                 .length
                                 .toString(),
                             style: const TextStyle(
@@ -361,7 +361,8 @@ class _SearchPageState extends State<SearchPage> {
                     //Tags
                     Row(
                       children: [
-                        for (var item in display_list_question[index].categories!)
+                        for (var item
+                            in display_list_question[index].categories!)
                           Padding(
                             padding: const EdgeInsets.only(right: 3, bottom: 2),
                             child: Container(
@@ -426,7 +427,10 @@ class _SearchPageState extends State<SearchPage> {
                           fit: BoxFit.contain,
                           width: 50,
                           height: 50,
-                          Company.haveIdCompanyInSample(display_list_question[index].company_id!)?.logo ?? HomeScreenAssets.lgLogo),
+                          Company.haveIdCompanyInSample(
+                                      display_list_question[index].company_id!)
+                                  ?.logo ??
+                              HomeScreenAssets.lgLogo),
                     ),
                     //TimePost
                     Padding(
@@ -448,81 +452,75 @@ class _SearchPageState extends State<SearchPage> {
     }));
   }
 
-  Column companyPart()
-  {
+  Column companyPart() {
     List _companyList = <Company>[];
-    _companyList..add(new Company('0','LG VCS DANANG','assets/images/lg_is.png'))
-    ..add(new Company('1', 'SAM SUNG ELECTRONIC VIETNAM', 'assets/images/samsung_is.png'))
-      ..add(new Company('2', 'TRONG HUY COMPUTER COMPANY', 'assets/images/fujitsu_is.png'))
-
-    ;
+    _companyList
+      ..add(new Company('0', 'LG VCS DANANG', 'assets/images/lg_is.png'))
+      ..add(new Company(
+          '1', 'SAM SUNG ELECTRONIC VIETNAM', 'assets/images/samsung_is.png'))
+      ..add(new Company(
+          '2', 'TRONG HUY COMPUTER COMPANY', 'assets/images/fujitsu_is.png'));
     return Column(
         children: List.generate(_companyList.length, (index) {
-          return InkWell(
-            onTap: () {
-
-            },
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 5),
-              decoration:
-              const BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(
-                  blurRadius: 2,
-                  offset: Offset(0.0, 3),
-                  color: Colors.grey,
-                ),
-              ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 9-20,
-                      width: MediaQuery.of(context).size.height / 9 +30,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.black),
-                      child: Center(
-
-                          child: Image(
-                            image: AssetImage(_companyList[index].logo),
-                            height: MediaQuery.of(context).size.height / 9,
-                            width: MediaQuery.of(context).size.width / 10,
-
-
-                          )),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width/2,
-                    child:  RichText(
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        text: _companyList[index].name,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-
-                  Icon(Icons.chevron_right,size: 40,),
-                ],
-              ),
+      return InkWell(
+        onTap: () {},
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 5),
+          decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+              blurRadius: 2,
+              offset: Offset(0.0, 3),
+              color: Colors.grey,
             ),
-          );
-        }));
-
+          ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 9 - 20,
+                  width: MediaQuery.of(context).size.height / 9 + 30,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.black),
+                  child: Center(
+                      child: Image(
+                    image: AssetImage(_companyList[index].logo),
+                    height: MediaQuery.of(context).size.height / 9,
+                    width: MediaQuery.of(context).size.width / 10,
+                  )),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 2,
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    text: _companyList[index].name,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 40,
+              ),
+            ],
+          ),
+        ),
+      );
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         backgroundColor: Colors.grey.shade50,
         body: ListView(
           children: [
@@ -547,7 +545,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
             searchFilter(),
             Visibility(
-                visible: choice==0,
+                visible: choice == 0,
                 child: Column(
                   children: [
                     Padding(
@@ -557,8 +555,8 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Article',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
@@ -574,18 +572,15 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Questions And Answers',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           qaPart(),
-
-
                         ],
                       ),
-
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -594,23 +589,20 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Company',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           companyPart()
-
-
                         ],
                       ),
-
                     ),
                   ],
                 )),
             Visibility(
-                visible: choice==1,
+                visible: choice == 1,
                 child: Column(
                   children: [
                     Padding(
@@ -620,8 +612,8 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Article',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
@@ -633,7 +625,7 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 )),
             Visibility(
-                visible: choice==2,
+                visible: choice == 2,
                 child: Column(
                   children: [
                     Padding(
@@ -643,26 +635,22 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Questions And Answers',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           qaPart(),
-
-
                         ],
                       ),
-
                     ),
                   ],
                 )),
             Visibility(
-                visible: choice==3,
+                visible: choice == 3,
                 child: Column(
                   children: [
-
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Column(
@@ -670,18 +658,15 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             'Company',
-                            style: HomeScreenFonts.h1
-                                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: HomeScreenFonts.h1.copyWith(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           companyPart()
-
-
                         ],
                       ),
-
                     ),
                   ],
                 )),

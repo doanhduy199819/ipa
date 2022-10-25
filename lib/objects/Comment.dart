@@ -9,8 +9,8 @@ class Comment {
   String? author_id;
   String? content;
   final DateTime? created_at;
-  List<String> upvote_users;
-  List<String> downvote_users;
+  List<String>? upvote_users;
+  List<String>? downvote_users;
   bool is_accepted;
 
   Comment({
@@ -23,18 +23,23 @@ class Comment {
     this.is_accepted = false,
   });
 
-  factory Comment.fromJson(Map<String, dynamic> data) {
-    final String? id = data['id'] as String?;
-    final String? author_id = data['author_id'] as String?;
-    final String? content = data['content'] as String?;
-    final List<String> upvote_users = data['upvote_users'] as List<String>;
-    final List<String> downvote_users = data['downvote_users'] as List<String>;
-    final bool is_accepted = data['is_accepted'] as bool;
+  factory Comment.fromJson(Map<String, dynamic>? data) {
+    final String? id = data?['id'];
+    final String? author_id = data?['author_id'];
+    final String? content = data?['content'];
+    final List<String>? upvote_users = data?['upvote_users'] is Iterable
+        ? List.from(data?['upvote_users'])
+        : null;
+    final List<String>? downvote_users = data?['downvote_users'] is Iterable
+        ? List.from(data?['downvote_users'])
+        : null;
+    final bool is_accepted = data?['is_accepted'];
 
-    final String? date_string_created = data['created_at'] as String?;
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final String? date_string_created = data?['created_at'] as String?;
+    // DateFormat formatter = DateFormat('dd/MM/yyyy');
     final DateTime created_at =
-        formatter.parse(date_string_created ?? '1/1/2001');
+        DateTime.parse(date_string_created ?? '1/1/2001');
+    // formatter.parse(date_string_created ?? '1/1/2001');
 
     return Comment(
         id: id,
@@ -56,9 +61,15 @@ class Comment {
         'is_accepted': is_accepted
       };
 
-  void addUpvoteUser(String userId) => upvote_users.add(userId);
+  void addUpvoteUser(String userId) {
+    if (upvote_users == null) upvote_users = <String>[];
+    upvote_users!.add(userId);
+  }
 
-  void addDownvoteUser(String userId) => downvote_users.add(userId);
+  void addDownvoteUser(String userId) {
+    if (downvote_users == null) upvote_users = <String>[];
+    downvote_users!.add(userId);
+  }
 
   void setAccepted(bool is_accepted) {
     this.is_accepted = is_accepted;

@@ -65,7 +65,7 @@ class DatabaseService {
       // print(querySnapshot.docs.first.data());
       result = querySnapshot.docs.map((doc) {
         if (doc.exists) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
           ArticlePost a = ArticlePost.fromJson(data);
           return a;
         }

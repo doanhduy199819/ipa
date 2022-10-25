@@ -6,6 +6,7 @@ import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 
 class ArticleContent extends StatefulWidget {
@@ -16,31 +17,58 @@ class ArticleContent extends StatefulWidget {
 }
 
 class _ArticleContentState extends State<ArticleContent> {
-  late List _post;
+  late List<ArticlePost> _post;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initSampleData();
+    // _initSampleData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(4.0),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildTitle(),
+    return FutureBuilder(
+      future: DatabaseService().getArticlesList(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+        if (snapshot.data == null) {
+          return Text('This list is null');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+        _post = snapshot.data! as List<ArticlePost>;
+        return Container(
+          padding: EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: _buildTitle(),
+              ),
+              Expanded(
+                flex: 7,
+                child: _buildListViewContent(),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 7,
-            child: _buildListViewContent(),
-          ),
-        ],
-      ),
+        );
+        // return ListView(
+        //   children: snapshot.data!.map((ArticlePost? articlePost) {
+        //     return ListTile(
+        //       title: Text(
+        //         articlePost?.title ?? 'null',
+        //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+        //       ),
+        //       subtitle: Text(articlePost?.content ?? 'null'),
+        //     );
+        //   }).toList(),
+        // );
+      },
     );
   }
 
@@ -65,18 +93,18 @@ class _ArticleContentState extends State<ArticleContent> {
         childrenDelegate: SliverChildBuilderDelegate(
       (BuildContext context, int index) {
         return InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                fullscreenDialog: false,
-                builder: (context) => const ArticleDetailScreen(),
-                settings: RouteSettings(
-                  arguments: _post[index],
-                ),
-              ),
-            );
-          },
+          // onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       fullscreenDialog: false,
+          //       builder: (context) => const ArticleDetailScreen(),
+          //       settings: RouteSettings(
+          //         arguments: _post[index],
+          //       ),
+          //     ),
+          //   );
+          // },
           child: Container(
             margin: const EdgeInsets.only(bottom: 5),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
@@ -99,6 +127,7 @@ class _ArticleContentState extends State<ArticleContent> {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                           text: _post[index].title,
+                          // text: 'a',
                           style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -114,6 +143,7 @@ class _ArticleContentState extends State<ArticleContent> {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                           text: _post[index].content,
+                          // text: 'a',
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 12,
@@ -128,7 +158,7 @@ class _ArticleContentState extends State<ArticleContent> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Icon(
-                       Icons.bookmark,
+                      Icons.bookmark,
                       color: Colors.blue,
                       size: 24,
                     ),
@@ -148,7 +178,7 @@ class _ArticleContentState extends State<ArticleContent> {
                             width: 5,
                           ),
                           Text(
-                            _post[index].liked_users.length.toString(),
+                            _post[index].liked_users?.length.toString() ?? '0',
                             style: TextStyle(fontSize: 12),
                           )
                         ],
@@ -164,7 +194,8 @@ class _ArticleContentState extends State<ArticleContent> {
           ),
         );
       },
-      childCount: _post.length,
+      // childCount: _post.length,
+      childCount: 4,
     ));
   }
 }
