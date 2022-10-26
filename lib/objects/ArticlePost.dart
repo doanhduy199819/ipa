@@ -46,7 +46,9 @@ class ArticlePost {
     );
   }
 
-  void setId(String id) => this.id = id;
+  void setId(String? id) => this.id = id;
+
+  void setAuthorId(String? id) => author_id = id;
 
   factory ArticlePost.fromJson(Map<String, dynamic>? data) {
     final String? id = data?['id'];

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 class DatabaseService {
   // DatabaseReference ref = FirebaseDatabase.instance.ref();
@@ -44,11 +46,12 @@ class DatabaseService {
     });
   }
 
-  void addArticle(ArticlePost article) {
-    // CollectionReference collection = db.collection('articles');
+  void addArticle(ArticlePost article) async {
     DocumentReference doc = db.collection('articles').doc();
-    String id = doc.id;
-    if (article.id == null) article.setId(id);
+    String doc_id = doc.id;
+    if (article.id == null) article.setId(doc_id);
+    String? user_id = AuthService().currentUserId;
+    article.setAuthorId(user_id);
     doc
         .set(article.toJson())
         .then((value) => print('Article added successfully'))

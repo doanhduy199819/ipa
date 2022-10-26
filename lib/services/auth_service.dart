@@ -26,6 +26,10 @@ class AuthService {
     return _auth.authStateChanges();
   }
 
+  String? get currentUserId {
+    return _auth.currentUser?.uid;
+  }
+
   // sign in anonymous
   Future<User?> signInAnonymous() async {
     UserCredential firebaseUser = await _auth.signInAnonymously();
