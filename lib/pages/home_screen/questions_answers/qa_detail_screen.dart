@@ -7,6 +7,7 @@ import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Company.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
+import 'package:intl/intl.dart';
 
 class QaDetailScreen extends StatefulWidget {
   const QaDetailScreen({Key? key}) : super(key: key);
@@ -55,6 +56,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Author bloc
                 Row(
@@ -86,6 +88,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                         Container(
                           width: MediaQuery.of(context).size.width * 2 / 3,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 padding: const EdgeInsets.only(top: 4),
@@ -177,8 +180,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
   Widget commentBlocColumn(Question question) {
     return Column(
       children: <Widget>[
+        if(question.answers!=null)
         //Map => add vào toList xong rã ra từng Widget = ...
-        ...(question.answers.map((item) {
+        ...(question.answers!.map((item) {
           return commentBloc(item);
         }).toList()),
       ],
@@ -285,7 +289,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  comment.created_at.toString(),
+                                  parseDateTime(comment.created_at),
                                   style: HomeScreenFonts.timePost,
                                 ),
                               ],
@@ -394,7 +398,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              '${question.answers.length} Answers',
+              '${question.numberOfAnswers} Answers',
               style: const TextStyle(
                 color: Color(0xff000000),
                 fontWeight: FontWeight.bold,
@@ -472,9 +476,10 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
           ),
         ),
         //Tags
+        (question.categories!=null)?
         Row(
           children: [
-            for (var item in question.categories)
+            for (var item in question.categories!)
               Padding(
                 padding: const EdgeInsets.only(right: 3, bottom: 2, top: 2),
                 child: Container(
@@ -482,6 +487,13 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                     color: const Color(0xffDFE2EB),
                     child: Text(item, style: HomeScreenFonts.tagsName)),
               )
+          ],
+        )
+        : Row(
+          children: const[
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ],
@@ -512,7 +524,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(
-              question.created_at.toString(),
+              parseDateTime(question.created_at),
               style: const TextStyle(
                 fontSize: 8,
               ),
@@ -538,13 +550,13 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
             padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
             child: Row(
               children: [
-                Icon(question.upvote > 0
+                Icon(question.numberOfUpvote > 0
                     ? Icons.arrow_upward
                     : Icons.arrow_downward),
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: Text(
-                    question.upvote.toString(),
+                    question.numberOfDownvote.toString(),
                     style: HomeScreenFonts.upvote,
                   ),
                 ),
@@ -558,7 +570,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 5, bottom: 2),
                 child: Text(
-                  question.answers.length.toString(),
+                  question.numberOfAnswers.toString(),
                   style: HomeScreenFonts.comment,
                 ),
               ),
@@ -567,5 +579,14 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
         ],
       ),
     );
+  }
+  String parseDateTime(DateTime? time){
+    if(time !=null){
+    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
+    return formatter;
+    } 
+    else{
+       return '1/1/2001';
+    } 
   }
 }

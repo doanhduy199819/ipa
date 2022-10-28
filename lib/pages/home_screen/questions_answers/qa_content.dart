@@ -6,8 +6,10 @@ import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Questions.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_detail_screen.dart';
+import 'package:flutter_interview_preparation/services/database_qa_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+import 'package:intl/intl.dart';
 
 class QAContent extends StatefulWidget {
   const QAContent({Key? key}) : super(key: key);
@@ -17,25 +19,69 @@ class QAContent extends StatefulWidget {
 }
 
 class _QAContentState extends State<QAContent> {
-  List<Question> display_list_question = List.from(Question.getSampleQuestion());
-  final List<Company> _sampleListCompany=List.from(Company.getSampleCompany());
+  List<Question> display_list_question =
+      List.from(Question.getSampleQuestion());
+  final List<Company> _sampleListCompany =
+      List.from(Company.getSampleCompany());
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(4.0),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: searchPart(),
+    return FutureBuilder(
+      future: DatabaseQAService().getQuestionsList(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+        if (snapshot.data == null) {
+          return Text('This list is null');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+        display_list_question = snapshot.data! as List<Question>;
+        return Container(
+          padding: EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: searchPart(),
+              ),
+              Expanded(
+                flex: 7,
+                child: contentListQuestions(),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 7,
-            child: contentListQuestions(),  
-          ),
-        ],
-      ),
+        );
+        // return ListView(
+        //   children: snapshot.data!.map((ArticlePost? articlePost) {
+        //     return ListTile(
+        //       title: Text(
+        //         articlePost?.title ?? 'null',
+        //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+        //       ),
+        //       subtitle: Text(articlePost?.content ?? 'null'),
+        //     );
+        //   }).toList(),
+        // );
+      },
     );
+    // return Container(
+    //   padding: EdgeInsets.all(4.0),
+    //   child: Column(
+    //     children: [
+    //       Expanded(
+    //         flex: 1,
+    //         child: searchPart(),
+    //       ),
+    //       Expanded(
+    //         flex: 7,
+    //         child: contentListQuestions(),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget searchPart() {
@@ -141,14 +187,15 @@ class _QAContentState extends State<QAContent> {
                               const EdgeInsets.only(top: 3.0, bottom: 12.0),
                           child: Row(
                             children: [
-                              Icon(display_list_question[index].upvote! > 0
+                              Icon(display_list_question[index].numberOfUpvote >
+                                      0
                                   ? Icons.arrow_upward
                                   : Icons.arrow_downward),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   display_list_question[index]
-                                      .upvote
+                                      .numberOfUpvote
                                       .toString(),
                                   style: const TextStyle(
                                     fontSize: 11,
@@ -167,8 +214,7 @@ class _QAContentState extends State<QAContent> {
                                   const EdgeInsets.only(left: 5, bottom: 2),
                               child: Text(
                                 display_list_question[index]
-                                    .answers
-                                    .length
+                                    .numberOfAnswers
                                     .toString(),
                                 style: const TextStyle(
                                   fontSize: 11,
@@ -191,7 +237,7 @@ class _QAContentState extends State<QAContent> {
                         //Title
                         Container(
                           padding: const EdgeInsets.only(top: 1, bottom: 4),
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 5,
+                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
                           child: RichText(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -211,42 +257,45 @@ class _QAContentState extends State<QAContent> {
                           // ),
                         ),
                         //Tags
-                        Row(
-                          children: [
-                            for (var item in display_list_question[index].categories)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 3, bottom: 2),
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  color: const Color(0xffDFE2EB),
-                                  child: RichText(
-                                    maxLines: 1,
-                                    overflow: TextOverflow.visible,
-                                    text: TextSpan(
-                                      text: item,
-                                      style: const TextStyle(
-                                        color: Colors.lightBlue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
+
+                        (display_list_question[index].categories != null)
+                            ? Row(
+                                children: [
+                                  for (var item in display_list_question[index]
+                                      .categories!)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 3, bottom: 2),
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        color: const Color(0xffDFE2EB),
+                                        child: RichText(
+                                          maxLines: 1,
+                                          overflow: TextOverflow.visible,
+                                          text: TextSpan(
+                                            text: item,
+                                            style: const TextStyle(
+                                              color: Colors.lightBlue,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  // child: Text(
-                                  //   item,
-                                  //   style: const TextStyle(
-                                  //     color: Colors.lightBlue,
-                                  //     fontSize: 12,
-                                  //     fontWeight: FontWeight.w500,
-                                  //   ),
-                                  // ),
-                                ),
+                                    )
+                                ],
                               )
-                          ],
-                        ),
+                            : Row(
+                                children:const [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
                         //Content
+
                         Container(
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 5,
+                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
                           padding: const EdgeInsets.only(top: 2, bottom: 2),
                           //width: 150,
                           child: RichText(
@@ -280,14 +329,17 @@ class _QAContentState extends State<QAContent> {
                               width: 50,
                               height: 50,
                               // Task: Change idCompany to picture of Company, default logo company is LG logo
-                              Company.haveIdCompanyInSample(display_list_question[index].company_id!)?.logo ?? HomeScreenAssets.lgLogo
-                              ),
+                              Company.haveIdCompanyInSample(
+                                          display_list_question[index]
+                                              .company_id!)
+                                      ?.logo ??
+                                  HomeScreenAssets.lgLogo),
                         ),
                         //TimePost
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
-                            display_list_question[index].created_at!.toString(),
+                            parseDateTime(display_list_question[index].created_at),
                             style: const TextStyle(
                               fontSize: 8,
                             ),
@@ -305,5 +357,13 @@ class _QAContentState extends State<QAContent> {
       ),
     );
   }
-
+   String parseDateTime(DateTime? time){
+    if(time !=null){
+    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
+    return formatter;
+    } 
+    else{
+       return '1/1/2001';
+    } 
+  }
 }

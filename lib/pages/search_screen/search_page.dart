@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Company.dart';
 import 'package:flutter_interview_preparation/values/Quizz_Screen_Fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-
+import 'package:intl/intl.dart';
 import '../../objects/Account.dart';
 import '../../objects/ArticlePost.dart';
 import '../../objects/Comment.dart';
@@ -293,13 +293,13 @@ class _SearchPageState extends State<SearchPage> {
                       padding: const EdgeInsets.only(top: 3.0, bottom: 12.0),
                       child: Row(
                         children: [
-                          Icon(display_list_question[index].upvote> 0
+                          Icon(display_list_question[index].numberOfUpvote > 0
                               ? Icons.arrow_upward
                               : Icons.arrow_downward),
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Text(
-                              display_list_question[index].upvote.toString(),
+                              display_list_question[index].numberOfUpvote .toString(),
                               style: const TextStyle(
                                 fontSize: 11,
                               ),
@@ -316,9 +316,7 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.only(left: 5, bottom: 2),
                           child: Text(
                             display_list_question[index]
-                                .answers
-                                .length
-                                .toString(),
+                                .numberOfAnswers.toString(),
                             style: const TextStyle(
                               fontSize: 11,
                             ),
@@ -436,7 +434,7 @@ class _SearchPageState extends State<SearchPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        display_list_question[index].created_at.toString()!,
+                        parseDateTime(display_list_question[index].created_at),
                         style: const TextStyle(
                           fontSize: 8,
                         ),
@@ -672,5 +670,14 @@ class _SearchPageState extends State<SearchPage> {
                 )),
           ],
         ));
+  }
+   String parseDateTime(DateTime? time){
+    if(time !=null){
+    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
+    return formatter;
+    } 
+    else{
+       return '1/1/2001';
+    } 
   }
 }

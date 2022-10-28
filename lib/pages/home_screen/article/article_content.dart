@@ -29,61 +29,47 @@ class _ArticleContentState extends State<ArticleContent> {
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //   future: DatabaseService().getArticlesList(),
-    //   builder:
-    //       (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Text('Something went wrong');
-    //     }
-    //     if (snapshot.data == null) {
-    //       return Text('This list is null');
-    //     }
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return Text("Loading");
-    //     }
-    //     _post = snapshot.data! as List<ArticlePost>;
-    //     return Container(
-    //       padding: EdgeInsets.all(4.0),
-    //       child: Column(
-    //         children: [
-    //           Expanded(
-    //             flex: 1,
-    //             child: _buildTitle(),
-    //           ),
-    //           Expanded(
-    //             flex: 7,
-    //             child: _buildListViewContent(),
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //     // return ListView(
-    //     //   children: snapshot.data!.map((ArticlePost? articlePost) {
-    //     //     return ListTile(
-    //     //       title: Text(
-    //     //         articlePost?.title ?? 'null',
-    //     //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-    //     //       ),
-    //     //       subtitle: Text(articlePost?.content ?? 'null'),
-    //     //     );
-    //     //   }).toList(),
-    //     // );
-    //   },
-    return Container(
-      padding: EdgeInsets.all(4.0),
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildTitle(),
+    return FutureBuilder(
+      future: DatabaseService().getArticlesList(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+        if (snapshot.data == null) {
+          return Text('This list is null');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+        _post = snapshot.data! as List<ArticlePost>;
+        return Container(
+          padding: EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: _buildTitle(),
+              ),
+              Expanded(
+                flex: 7,
+                child: _buildListViewContent(),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 7,
-            child: _buildListViewContent(),
-          ),
-        ],
-      ),
+        );
+        // return ListView(
+        //   children: snapshot.data!.map((ArticlePost? articlePost) {
+        //     return ListTile(
+        //       title: Text(
+        //         articlePost?.title ?? 'null',
+        //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+        //       ),
+        //       subtitle: Text(articlePost?.content ?? 'null'),
+        //     );
+        //   }).toList(),
+        // );
+      },
     );
   }
 
