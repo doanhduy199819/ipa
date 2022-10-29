@@ -7,6 +7,7 @@ import 'package:flutter_interview_preparation/pages/interest_screen/Interest_Pag
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
+import 'package:flutter_interview_preparation/pages/test/profile.dart';
 import 'package:flutter_interview_preparation/pages/wrapper.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
@@ -32,18 +33,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User?>.value(
-      value: AuthService().user,
-      initialData: null,
-      child: MaterialApp(
-        title: 'IPA',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        // home: const HomeContainerWidget(),
-        home: Wrapper(),
-        debugShowCheckedModeBanner: false,
-      ),
+    // return StreamProvider<User?>.value(
+    //   value: AuthService().user,
+    //   initialData: null,
+    //   child: MaterialApp(
+    //     title: 'IPA',
+    //     theme: ThemeData(
+    //       primarySwatch: Colors.blue,
+    //     ),
+    //     // home: const HomeContainerWidget(),
+    //     home: Wrapper(),
+    //     debugShowCheckedModeBanner: false,
+    //   ),
+    // );
+    return Scaffold(
+      body: Profile(),
     );
   }
 }
