@@ -47,7 +47,12 @@ class MyApp extends StatelessWidget {
     //   ),
     // );
     return Scaffold(
-      body: Profile(),
+      body: Profile(data: {
+        'Fullname': 'Trần Hiền',
+        'Email': 'thuhientranthi137200@gmail.com',
+        'Password': '123456789',
+        'Phone number': '0898130701'
+      }),
     );
   }
 }
