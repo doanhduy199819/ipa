@@ -1,5 +1,6 @@
 import 'dart:html';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,6 @@ class Comment {
     // DateFormat formatter = DateFormat('dd/MM/yyyy');
     final DateTime created_at =
         DateTime.parse(date_string_created ?? '1/1/2001');
-    // formatter.parse(date_string_created ?? '1/1/2001');
 
     return Comment(
         id: id,
@@ -49,6 +49,11 @@ class Comment {
         upvote_users: upvote_users,
         downvote_users: downvote_users,
         is_accepted: is_accepted);
+  }
+
+  factory Comment.fromQuerySnapshot(
+      QueryDocumentSnapshot<Map<String, dynamic>> queryDocumentSnapshot) {
+    return Comment.fromJson(queryDocumentSnapshot.data());
   }
 
   Map<String, dynamic> toJson() => {

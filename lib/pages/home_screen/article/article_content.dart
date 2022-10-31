@@ -29,17 +29,15 @@ class _ArticleContentState extends State<ArticleContent> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseService().getArticlesList(),
+      future: DatabaseService().allArticlesOnce,
       builder:
           (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         }
-        if (snapshot.data == null) {
-          return Text('This list is null');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+        if (snapshot.data == null ||
+            snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
         }
         _post = snapshot.data! as List<ArticlePost>;
         return Container(
@@ -93,18 +91,18 @@ class _ArticleContentState extends State<ArticleContent> {
         childrenDelegate: SliverChildBuilderDelegate(
       (BuildContext context, int index) {
         return InkWell(
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       fullscreenDialog: false,
-          //       builder: (context) => const ArticleDetailScreen(),
-          //       settings: RouteSettings(
-          //         arguments: _post[index],
-          //       ),
-          //     ),
-          //   );
-          // },
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                fullscreenDialog: false,
+                builder: (context) => const ArticleDetailScreen(),
+                settings: RouteSettings(
+                  arguments: _post[index],
+                ),
+              ),
+            );
+          },
           child: Container(
             margin: const EdgeInsets.only(bottom: 5),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
@@ -194,8 +192,7 @@ class _ArticleContentState extends State<ArticleContent> {
           ),
         );
       },
-      // childCount: _post.length,
-      childCount: 4,
+      childCount: _post.length,
     ));
   }
 }

@@ -4,77 +4,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
+import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/services/articles_service.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/comment_service.dart';
 
-class DatabaseService {
-  // DatabaseReference ref = FirebaseDatabase.instance.ref();
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
-  List<ArticlePost>? _articlesListFromQuerySnapshot(
-      QuerySnapshot querySnapshot) {
-    return querySnapshot.docs.map((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        return ArticlePost.fromJson(
-            documentSnapshot.data() as Map<String, dynamic>);
-      }
-      return ArticlePost.test();
-    }).toList();
+class DatabaseService with ArticlePostHandle implements CommentService {
+  @override
+  Future<void> addCommentToArticle(Comment comment, String articleId) {
+    DocumentReference docRef =
+        db.collection('articles').doc(articleId).collection('comments').doc();
+    comment.id ??= docRef.id;
+    return docRef.set(comment.toJson()).then((_) {
+      print(
+          'New comment is added to aritcle $articleId\n with id ${docRef.id}');
+    });
   }
 
-  Stream<List<ArticlePost>?> get articlesList {
+  @override
+  Stream<List<Comment>?> commentsFromArticle(String aricleId) {
     return db
         .collection('articles')
+        .doc(aricleId)
+        .collection('comments')
         .snapshots()
-        .map(_articlesListFromQuerySnapshot);
+        .map(commentsFromQuerySnapshot);
   }
 
-  void testReadArticles() async {
-    await db.collection('company').get().then((event) {
-      for (var doc in event.docs) {
-        print("id: ${doc.id} => data: ${doc.data()}");
-      }
-    });
-  }
-
-  void addListArticles(List<ArticlePost> list) {
-    CollectionReference collection = db.collection('articles');
-    list.forEach((article) {
-      collection
-          .add(article.toJson())
-          .then((value) => print('Article added successfully'))
-          .catchError((onError) => print('Failed to add an article'));
-    });
-  }
-
-  void addArticle(ArticlePost article) async {
-    DocumentReference doc = db.collection('articles').doc();
-    String doc_id = doc.id;
-    if (article.id == null) article.setId(doc_id);
-    String? user_id = AuthService().currentUserId;
-    article.setAuthorId(user_id);
-    doc
-        .set(article.toJson())
-        .then((value) => print('Article added successfully'))
-        .catchError((error) => print('Failed to add an article'));
-  }
-
-  Future<List<ArticlePost>?> getArticlesList() async {
-    CollectionReference collection = db.collection('articles');
-    // return a QuerySnapshot, which is a collection query
-    // To access documents in a collection,
-    // querySnapshot.docs() => return a List<DocumentSnapshot>
-    List<ArticlePost>? result;
-    await collection.get().then((QuerySnapshot querySnapshot) {
-      // print(querySnapshot.docs.first.data());
-      result = querySnapshot.docs.map((doc) {
-        if (doc.exists) {
-          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-          ArticlePost a = ArticlePost.fromJson(data);
-          return a;
-        }
-        return ArticlePost.test();
-      }).toList();
-    });
-    return result;
+  @override
+  List<Comment>? commentsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    querySnapshot.docs
+        .map((QueryDocumentSnapshot<Map<String, dynamic>> querySnapshot) {
+      if (querySnapshot.exists) return Comment.fromQuerySnapshot(querySnapshot);
+      return Comment();
+    }).toList();
   }
 }

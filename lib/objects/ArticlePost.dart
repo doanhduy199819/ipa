@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
@@ -75,6 +76,11 @@ class ArticlePost {
         liked_users, comments);
   }
 
+  factory ArticlePost.fromDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+    return ArticlePost.fromJson(documentSnapshot.data());
+  }
+
   Map<String, dynamic> toJson() => {
         if (id != null) 'id': id,
         if (title != null) 'title': title,
@@ -121,11 +127,5 @@ class ArticlePost {
         listComment));
 
     return _post;
-    // await DatabaseService().getArticlesList().then((value) {
-    //   _post2 = value;
-    //   print(_post2);
-    // });
-    // return _post2 ?? _post;
-    // return DatabaseService().getArticlesList() ?? _post;
   }
 }
