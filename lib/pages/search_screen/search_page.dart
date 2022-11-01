@@ -516,31 +516,35 @@ class _SearchPageState extends State<SearchPage> {
     }));
   }
 
+  Padding searchBox()
+  {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: TextField(
+          cursorColor: Colors.black,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Search'),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey.shade50,
         body: ListView(
           children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Container(
-                width: double.infinity,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Search'),
-                ),
-              ),
-            ),
+            searchBox(),
             searchFilter(),
             Visibility(
                 visible: choice == 0,
