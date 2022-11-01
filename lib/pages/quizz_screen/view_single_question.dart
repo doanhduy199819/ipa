@@ -230,7 +230,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
     );
   }
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showQuizDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -280,6 +280,32 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
     );
   }
 
+  Visibility submitButton()
+  {
+    return Visibility(child: InkWell(
+      onTap: () {
+        _showQuizDialog().then((value) {createQuiz();});
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xffC7EDE6),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            "SUBMIT",
+            style: TextStyle(
+              decoration: TextDecoration.none,
+              color: Colors.black,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Arial",
+            ),
+          ),
+        ),
+      ),
+    ),visible: !isCompleted,);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,30 +320,7 @@ class _ViewSingleQuestionWidgetState extends State<ViewSingleQuestionWidget> {
                   });});
             },
           ),
-
-          Visibility(child: InkWell(
-            onTap: () {
-              _showMyDialog().then((value) {createQuiz();});
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xffC7EDE6),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "SUBMIT",
-                  style: TextStyle(
-                    decoration: TextDecoration.none,
-                    color: Colors.black,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Arial",
-                  ),
-                ),
-              ),
-            ),
-          ),visible: !isCompleted,)
+          submitButton()
         ],
       ),
       body: SingleChildScrollView(
