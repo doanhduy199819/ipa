@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:intl/intl.dart';
@@ -36,8 +35,8 @@ class Comment {
 
     final String? date_string_created = data?['created_at'] as String?;
     // DateFormat formatter = DateFormat('dd/MM/yyyy');
-    final DateTime created_at =
-        DateTime.parse(date_string_created ?? '1/1/2001');
+    final DateTime created_at = DateTime.parse(
+        date_string_created ?? DateTime.utc(2001, 1, 1).toString());
     // formatter.parse(date_string_created ?? '1/1/2001');
 
     return Comment(

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_interview_preparation/pages/authentication/signup_components/signup_email.dart';
+// import 'package:flutter_interview_preparation/pages/authentication/signup_components/input_form.dart';
+// import 'package:flutter_interview_preparation/pages/authentication/signup_components/reenter_password.dart';
+// import 'package:flutter_interview_preparation/pages/authentication/signup_components/signup_title.dart';
 import '../../services/auth_service.dart';
+// import 'signup_components/display_name.dart';
+// import 'signup_components/signup_password.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -9,21 +15,59 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late String email;
-  late String password;
+  String? email;
+  String? password;
+  String? reEnterPassword;
   final _auth = AuthService();
   final _formStateKey = GlobalKey<FormState>();
+  var signUpBackground = const BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('images/signUp_background.jpg'),
+      fit: BoxFit.cover,
+    ),
+  );
+  var blurBackground = BoxDecoration(
+      color: Colors.grey.withOpacity(0.2),
+      borderRadius: BorderRadius.all(Radius.circular(6.0)));
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formStateKey,
-          child: Column(
+        body: SafeArea(
+            child: Container(
+      decoration: signUpBackground,
+      child: Column(
+        children: [
+          // buildSignUpTitle(),
+          Container(
+            decoration: blurBackground,
+            margin: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // buildEmail(
+                //     onChanged: (val) => setState(() => email = val ?? '')),
+                // buildPassword(
+                //     onChanged: (val) => setState(() => password = val ?? '')),
+                // builReenterPassword(
+                //     onChanged: (val) =>
+                //         setState(() => reEnterPassword = val ?? '')),
+                // buildDisplayName(),
+              ],
+            ),
+            // child: ,
+          )
+        ],
+      ),
+    )));
+  }
+}
+
+
+
+
+/* 
+  Column(
             children: [
               SizedBox(
                 height: 20.0,
@@ -89,31 +133,4 @@ class _SignUpState extends State<SignUp> {
                   : CircularProgressIndicator()
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  String? _validateReenterPassword(reEnterPassword) {
-    if (reEnterPassword != password) {
-      return "Your password is not the same";
-    }
-  }
-
-  String? _validatePassword(val) {
-    if (val != null && val.length < 8) {
-      return 'Your password must contain at least 8 characters';
-    }
-  }
-
-  String? _validateEmail(val) {
-    if (val == null || val.isEmpty) {
-      return 'Enter an email';
-    } else {
-      String pattern =
-          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-      RegExp regex = new RegExp(pattern);
-      if (!(regex.hasMatch(val!))) return "Invalid Email";
-    }
-  }
-}
+*/

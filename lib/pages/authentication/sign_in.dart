@@ -42,57 +42,59 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.jpg"),
-              fit: BoxFit.cover,
+        child: SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/signIn_background.jpg"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              Row(), // To get full width
-              Form(
-                key: _formKey,
-                child: IntrinsicWidth(
-                  child: Column(
-                    children: [
-                      const buildSignInTitle(),
-                      space,
-                      buildEmail(
-                        mainColor: mainColor,
-                        onChanged: (val) => setState(() => email = val),
-                      ),
-                      space,
-                      buildPassword(
-                        mainColor: mainColor,
-                        onChanged: (val) => setState(() => password = val),
-                      ),
-                      space,
-                      const buildForgotPassword(),
-                      space,
-                      buildLoginButton(
-                        email: email,
-                        password: password,
-                      ),
-                      space,
-                      const Center(
-                          child: Text('OR',
-                              style: TextStyle(
-                                  fontSize: 20.0, color: Colors.white))),
-                      space,
-                      const Center(
-                          child: Text('Login With',
-                              style: TextStyle(color: Colors.white))),
-                      space,
-                      const buildExtraLoginMethods(),
-                      space,
-                      const buildDontHaveAccount(),
-                    ],
+            child: Column(
+              children: [
+                Row(), // To get full width
+                Form(
+                  key: _formKey,
+                  child: IntrinsicWidth(
+                    child: Column(
+                      children: [
+                        const buildSignInTitle(),
+                        space,
+                        buildEmail(
+                          mainColor: mainColor,
+                          onChanged: (val) => setState(() => email = val ?? ''),
+                        ),
+                        buildPassword(
+                          mainColor: mainColor,
+                          onChanged: (val) =>
+                              setState(() => password = val ?? ''),
+                        ),
+                        space,
+                        const buildForgotPassword(),
+                        space,
+                        buildLoginButton(
+                          email: email,
+                          password: password,
+                        ),
+                        space,
+                        const Center(
+                            child: Text('OR',
+                                style: TextStyle(
+                                    fontSize: 20.0, color: Colors.white))),
+                        space,
+                        const Center(
+                            child: Text('Login With',
+                                style: TextStyle(color: Colors.white))),
+                        space,
+                        const buildExtraLoginMethods(),
+                        space,
+                        const buildDontHaveAccount(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

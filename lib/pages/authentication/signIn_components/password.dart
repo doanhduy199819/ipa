@@ -10,7 +10,7 @@ class buildPassword extends StatefulWidget {
   }) : super(key: key);
 
   final Color mainColor;
-  final Function(String)? onChanged;
+  final Function(String?)? onChanged;
 
   @override
   State<buildPassword> createState() => _buildPasswordState();

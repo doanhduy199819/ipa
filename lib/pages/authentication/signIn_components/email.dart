@@ -8,7 +8,7 @@ class buildEmail extends StatelessWidget {
   }) : super(key: key);
 
   final Color mainColor;
-  final Function(String)? onChanged;
+  final Function(String?)? onChanged;
   final Icon icon = const Icon(Icons.email_rounded, color: Colors.blue);
   final String hintText = 'Email';
   final boxDecoration = const BoxDecoration(
@@ -31,8 +31,10 @@ class buildEmail extends StatelessWidget {
             width: 240.0,
             child: TextFormField(
               decoration: InputDecoration(
+                  prefixIcon: icon,
                   hintText: hintText,
                   border: InputBorder.none,
+                  contentPadding: const EdgeInsets.all(16.0),
                   hintStyle: TextStyle(color: Colors.black)),
               style: TextStyle(color: Colors.black),
               onChanged: onChanged,

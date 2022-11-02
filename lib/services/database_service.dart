@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
+import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 class DatabaseService {
@@ -34,6 +35,13 @@ class DatabaseService {
         print("id: ${doc.id} => data: ${doc.data()}");
       }
     });
+  }
+
+  void postSampleArticle() {
+    ArticlePost articlePost =
+        ArticlePost.only(title: 'Testing comments', content: 'Nothing much');
+    articlePost.comments = Comment.getSampleCommentsList();
+    addArticle(articlePost);
   }
 
   void addListArticles(List<ArticlePost> list) {
