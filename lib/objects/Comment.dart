@@ -12,7 +12,7 @@ class Comment {
   final DateTime? created_at;
   List<String>? upvote_users;
   List<String>? downvote_users;
-  bool is_accepted;
+  bool? is_accepted;
 
   Comment({
     this.id,
@@ -34,12 +34,14 @@ class Comment {
     final List<String>? downvote_users = data?['downvote_users'] is Iterable
         ? List.from(data?['downvote_users'])
         : null;
-    final bool is_accepted = data?['is_accepted'];
+    final bool? is_accepted = data?['is_accepted'];
 
     final String? date_string_created = data?['created_at'] as String?;
     // DateFormat formatter = DateFormat('dd/MM/yyyy');
-    final DateTime created_at =
-        DateTime.parse(date_string_created ?? '1/1/2001');
+    // final DateTime created_at =
+    //     DateTime.parse(date_string_created ?? '1/1/2001');
+    final DateTime created_at = DateTime.parse(
+        date_string_created ?? DateTime.utc(2001, 1, 1).toString());
 
     return Comment(
         id: id,
