@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
+import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 mixin ArticlePostHandle {
@@ -43,6 +44,11 @@ mixin ArticlePostHandle {
     if (article.id == null) article.setId(doc_id);
     String? user_id = AuthService().currentUserId;
     article.setAuthorId(user_id);
+    CollectionReference subcollection =
+        db.collection('articles').doc(doc_id).collection('comments');
+    article.comments?.forEach((element) => subcollection.add(element.toJson()));
+    print(article.comments);
+
     doc
         .set(article.toJson())
         .then((value) => print('Article added successfully'))
