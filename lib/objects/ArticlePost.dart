@@ -51,6 +51,8 @@ class ArticlePost {
 
   void setAuthorId(String? id) => author_id = id;
 
+  void setComments(List<Comment>? comments) => this.comments = comments;
+
   factory ArticlePost.fromJson(Map<String, dynamic>? data) {
     final String? id = data?['id'];
     final String? title = data?['title'];
@@ -69,6 +71,7 @@ class ArticlePost {
     final List<String>? liked_users = data?['liked_users'] is Iterable
         ? List.from(data?['liked_users'])
         : null;
+
     final List<Comment>? comments =
         data?['comments'] is Iterable ? List.from(data?['comments']) : null;
 

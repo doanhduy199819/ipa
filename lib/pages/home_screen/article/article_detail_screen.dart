@@ -5,6 +5,7 @@ import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
@@ -26,64 +27,100 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       100,
       100,
       100);
+  late ArticlePost articlePost;
+  late List<Comment>? comments;
   @override
   Widget build(BuildContext context) {
-    final ArticlePost articlePost =
-        ModalRoute.of(context)!.settings.arguments as ArticlePost;
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(40.0),
-        child: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          backgroundColor: Colors.white,
-          title: Text(
-            'Detail Article',
-            style: HomeScreenFonts.h1.copyWith(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          top: 4,
-        ),
-        child: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                postOwner(articlePost),
+    // get article from parent widget
+    articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
+    print(articlePost.id);
+    return StreamBuilder(
+        stream: DatabaseService().commentsFromArticle(articlePost.id!),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Comment>?> snapshot) {
+          // DatabaseService()
+          //     .commentsFromArticle(articlePost.id!)
+          //     .listen((event) {
+          //   print(event);
+          // });
 
-                //Content of Question
+          // set comments for this article
+          if (snapshot.hasError) return Text('Some thing went wrong :(');
+          if (snapshot.data == null ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.data == null) print('no data');
+            return Column(
+              children: [
                 Container(
+                    padding: EdgeInsets.all(16.0),
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator()),
+              ],
+            );
+          }
+          _loadComments(snapshot.data);
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(40.0),
+              child: AppBar(
+                iconTheme: const IconThemeData(
+                  color: Colors.black,
+                ),
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Detail Article',
+                  style: HomeScreenFonts.h1.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.only(
+                top: 4,
+              ),
+              child: Container(
+                color: Colors.white,
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      postOwner(articlePost),
+
+                      //Content of Question
                       Container(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: title(articlePost),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          articlePost.content! +
-                              ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                          style: HomeScreenFonts.content,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: title(articlePost),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                articlePost.content! +
+                                    ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
+                                style: HomeScreenFonts.content,
+                              ),
+                            )
+                          ],
                         ),
-                      )
+                      ),
+
+                      answersAndSortByBloc(articlePost),
+                      commentBlocColumn(articlePost),
                     ],
                   ),
                 ),
-
-                answersAndSortByBloc(articlePost),
-                commentBlocColumn(articlePost),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        });
+  }
+
+  void _loadComments(List<Comment>? comments) {
+    articlePost.setComments(comments);
   }
 
   Widget postOwner(ArticlePost articlePost) {

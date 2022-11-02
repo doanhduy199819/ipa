@@ -15,6 +15,7 @@ class DatabaseService with ArticlePostHandle implements CommentService {
     DocumentReference docRef =
         db.collection('articles').doc(articleId).collection('comments').doc();
     comment.id ??= docRef.id;
+    comment.author_id ??= AuthService().currentUserId;
     return docRef.set(comment.toJson()).then((_) {
       print(
           'New comment is added to aritcle $articleId\n with id ${docRef.id}');

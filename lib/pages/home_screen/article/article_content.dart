@@ -33,11 +33,17 @@ class _ArticleContentState extends State<ArticleContent> {
       builder:
           (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('Something went wrong :(');
         }
         if (snapshot.data == null ||
             snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(16.0),
+                  width: 100, height: 100, child: CircularProgressIndicator()),
+            ],
+          );
         }
         _post = snapshot.data! as List<ArticlePost>;
         return Container(
