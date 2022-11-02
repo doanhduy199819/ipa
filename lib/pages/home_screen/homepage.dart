@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
@@ -27,7 +28,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
+          FloatingActionButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>PostAnArticle()));
+          }, child: Icon(Icons.add)),
       body: Column(
         children: [
           Expanded(

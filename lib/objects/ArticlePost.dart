@@ -59,7 +59,7 @@ class ArticlePost {
     // final DateTime created_at =
     //     formatter.parse(date_string_created ?? '1/1/2001');
     final DateTime created_at =
-        DateTime.parse(date_string_created ?? '1/1/2001');
+        DateTime.parse(date_string_created ?? DateTime.utc(2001,1,1).toString());
 
     final String? content = data?['content'];
     final List<String>? categories =
@@ -102,6 +102,12 @@ class ArticlePost {
 
   int get numberOfLile {
     return liked_users?.length ?? 0;
+  }
+
+  @override
+  String toString() {
+    return '${this.title} , ${this.content}';
+    
   }
 
   static List<ArticlePost> getSampleArticlePostList() {

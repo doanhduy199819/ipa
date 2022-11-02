@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_container.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/data_questions.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/search_company_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
@@ -20,6 +23,7 @@ class _PostAnArticleState extends State<PostAnArticle> {
   String? content;
   DateTime? created_at;
   ArticlePost? myArticlePost;
+  List<ArticlePost> listArticlePost = [];
   @override
   Widget build(BuildContext context) {
     return //MaterialApp(
@@ -132,19 +136,38 @@ class _PostAnArticleState extends State<PostAnArticle> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    created_at = DateTime.now();
-                                    myArticlePost = ArticlePost(
-                                        null,
-                                        title,
-                                        created_at,
-                                        content,
-                                        null,
-                                        null,
-                                        null,
-                                        null);
-                                    DatabaseService()
-                                        .addArticle(myArticlePost!);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeContainerWidget()));
+                                    _convertJsonAndPushToFirebase();
+                                    for (var item in listArticlePost) {
+                                     ArticlePost newPost= ArticlePost(
+                                          null,
+                                          item.title,
+                                          item.created_at,
+                                          item.content,
+                                          null,
+                                          null,
+                                          null,
+                                          null);
+                                      DatabaseService()
+                                          .addArticle(newPost);
+                                    }
+
+                                    //  created_at = DateTime.now();
+                                    //   myArticlePost = ArticlePost(
+                                    //       null,
+                                    //       title,
+                                    //       created_at,
+                                    //       content,
+                                    //       null,
+                                    //       null,
+                                    //       null,
+                                    //       null);
+                                    //   DatabaseService()
+                                    //       .addArticle(myArticlePost!);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                HomeContainerWidget()));
                                   },
                                   child: const Text('OK'),
                                 ),
@@ -161,6 +184,15 @@ class _PostAnArticleState extends State<PostAnArticle> {
             );
   }
 
+  void _convertJsonAndPushToFirebase() {
+    for (var item in DataQuestion.listDataQuestion) {
+      listArticlePost.add(ArticlePost.fromJson(jsonDecode(jsonEncode(item))));
+    }
+
+    listArticlePost.forEach((element) {
+      print(element.toString());
+    });
+  }
 
   Widget _buildContentField() {
     final maxLines = 10;
@@ -221,7 +253,7 @@ class _PostAnArticleState extends State<PostAnArticle> {
     );
   }
 
-  Widget _buildRelatedField() {  
+  Widget _buildRelatedField() {
     return Container(
       child: Row(
         children: [
