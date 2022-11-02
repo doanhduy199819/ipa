@@ -23,10 +23,19 @@ class DatabaseService with ArticlePostHandle implements CommentService {
   }
 
   @override
-  Stream<List<Comment>?> commentsFromArticle(String aricleId) {
+  Stream<List<Comment>?> commentsFromArticle(String articleId) {
+    db
+        .collection('articles')
+        .doc(articleId)
+        .collection('comments')
+        .snapshots()
+        .listen((event) {
+      print(event.docs);
+    });
+
     return db
         .collection('articles')
-        .doc(aricleId)
+        .doc(articleId)
         .collection('comments')
         .snapshots()
         .map(commentsFromQuerySnapshot);
@@ -35,9 +44,10 @@ class DatabaseService with ArticlePostHandle implements CommentService {
   @override
   List<Comment>? commentsFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-    querySnapshot.docs
-        .map((QueryDocumentSnapshot<Map<String, dynamic>> querySnapshot) {
-      if (querySnapshot.exists) return Comment.fromQuerySnapshot(querySnapshot);
+    return querySnapshot.docs
+        .map((QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists)
+        return Comment.fromQuerySnapshot(documentSnapshot);
       return Comment();
     }).toList();
   }

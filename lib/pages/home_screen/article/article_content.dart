@@ -39,9 +39,7 @@ class _ArticleContentState extends State<ArticleContent> {
             snapshot.connectionState == ConnectionState.waiting) {
           return Column(
             children: [
-              Container(
-                padding: EdgeInsets.all(16.0),
-                  width: 100, height: 100, child: CircularProgressIndicator()),
+              CircularProgressIndicator(),
             ],
           );
         }

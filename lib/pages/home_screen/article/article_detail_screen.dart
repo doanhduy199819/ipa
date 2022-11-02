@@ -34,89 +34,85 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     // get article from parent widget
     articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
     print(articlePost.id);
-    return StreamBuilder(
-        stream: DatabaseService().commentsFromArticle(articlePost.id!),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<Comment>?> snapshot) {
-          // DatabaseService()
-          //     .commentsFromArticle(articlePost.id!)
-          //     .listen((event) {
-          //   print(event);
-          // });
-
-          // set comments for this article
-          if (snapshot.hasError) return Text('Some thing went wrong :(');
-          if (snapshot.data == null ||
-              snapshot.connectionState == ConnectionState.waiting) {
-            if (snapshot.data == null) print('no data');
-            return Column(
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(40.0),
+        child: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          backgroundColor: Colors.white,
+          title: Text(
+            'Detail Article',
+            style: HomeScreenFonts.h1.copyWith(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          top: 4,
+        ),
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
               children: [
+                postOwner(articlePost),
+
+                //Content of Question
                 Container(
-                    padding: EdgeInsets.all(16.0),
-                    width: 100,
-                    height: 100,
-                    child: CircularProgressIndicator()),
-              ],
-            );
-          }
-          _loadComments(snapshot.data);
-          return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(40.0),
-              child: AppBar(
-                iconTheme: const IconThemeData(
-                  color: Colors.black,
-                ),
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Detail Article',
-                  style: HomeScreenFonts.h1.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-              ),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.only(
-                top: 4,
-              ),
-              child: Container(
-                color: Colors.white,
-                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      postOwner(articlePost),
-
-                      //Content of Question
                       Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: title(articlePost),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Text(
-                                articlePost.content! +
-                                    ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                                style: HomeScreenFonts.content,
-                              ),
-                            )
-                          ],
-                        ),
+                        padding: const EdgeInsets.only(top: 4),
+                        child: title(articlePost),
                       ),
-
-                      answersAndSortByBloc(articlePost),
-                      commentBlocColumn(articlePost),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          articlePost.content! +
+                              ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
+                          style: HomeScreenFonts.content,
+                        ),
+                      )
                     ],
                   ),
                 ),
-              ),
+                commentsPart(),
+              ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  StreamBuilder<List<Comment>?> commentsPart() {
+    return StreamBuilder(
+        stream: DatabaseService().commentsFromArticle(articlePost.id!),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<Comment>?> asyncSnapshot) {
+          if (asyncSnapshot.hasError) {
+            return Text('Something went wrong :(');
+          }
+          if (asyncSnapshot.data == null ||
+              asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return Column(
+              children: [
+                CircularProgressIndicator(),
+              ],
+            );
+          }
+          comments = asyncSnapshot.data;
+          return Column(
+            children: [
+              answersAndSortByBloc(comments),
+              commentBlocColumn(comments),
+            ],
           );
         });
+    ;
   }
 
   void _loadComments(List<Comment>? comments) {
@@ -183,12 +179,14 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget commentBlocColumn(ArticlePost articlePost) {
+  // Widget commentBlocColumn(ArticlePost articlePost) {
+  Widget commentBlocColumn(List<Comment>? comments) {
     return Column(
       children: <Widget>[
-        ...articlePost.comments!.map((item) {
-          return commentBloc(item);
-        }).toList(),
+        // ...articlePost.comments!.map((item) {
+        //   return commentBloc(item);
+        // }).toList(),
+        ...?comments?.map((comment) => commentBloc(comment)).toList()
       ],
     );
   }
@@ -376,7 +374,8 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget answersAndSortByBloc(ArticlePost articlePost) {
+  // Widget answersAndSortByBloc(ArticlePost articlePost) {
+  Widget answersAndSortByBloc(List<Comment>? comments) {
     return Container(
       height: 37,
       width: MediaQuery.of(context).size.width,
@@ -388,7 +387,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              '${articlePost.comments?.length} Comments',
+              '${comments?.length ?? 0} Comments',
               style: const TextStyle(
                 color: Color(0xff000000),
                 fontWeight: FontWeight.bold,
