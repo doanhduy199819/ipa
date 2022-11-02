@@ -141,7 +141,7 @@ class _QAContentState extends State<QAContent> {
                               const EdgeInsets.only(top: 3.0, bottom: 12.0),
                           child: Row(
                             children: [
-                              Icon(display_list_question[index].upvote! > 0
+                              Icon(display_list_question[index].upvote > 0
                                   ? Icons.arrow_upward
                                   : Icons.arrow_downward),
                               Padding(

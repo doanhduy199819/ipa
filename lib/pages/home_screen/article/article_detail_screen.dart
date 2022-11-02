@@ -184,7 +184,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0),
                       child: Text(
-                        comment.upvote!.toString(),
+                        comment.upvote.toString(),
                         style: HomeScreenFonts.upvote,
                       ),
                     ),
@@ -239,7 +239,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             height: 30,
                             child: CircleAvatar(
                               backgroundImage:
-                                  NetworkImage('${account!.avatar}'),
+                                  NetworkImage('${account.avatar}'),
                             ),
                           ),
                         ],
@@ -264,7 +264,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                     padding: const EdgeInsets.only(
                                         top: 4, bottom: 4),
                                     child: Text(
-                                      account!.name!,
+                                      account.name!,
                                       style: HomeScreenFonts.nameAccount,
                                     )),
                               ],
@@ -272,7 +272,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                             Row(
                               children: [
                                 Text(
-                                  account!.numberOfPost!.toString(),
+                                  account.numberOfPost!.toString(),
                                   style: HomeScreenFonts.numberOfPost,
                                 ),
 
@@ -290,7 +290,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      account!.numberOfGold!.toString(),
+                                      account.numberOfGold!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -304,7 +304,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      account!.numberOfSilver!.toString(),
+                                      account.numberOfSilver!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                     Container(
@@ -318,7 +318,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                       ),
                                     ),
                                     Text(
-                                      account!.numberOfBronze!.toString(),
+                                      account.numberOfBronze!.toString(),
                                       style: HomeScreenFonts.numberOfPost,
                                     ),
                                   ],

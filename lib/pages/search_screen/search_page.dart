@@ -362,7 +362,7 @@ class _SearchPageState extends State<SearchPage> {
                     Row(
                       children: [
                         for (var item
-                            in display_list_question[index].categories!)
+                            in display_list_question[index].categories)
                           Padding(
                             padding: const EdgeInsets.only(right: 3, bottom: 2),
                             child: Container(
@@ -436,7 +436,7 @@ class _SearchPageState extends State<SearchPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        display_list_question[index].created_at.toString()!,
+                        display_list_question[index].created_at.toString(),
                         style: const TextStyle(
                           fontSize: 8,
                         ),
