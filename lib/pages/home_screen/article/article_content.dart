@@ -195,7 +195,7 @@ class _ArticleContentState extends State<ArticleContent> {
         );
       },
       // childCount: _post.length,
-      childCount: 4,
+      childCount: _post.length,
     ));
   }
 }
