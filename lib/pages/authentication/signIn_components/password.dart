@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 
 class buildPassword extends StatefulWidget {
@@ -34,40 +32,42 @@ class _buildPasswordState extends State<buildPassword> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: EdgeInsets.only(left: 16.0, right: 8.0),
       decoration: boxDecoration,
-      child: Row(
-        children: [
-          passwordIcon,
-          SizedBox(
-            width: 8.0,
-          ),
-          SizedBox(
-            width: 240.0,
-            child: TextFormField(
-              decoration: InputDecoration(
+      child: Stack(alignment: Alignment.centerLeft, children: [
+        Row(
+          children: [
+            passwordIcon,
+            const SizedBox(
+              width: 8.0,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.65,
+              child: TextFormField(
+                decoration: InputDecoration(
                   hintText: hintText,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.black)),
-              style: TextStyle(color: Colors.black),
-              onChanged: widget.onChanged,
-              obscureText: isPasswordShown,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  contentPadding: const EdgeInsets.all(16.0),
+                ),
+                style: TextStyle(color: Colors.black),
+                onChanged: widget.onChanged,
+                obscureText: isPasswordShown,
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isPasswordShown = !isPasswordShown;
-                    });
-                  },
-                  icon: revealIcon),
-            ],
-          )
-        ],
-      ),
+          ],
+        ),
+        Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    isPasswordShown = !isPasswordShown;
+                  });
+                },
+                icon: revealIcon))
+      ]),
     );
   }
 }

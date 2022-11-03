@@ -19,23 +19,23 @@ class buildEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: EdgeInsets.only(left: 16.0, right: 8.0),
       decoration: boxDecoration,
       child: Row(
         children: [
           icon,
-          SizedBox(
+          const SizedBox(
             width: 8.0,
           ),
           SizedBox(
-            width: 240.0,
+            width: MediaQuery.of(context).size.width * 0.65,
             child: TextFormField(
               decoration: InputDecoration(
-                  prefixIcon: icon,
                   hintText: hintText,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(16.0),
-                  hintStyle: TextStyle(color: Colors.black)),
+                  hintStyle: TextStyle(color: Colors.grey)),
               style: TextStyle(color: Colors.black),
               onChanged: onChanged,
             ),

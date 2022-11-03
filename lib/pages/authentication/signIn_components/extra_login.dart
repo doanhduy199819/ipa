@@ -16,16 +16,14 @@ class buildExtraLoginMethods extends StatelessWidget {
           Buttons.GoogleDark,
           onPressed: () => AuthService().signInWithGoogleEmail(),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 4.0),
         SignInButton(
           Buttons.Apple,
-          padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
           onPressed: () => AuthService().signInAnonymous(),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 4.0),
         SignInButton(
           Buttons.GitHub,
-          padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
           onPressed: () => AuthService().signInAnonymous(),
         ),
       ],

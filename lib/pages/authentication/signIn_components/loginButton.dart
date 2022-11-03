@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -33,32 +34,33 @@ class _buildLoginButtonState extends State<buildLoginButton> {
             children: [
               Expanded(
                 child: Container(
-                  height: 60.0,
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                  height: 48.0,
                   child: ElevatedButton(
                     style: roundedButtonStyle,
                     onPressed: () async {
                       setState(() {
                         isLoading = true;
                       });
-                      dynamic result = await AuthService()
+                      UserCredential? result = await AuthService()
                           .signInWithEmailAndPassword(
                               widget.email, widget.password);
-                      print(
+                      debugPrint(
                           "Email: ${widget.email}', Password: '${widget.password}'");
                       setState(() {
                         isLoading = false;
                       });
-                      if (result == null) {
-                        print('no user');
-                        Fluttertoast.showToast(
-                            msg: "Your email & password are not correct",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                      }
+                      // print('Result $result');
+                      // if (result == null) {
+                      //   debugPrint('no user');
+                      //   Fluttertoast.showToast(
+                      //       msg: "Your email & password are not correct",
+                      //       toastLength: Toast.LENGTH_SHORT,
+                      //       gravity: ToastGravity.TOP,
+                      //       timeInSecForIosWeb: 1,
+                      //       textColor: Colors.white,
+                      //       fontSize: 12.0);
+                      // }
                     },
                     child: Text(
                       'Log in',

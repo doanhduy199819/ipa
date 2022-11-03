@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -38,7 +41,7 @@ class AuthService {
   }
 
   // sign in with email & pw
-  Future<User?> signInWithEmailAndPassword(email, password) async {
+  Future<UserCredential?> signInWithEmailAndPassword(email, password) async {
     try {
       UserCredential firebaseUser =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -46,14 +49,39 @@ class AuthService {
         password: password,
       );
 
-      return firebaseUser.user;
+      return firebaseUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        Fluttertoast.showToast(
+            msg: "No user found for that email.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 12.0);
+        // print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        Fluttertoast.showToast(
+            msg: "Wrong password provided for that user.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 12.0);
+        // print('Wrong password provided for that user.');
       }
     }
+  }
+
+  Future<bool> isDisplayNameExist(String displayName) async {
+    // Should be in databaseService
+    var res;
+    await FirebaseFirestore.instance
+        .collection('usernames')
+        .doc(displayName)
+        .get()
+        .then((value) => res = value.exists);
+    return res;
   }
 
   // register wit email & pw
@@ -72,6 +100,24 @@ class AuthService {
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
       }
+    }
+  }
+
+  // register wit email & pw
+  Future<User?> signUpWithDisplayName(email, password, displayName) async {
+    try {
+      if (await isDisplayNameExist(displayName)) {
+        // TODO: Throw custom Exception: Duplicate display name
+        return null;
+      }
+      return signUp(email, password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+      print(e.code);
     }
   }
 
