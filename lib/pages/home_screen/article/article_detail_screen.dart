@@ -9,6 +9,7 @@ import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
+import 'package:intl/intl.dart';
 
 class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({Key? key}) : super(key: key);
@@ -20,70 +21,88 @@ class ArticleDetailScreen extends StatefulWidget {
 class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
-  Account account = new Account(
-      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360',
-      'Nhat Tan',
-      2871,
-      100,
-      100,
-      100);
+  DateFormat formatter = DateFormat('dd-MM-yyyy');
+
+  late Account account;
   late ArticlePost articlePost;
   late List<Comment>? comments;
+  late String imageUrl;
+  late bool checkFollow;
+  void initData() {
+    checkFollow = false;
+    imageUrl =
+        'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
+    account = new Account(
+        'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        'Nhat Tan',
+        2871,
+        100,
+        100,
+        100);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initData();
+  }
+
   @override
   Widget build(BuildContext context) {
     // get article from parent widget
     articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
+    articlePost.categories = ['Mathematics', 'Java'];
     print(articlePost.id);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40.0),
         child: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.white70,
+          elevation: 0,
+          foregroundColor: Colors.black,
           title: Text(
-            'Detail Article',
+            'Detail Articles',
             style: HomeScreenFonts.h1.copyWith(
                 fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          top: 4,
-        ),
-        child: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                postOwner(articlePost),
-
-                //Content of Question
-                Container(
-                  child: Column(
+      body: Stack(
+        children: [
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 0,
+            top: 16,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  accountPart(),
+                  buildTitle(),
+                  Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: title(articlePost),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          articlePost.content! +
-                              ' The Interview Series has been started with the aim to let student practice solving programming questions constantly without a fail. The questions are designed in such a way that they imitate the actual interview questions asked during interviews. By solving these mock practice questions, you’ll get to evaluate your potential and where you’re lacking.  Through our interview series questions, you can get your concepts cleared before sitting for the actual coding interview. You can ace your interview preparation by participating in our recurring weekly Coding Interview Series which is devised in such a way that it will mimic the coding interview rounds of top product-based companies and service-based companies like Amazon, Google, Microsoft, PayTm, and many more IT tech giants. ',
-                          style: HomeScreenFonts.content,
-                        ),
-                      )
+                      postedTime(),
+                      Spacer(),
+                      listCategory(),
                     ],
                   ),
-                ),
-                commentsPart(),
-              ],
+                  SizedBox(
+                    height: 12,
+                  ),
+                  imageArticle(),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  articleContent(),
+                  commentsPart(),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -119,66 +138,6 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     articlePost.setComments(comments);
   }
 
-  Widget postOwner(ArticlePost articlePost) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage('${account.avatar}'),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${account.name}',
-                style: TextStyle(
-                    color: Color(0xff00BE2A),
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${articlePost.created_at.toString()}',
-                style: TextStyle(
-                  fontSize: 10,
-                ),
-              ),
-            ],
-          ),
-          Spacer(),
-          Column(
-            children: [
-              Icon(
-                Icons.favorite_outline,
-                color: Colors.red,
-              ),
-              Text(
-                '${articlePost.liked_users?.length}',
-                style: TextStyle(
-                  fontSize: 10,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Icon(
-            Icons.bookmark_border,
-            color: Colors.blue,
-            size: 24,
-          ),
-        ],
-      ),
-    );
-  }
-
   // Widget commentBlocColumn(ArticlePost articlePost) {
   Widget commentBlocColumn(List<Comment>? comments) {
     return Column(
@@ -196,9 +155,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       // color: Colors.white,
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(
-          bottom: BorderSide(width: 0.6),
-        ),
+        border: Border(),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,19 +408,161 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget title(ArticlePost articlePost) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+  Row accountPart() {
+    return Row(
       children: [
-        //Title
-        Container(
-          padding: const EdgeInsets.only(top: 2, bottom: 4),
-          child: Text(
-            articlePost.title!,
-            style: HomeScreenFonts.titleArticle,
-          ),
+        CircleAvatar(
+          radius: 24,
+          backgroundImage: NetworkImage(account.avatar!),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Column(
+          children: [
+            Text(
+              account.name!,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {
+              checkFollow = !checkFollow;
+            });
+          },
+          child: checkFollow == false
+              ? Container(
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 3,
+                    vertical: 7,
+                  ),
+                  child: Text(
+                    'Follow',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                )
+              : Container(
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 3,
+                    vertical: 7,
+                  ),
+                  child: Text(
+                    'Followed',
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ),
+        ),
+        const Spacer(),
+        Icon(
+          Icons.favorite,
+          color: Colors.red,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Text(
+          articlePost.liked_users == null
+              ? '0'
+              : articlePost.liked_users!.length.toString(),
+          style: TextStyle(fontSize: 12),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.bookmark_add_outlined),
         ),
       ],
+    );
+  }
+
+  Padding buildTitle() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        articlePost.title!,
+        style:
+            TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 1.6),
+      ),
+    );
+  }
+
+  Text postedTime() {
+    return Text(
+      'posted on ' + formatter.format(articlePost.created_at!),
+      style: TextStyle(
+        color: Colors.grey,
+      ),
+    );
+  }
+
+  Row listCategory() {
+    return Row(
+        children: List.generate(articlePost.categories!.length, (index) {
+      return Container(
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Center(
+                child: Text(articlePost.categories![index]),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+          ],
+        ),
+      );
+    }));
+  }
+
+  Container imageArticle() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      height: 160,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        image: DecorationImage(
+          image: NetworkImage(
+            imageUrl,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Text articleContent() {
+    return Text(
+      articlePost.content!,
+      style: TextStyle(
+          fontSize: 12,
+          height: 1.6,
+          fontWeight: FontWeight.w400,
+          fontFamily: FontFamily.urbanist),
     );
   }
 }
