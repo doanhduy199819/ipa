@@ -31,17 +31,19 @@ class _ArticleContentState extends State<ArticleContent> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseService().getArticlesList(),
+      future: DatabaseService().allArticlesOnce,
       builder:
           (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('Something went wrong :(');
         }
-        if (snapshot.data == null) {
-          return Text('This list is null');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+        if (snapshot.data == null ||
+            snapshot.connectionState == ConnectionState.waiting) {
+          return Column(
+            children: [
+              CircularProgressIndicator(),
+            ],
+          );
         }
         _post = snapshot.data! as List<ArticlePost>;
         return Container(
@@ -93,30 +95,33 @@ class _ArticleContentState extends State<ArticleContent> {
   ListView _buildListViewContent() {
     return ListView.custom(
         childrenDelegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-            return InkWell(
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       fullscreenDialog: false,
-              //       builder: (context) => const ArticleDetailScreen(),
-              //       settings: RouteSettings(
-              //         arguments: _post[index],
-              //       ),
-              //     ),
-              //   );
-              // },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 5),
-                decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                    blurRadius: 2,
-                    offset: Offset(0.0, 3),
-                    color: Colors.grey,
-                  ),
-                ]),
-                child: Row(
+      (BuildContext context, int index) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                fullscreenDialog: false,
+                builder: (context) => const ArticleDetailScreen(),
+                settings: RouteSettings(
+                  arguments: _post[index],
+                ),
+              ),
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 5),
+            decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                blurRadius: 2,
+                offset: Offset(0.0, 3),
+                color: Colors.grey,
+              ),
+            ]),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
                       children: [
@@ -124,7 +129,8 @@ class _ArticleContentState extends State<ArticleContent> {
                           padding: EdgeInsets.all(5),
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.15,
-                            height: MediaQuery.of(context).size.width * 0.15-20,
+                            height:
+                                MediaQuery.of(context).size.width * 0.15 - 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -146,8 +152,7 @@ class _ArticleContentState extends State<ArticleContent> {
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -163,7 +168,6 @@ class _ArticleContentState extends State<ArticleContent> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.8,
-
                           padding: const EdgeInsets.only(bottom: 5, left: 10),
                           child: RichText(
                             maxLines: 2,
@@ -197,12 +201,16 @@ class _ArticleContentState extends State<ArticleContent> {
                                     width: 5,
                                   ),
                                   Text(
-                                    _post[index].liked_users?.length.toString() ==
-                                        null
+                                    _post[index]
+                                                .liked_users
+                                                ?.length
+                                                .toString() ==
+                                            null
                                         ? '0 like'
                                         : '${_post[index].liked_users?.length.toString()} likes',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold, fontSize: 10),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10),
                                   )
                                 ],
                               ),
@@ -226,11 +234,15 @@ class _ArticleContentState extends State<ArticleContent> {
                     ),
                   ],
                 ),
-              ),
-            );
-          },
-          // childCount: _post.length,
-          childCount: _post.length,
-        ));
+                const SizedBox(
+                  width: 15,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      childCount: _post.length,
+    ));
   }
 }

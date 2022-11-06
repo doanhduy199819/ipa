@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
@@ -50,6 +51,8 @@ class ArticlePost {
 
   void setAuthorId(String? id) => author_id = id;
 
+  void setComments(List<Comment>? comments) => this.comments = comments;
+
   factory ArticlePost.fromJson(Map<String, dynamic>? data) {
     final String? id = data?['id'];
     final String? title = data?['title'];
@@ -59,7 +62,7 @@ class ArticlePost {
     // final DateTime created_at =
     //     formatter.parse(date_string_created ?? '1/1/2001');
     final DateTime created_at =
-        DateTime.parse(date_string_created ?? DateTime.utc(2001,1,1).toString());
+        DateTime.parse(date_string_created ?? DateTime.utc(2001, 1, 1).toString());
 
     final String? content = data?['content'];
     final List<String>? categories =
@@ -68,11 +71,17 @@ class ArticlePost {
     final List<String>? liked_users = data?['liked_users'] is Iterable
         ? List.from(data?['liked_users'])
         : null;
+
     final List<Comment>? comments =
         data?['comments'] is Iterable ? List.from(data?['comments']) : null;
 
     return ArticlePost(id, title, created_at, content, categories, author_id,
         liked_users, comments);
+  }
+
+  factory ArticlePost.fromDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+    return ArticlePost.fromJson(documentSnapshot.data());
   }
 
   Map<String, dynamic> toJson() => {
@@ -121,11 +130,5 @@ class ArticlePost {
         listComment));
 
     return _post;
-    // await DatabaseService().getArticlesList().then((value) {
-    //   _post2 = value;
-    //   print(_post2);
-    // });
-    // return _post2 ?? _post;
-    // return DatabaseService().getArticlesList() ?? _post;
   }
 }

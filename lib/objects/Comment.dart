@@ -1,3 +1,5 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,7 @@ class Comment {
   final DateTime? created_at;
   List<String>? upvote_users;
   List<String>? downvote_users;
-  bool is_accepted;
+  bool? is_accepted;
 
   Comment({
     this.id,
@@ -31,7 +33,7 @@ class Comment {
     final List<String>? downvote_users = data?['downvote_users'] is Iterable
         ? List.from(data?['downvote_users'])
         : null;
-    final bool is_accepted = data?['is_accepted'];
+    final bool? is_accepted = data?['is_accepted'];
 
     final String? date_string_created = data?['created_at'] as String?;
     // DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -47,6 +49,11 @@ class Comment {
         upvote_users: upvote_users,
         downvote_users: downvote_users,
         is_accepted: is_accepted);
+  }
+
+  factory Comment.fromQuerySnapshot(
+      QueryDocumentSnapshot<Map<String, dynamic>> queryDocumentSnapshot) {
+    return Comment.fromJson(queryDocumentSnapshot.data());
   }
 
   Map<String, dynamic> toJson() => {

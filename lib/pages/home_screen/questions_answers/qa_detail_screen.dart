@@ -230,7 +230,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    comment.is_accepted
+                    comment.is_accepted ?? false
                         ? const Icon(
                             Icons.beenhere,
                             color: Colors.green,

@@ -5,6 +5,7 @@ import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
@@ -26,10 +27,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       100,
       100,
       100);
+  late ArticlePost articlePost;
+  late List<Comment>? comments;
   @override
   Widget build(BuildContext context) {
-    final ArticlePost articlePost =
-        ModalRoute.of(context)!.settings.arguments as ArticlePost;
+    // get article from parent widget
+    articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
+    print(articlePost.id);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40.0),
@@ -75,15 +79,44 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                     ],
                   ),
                 ),
-
-                answersAndSortByBloc(articlePost),
-                commentBlocColumn(articlePost),
+                commentsPart(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  StreamBuilder<List<Comment>?> commentsPart() {
+    return StreamBuilder(
+        stream: DatabaseService().commentsFromArticle(articlePost.id!),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<Comment>?> asyncSnapshot) {
+          if (asyncSnapshot.hasError) {
+            return Text('Something went wrong :(');
+          }
+          if (asyncSnapshot.data == null ||
+              asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return Column(
+              children: [
+                CircularProgressIndicator(),
+              ],
+            );
+          }
+          comments = asyncSnapshot.data;
+          return Column(
+            children: [
+              answersAndSortByBloc(comments),
+              commentBlocColumn(comments),
+            ],
+          );
+        });
+    ;
+  }
+
+  void _loadComments(List<Comment>? comments) {
+    articlePost.setComments(comments);
   }
 
   Widget postOwner(ArticlePost articlePost) {
@@ -146,12 +179,14 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget commentBlocColumn(ArticlePost articlePost) {
+  // Widget commentBlocColumn(ArticlePost articlePost) {
+  Widget commentBlocColumn(List<Comment>? comments) {
     return Column(
       children: <Widget>[
-        ...articlePost.comments!.map((item) {
-          return commentBloc(item);
-        }).toList(),
+        // ...articlePost.comments!.map((item) {
+        //   return commentBloc(item);
+        // }).toList(),
+        ...?comments?.map((comment) => commentBloc(comment)).toList()
       ],
     );
   }
@@ -339,7 +374,8 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Widget answersAndSortByBloc(ArticlePost articlePost) {
+  // Widget answersAndSortByBloc(ArticlePost articlePost) {
+  Widget answersAndSortByBloc(List<Comment>? comments) {
     return Container(
       height: 37,
       width: MediaQuery.of(context).size.width,
@@ -351,7 +387,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           Container(
             margin: const EdgeInsets.only(left: 10),
             child: Text(
-              '${articlePost.comments?.length} Comments',
+              '${comments?.length ?? 0} Comments',
               style: const TextStyle(
                 color: Color(0xff000000),
                 fontWeight: FontWeight.bold,

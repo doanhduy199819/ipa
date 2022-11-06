@@ -28,7 +28,6 @@ class _buildLoginButtonState extends State<buildLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuild log in');
     return !isLoading
         ? Row(
             children: [
@@ -50,17 +49,6 @@ class _buildLoginButtonState extends State<buildLoginButton> {
                       setState(() {
                         isLoading = false;
                       });
-                      // print('Result $result');
-                      // if (result == null) {
-                      //   debugPrint('no user');
-                      //   Fluttertoast.showToast(
-                      //       msg: "Your email & password are not correct",
-                      //       toastLength: Toast.LENGTH_SHORT,
-                      //       gravity: ToastGravity.TOP,
-                      //       timeInSecForIosWeb: 1,
-                      //       textColor: Colors.white,
-                      //       fontSize: 12.0);
-                      // }
                     },
                     child: Text(
                       'Log in',
@@ -74,6 +62,6 @@ class _buildLoginButtonState extends State<buildLoginButton> {
               ),
             ],
           )
-        : CircularProgressIndicator();
+        : Center(child: CircularProgressIndicator());
   }
 }
