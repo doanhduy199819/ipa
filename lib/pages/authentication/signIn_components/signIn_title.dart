@@ -7,8 +7,9 @@ class buildSignInTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 48),
         child: const Text(
           'SIGN IN',
           style: TextStyle(

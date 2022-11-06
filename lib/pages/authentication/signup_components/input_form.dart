@@ -48,6 +48,7 @@ class InputFormWidget extends StatelessWidget {
           onChanged: onChanged,
           validator: validator,
           onEditingComplete: onEditingComplete,
+          textInputAction: TextInputAction.next,
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/CustomFirebaseAuthException.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -92,32 +93,42 @@ class AuthService {
         email: email,
         password: password,
       );
-
+      if (firebaseUser.user != null) {
+        Fluttertoast.showToast(msg: 'Sign up successfully');
+      }
       return firebaseUser.user;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      _handleAuthExceptionCode(e.code);
     }
   }
 
-  // register wit email & pw
+  // register wit email & pw & displayName
   Future<User?> signUpWithDisplayName(email, password, displayName) async {
     try {
       if (await isDisplayNameExist(displayName)) {
-        // TODO: Throw custom Exception: Duplicate display name
-        return null;
+        throw CustomFirebaseAuthException(
+            CustomFirebaseAuthException.DUPLICATE_DISPLAY_NAME);
       }
       return signUp(email, password);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-      print(e.code);
+    } on CustomFirebaseAuthException catch (e) {
+      _handleAuthExceptionCode(e.code);
+    }
+  }
+
+  String _friendlyMessage(String code) {
+    switch (code) {
+      case CustomFirebaseAuthException.DUPLICATE_DISPLAY_NAME:
+        return 'Your display name has exists, try another';
+      case CustomFirebaseAuthException.EMAIL_ALREADY_IN_USE:
+        return 'Your email has been used, try another';
+      case CustomFirebaseAuthException.INVALID_EMAIL:
+        return 'Your email is invalid, try another';
+      case CustomFirebaseAuthException.WEAK_PASSWORD:
+        return 'Your is too weak, try another';
+      case CustomFirebaseAuthException.OPERATION_NOT_ALLOWED:
+        return 'Sorry, your operation is denied';
+      default:
+        return 'Something went wrong';
     }
   }
 
@@ -139,5 +150,22 @@ class AuthService {
       idToken: googleAuth?.idToken,
     );
     return await _auth.signInWithCredential(credential);
+  }
+
+  // This function show a toast about FirebaseAuthException
+  void _showAuthExceptionToast(String code) {
+    debugPrint(code);
+    Fluttertoast.showToast(
+        msg: _friendlyMessage(code),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        textColor: Colors.white,
+        fontSize: 12.0);
+  }
+
+  void _handleAuthExceptionCode(String code) {
+    _showAuthExceptionToast(code);
+    debugPrint(code);
   }
 }

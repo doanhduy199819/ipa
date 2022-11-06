@@ -41,48 +41,48 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/signIn_background.jpg"),
-            fit: BoxFit.cover,
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/signIn_background.jpg"),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const buildSignInTitle(),
-              buildEmail(
-                mainColor: mainColor,
-                onChanged: (val) => setState(() => email = val ?? ''),
-              ),
-              const SizedBox(height: 16.0),
-              buildPassword(
-                mainColor: mainColor,
-                onChanged: (val) => setState(() => password = val ?? ''),
-              ),
-              const buildForgotPassword(),
-              buildLoginButton(
-                email: email,
-                password: password,
-              ),
-              const SizedBox(height: 16.0),
-              const Center(
-                  child: Text('OR', style: TextStyle(color: Colors.white))),
-              const SizedBox(height: 16.0),
-              const Center(
-                  child: Text('Login With',
-                      style: TextStyle(fontSize: 12.0, color: Colors.white))),
-              const SizedBox(height: 16.0),
-              const buildExtraLoginMethods(),
-              const SizedBox(height: 16.0),
-              const buildDontHaveAccount(),
-              Container(
-                color: Colors.amber,
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                const buildSignInTitle(),
+                buildEmail(
+                  mainColor: mainColor,
+                  onChanged: (val) => setState(() => email = val ?? ''),
+                ),
+                const SizedBox(height: 16.0),
+                buildPassword(
+                    mainColor: mainColor,
+                    onChanged: (val) => setState(() => password = val ?? '')),
+                const buildForgotPassword(),
+                buildLoginButton(
+                  email: email,
+                  password: password,
+                ),
+                const SizedBox(height: 16.0),
+                const Center(
+                    child: Text('OR', style: TextStyle(color: Colors.white))),
+                const SizedBox(height: 16.0),
+                const Center(
+                    child: Text('Login With',
+                        style: TextStyle(fontSize: 12.0, color: Colors.white))),
+                const SizedBox(height: 16.0),
+                const buildExtraLoginMethods(),
+                const SizedBox(height: 16.0),
+                const buildDontHaveAccount(),
+                Container(
+                  color: Colors.amber,
+                ),
+              ],
+            ),
           ),
         ),
       ),

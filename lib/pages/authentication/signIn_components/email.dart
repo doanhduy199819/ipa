@@ -20,7 +20,11 @@ class buildEmail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 16.0, right: 16.0),
-      padding: EdgeInsets.only(left: 16.0, right: 8.0),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 8.0,
+        // bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       decoration: boxDecoration,
       child: Row(
         children: [

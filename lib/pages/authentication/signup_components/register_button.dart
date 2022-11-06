@@ -57,24 +57,7 @@ class _buildRegisterButtonState extends State<buildRegisterButton> {
                       setState(() {
                         isLoading = false;
                       });
-                      if (result == null) {
-                        debugPrint('no user');
-                        Fluttertoast.showToast(
-                            msg: "Sign up failed",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.TOP,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            fontSize: 12.0);
-                      } else {
-                        debugPrint('user signed up completed');
-                        Fluttertoast.showToast(
-                            msg: "Sign up successfully",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.TOP,
-                            timeInSecForIosWeb: 1,
-                            textColor: Colors.white,
-                            fontSize: 12.0);
+                      if (result != null) {
                         Navigator.pop(context);
                       }
                     },
