@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:intl/intl.dart';
