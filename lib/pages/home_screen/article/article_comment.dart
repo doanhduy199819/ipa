@@ -73,6 +73,9 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
         children: [
           Container(
               child: TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                minLines: 1,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Comment here!',

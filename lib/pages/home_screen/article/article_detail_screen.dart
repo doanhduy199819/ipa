@@ -192,7 +192,6 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                   buildTitle(),
                   Row(
                     children: [
-                      postedTime(),
                       Spacer(),
                       listCategory(),
                     ],
@@ -227,14 +226,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     );
   }
 
-  Text postedTime() {
-    return Text(
-      'posted on ' + formatter.format(articlePost.created_at!),
-      style: TextStyle(
-        color: Colors.grey,
-      ),
-    );
-  }
+
 
   Row listCategory() {
     return Row(
