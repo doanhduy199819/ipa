@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
+import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
 import '../../objects/Questions.dart';
@@ -14,9 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
-  List<Question> display_list_question = List.from(Question.getSampleQuestion());
+  List<Question> display_list_question =
+      List.from(Question.getSampleQuestion());
 
-  @override
+  // @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -26,89 +31,72 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
+      appBar: _buildAppBar(),
+      backgroundColor: Color.fromARGB(255, 233, 240, 243),
       body: Column(
+        //list articles post
         children: [
           Expanded(
-            flex: 2,
-            child: _buildTopBanner(), // Extract to method for short code
-          ),
-          Expanded(
             flex: 1,
-            child: _buildTabView(),
+            child: _buildMenu(), // Extract to method for short code
           ),
-          // Expanded(child: Container(color: Colors.pink.shade200), flex: 7)
           Expanded(
-            child: isArticleTab ? ArticleContent() : QAContent(),
-            flex: 7,
+            child: ArticleContent(),
+            flex: 9,
           )
         ],
       ),
     );
   }
 
-  Row _buildTopBanner() {
-    return Row(
-      children: [
-        Expanded(
-          child: Image.asset(
-            HomeScreenAssets.banner,
-            fit: BoxFit.fitWidth,
-          ),
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text('Home'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.notifications),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(Icons.person),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfilePage()));
+          },
         ),
       ],
     );
   }
 
-  Widget _buildTabView() {
-    // Change name
-    return DefaultTabController(
-      length: 2,
-      child: Material(
-        color: HomeScreenColors.primaryColor,
-        child: TabBar(
-          onTap: (index) {
-            onTapHandle(index);
-          },
-          indicatorColor: const Color(0xffF0B10E),
-          indicatorWeight: 5,
-          tabs: const [
-            Tab(
-              child: Text(
-                'Articles',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Tab(
-              child: Text(
-                'Questions & Answers',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Row _buildMenu() {
+    return Row(children: [
+      _cardCategory('+'),
+      _cardCategory('All'),
+      _cardCategory('Popular'),
+      _cardCategory('For you'),
+      _cardCategory('Algorithm'),
+    ]);
   }
 
-  void onTapHandle(int index) {
-    setState(() {
-      {
-        // ignore: avoid_print
-        print('Index: $index , isArticleTab: $isArticleTab');
-        if (index != 0) {
-          isArticleTab = false;
-        } else {
-          isArticleTab = true;
-        }
-      }
-    });
+  Card _cardCategory(String string) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      //color: Colors.cyanAccent[100],//after tab this card
+      color: Colors.grey[300],
+      elevation: 2,
+      child: FlatButton(
+        child: Text(
+          '${string}',
+          style: TextStyle(fontSize: 14),
+          textWidthBasis: TextWidthBasis.parent,
+        ),
+        minWidth: double.minPositive,
+        onPressed: () {
+          //do something
+        },
+      ),
+    );
   }
 }
