@@ -60,18 +60,6 @@ class _ArticleContentState extends State<ArticleContent> {
     _post = ArticlePost.getSampleArticlePostList();
   }
 
-  Row _buildTitle() {
-    return Row(
-      children: const [
-        Text(
-          'Articles',
-          style: TextStyle(
-              color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
-  }
-
   ListView _buildListViewContent() {
     return ListView.custom(
         childrenDelegate: SliverChildBuilderDelegate(
@@ -90,6 +78,7 @@ class _ArticleContentState extends State<ArticleContent> {
             );
           },
           child: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             margin: const EdgeInsets.only(bottom: 5),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
@@ -116,14 +105,13 @@ class _ArticleContentState extends State<ArticleContent> {
                                     Icon(
                                       Icons.person,
                                       color: Colors.grey,
-                                      size: 16,
+                                      size: 14,
                                     ),
                                     RichText(
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       text: TextSpan(
                                         text: _post[index].author_id,
-                                        // text: 'a',
                                         style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 10,
@@ -192,7 +180,7 @@ class _ArticleContentState extends State<ArticleContent> {
                           Icon(
                             Icons.timelapse,
                             color: Colors.grey,
-                            size: 18,
+                            size: 14,
                           ),
                           RichText(
                             text: TextSpan(
@@ -201,7 +189,7 @@ class _ArticleContentState extends State<ArticleContent> {
                               // text: 'a',
                               style: const TextStyle(
                                 color: Colors.black,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                             ),
                           ),
