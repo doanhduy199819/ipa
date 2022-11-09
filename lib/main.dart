@@ -45,5 +45,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
       ),
     );
+    // return Scaffold(
+    //   body: Profile(userProfile: AuthService().userProfileObj),
+    // );
   }
 }

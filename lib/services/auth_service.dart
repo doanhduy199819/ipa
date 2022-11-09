@@ -26,7 +26,7 @@ class AuthService {
   // }
 
   // Custom stream from firebase authStateStream
-  Stream<User?>? get user {
+  Stream<User?> get user {
     return _auth.authStateChanges();
   }
 

@@ -20,10 +20,6 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
   Widget _getBodyWidget(int index) {
     if (index == 0) {
       return HomePage();
-      // return SafeArea(
-      //     child: Container(
-      //   child: Text('This is article and q&a screen'),
-      // ));
     } else if (index == 1) {
       return SearchPage();
     } else if (index == 2) {
