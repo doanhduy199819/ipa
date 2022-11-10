@@ -7,7 +7,7 @@ import '../../../objects/Comment.dart';
 
 class ArticleCommentPart extends StatefulWidget {
   String id;
-  ArticleCommentPart({Key? key,required this.id}) : super(key: key);
+  ArticleCommentPart({Key? key, required this.id}) : super(key: key);
 
   @override
   State<ArticleCommentPart> createState() => _ArticleCommentPartState();
@@ -17,6 +17,9 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
   late List<Comment>? comments;
   late Account account;
   DateFormat formatter = DateFormat('dd-MM-yyyy');
+  String commentContent = "";
+  final _formKey = GlobalKey<FormState>();
+  final _controller = TextEditingController();
 
   @override
   void initState() {
@@ -30,11 +33,11 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
-        stream: DatabaseService().commentsFromArticle(this.widget.id),
+        stream: DatabaseService().commentsFromArticle(widget.id),
         builder: (BuildContext context,
             AsyncSnapshot<List<Comment>?> asyncSnapshot) {
           if (asyncSnapshot.hasError) {
@@ -58,21 +61,21 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
               commentBox(comments),
               Divider(),
               commentBlocColumn(comments),
-
-
             ],
           );
         });
   }
 
-  Container commentBox(List<Comment>? comments)
-  {
+  Container commentBox(List<Comment>? comments) {
     print('hechhc');
     return Container(
       child: Column(
         children: [
           Container(
-              child: TextField(
+            child: Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _controller,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 minLines: 1,
@@ -80,27 +83,40 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                   border: OutlineInputBorder(),
                   hintText: 'Comment here!',
                 ),
+                validator: (value) {
+                  if (value == null || value.length < 1) {
+                    return 'Nothing to comment';
+                  }
+                },
+                onChanged: (value) => commentContent = value,
                 autofocus: false,
-              )),
+              ),
+            ),
+          ),
           Row(
             children: [
               Spacer(),
-              Container(
-                  width: 70  ,
-                  child: FlatButton(
-                    child: Text(
-                      'Send',
-                    ),
-                    color: Colors.blueAccent,
-                    textColor: Colors.white,
-                    onPressed: () {},
-                  )),
+              FlatButton(
+                child: Text(
+                  'Send',
+                ),
+                color: Colors.blueAccent,
+                textColor: Colors.white,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    debugPrint('Sent comment button is pressed');
+                    _sendComment(commentContent);
+                    _clearCommentContent();
+                  }
+                },
+              ),
             ],
           )
         ],
       ),
     );
   }
+
   Container headingComment(List<Comment>? comments) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -122,21 +138,30 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                   ),
                   child: Row(
                     children: [
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Text(
                         comments == null ? '0' : comments!.length.toString(),
                         style: TextStyle(color: Colors.white, fontSize: 10),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                     ],
-                  )
-              ))
+                  )))
         ],
       ),
     );
   }
 
+  void _sendComment(String content) {
+    DatabaseService().addCommentToArticle(content, widget.id);
+  }
 
+  void _clearCommentContent() {
+    _controller.clear();
+  }
 
   Widget commentBlocColumn(List<Comment>? comments) {
     return Column(
@@ -149,38 +174,44 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     );
   }
 
-
   Widget commentBloc(Comment comment) {
     return Column(
       children: [
         Row(
-
           children: [
             Container(
               width: 30,
               height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(image: NetworkImage(account.avatar!),fit: BoxFit.fill),
-
+                image: DecorationImage(
+                    image: NetworkImage(account.avatar!), fit: BoxFit.fill),
               ),
             ),
-            SizedBox(width: 5,),
-            Text(account.name!,style: TextStyle(
-                fontWeight: FontWeight.w500
-            ),),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              account.name!,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
             Spacer(),
             Icon(Icons.more_horiz)
           ],
         ),
-        SizedBox(height: 5,),
-        Text(comment.content!,
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          comment.content!,
           style: TextStyle(
               fontWeight: FontWeight.w400,
               color: Colors.grey.shade700,
-              fontSize: 12
-          ),),
-        SizedBox(height: 5,),
+              fontSize: 12),
+        ),
+        SizedBox(
+          height: 5,
+        ),
         Row(
           children: [
             Icon(
@@ -190,31 +221,36 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
             SizedBox(
               width: 5,
             ),
-            Text(comment!.upvote.toString(),
-              style: TextStyle(
-                  fontSize: 10
-              ),
+            Text(
+              comment!.upvote.toString(),
+              style: TextStyle(fontSize: 10),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             Container(
               color: Colors.grey,
               height: 15,
-              width: 1  ,
+              width: 1,
             ),
-            SizedBox(width: 5,),
-            Text('Reply',
-              style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold
-              ),
+            SizedBox(
+              width: 5,
             ),
-            SizedBox(width: 5,),
+            Text(
+              'Reply',
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              width: 5,
+            ),
             Container(
               color: Colors.grey,
               height: 15,
-              width: 1  ,
+              width: 1,
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             Text(
               formatter.format(comment.created_at!),
               style: TextStyle(
@@ -226,9 +262,6 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
         ),
         Divider(),
       ],
-
     );
   }
-
-
 }
