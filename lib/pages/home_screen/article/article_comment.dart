@@ -55,7 +55,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
           comments = asyncSnapshot.data;
           return Column(
             children: [
-              headingComment(comments),
+              headingComment(),
               SizedBox(
                 height: 10,
               ),
@@ -120,45 +120,32 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     );
   }
 
-  Row headingComment(List<Comment>? comments) {
-    return Row(
-      children: [
-        Container(
-          width: 200,
-          child: Stack(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Comments',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-              Positioned(
-                  left: 85,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            comments == null ? '0' : comments!.length.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      )))
-            ],
+  Widget headingComment() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.centerLeft,
+        children: [
+          const Text(
+            'Comments',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
           ),
-        )
-      ],
+          Positioned(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Text(comments?.length.toString() ?? '0',
+                  style: TextStyle(color: Colors.white, fontSize: 12)),
+            ),
+            top: -4,
+            right: -20,
+          )
+        ],
+      ),
     );
   }
 
