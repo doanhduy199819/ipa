@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +13,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/article/article_
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 
 class ArticleContent extends StatefulWidget {
   const ArticleContent({Key? key}) : super(key: key);
@@ -25,6 +29,8 @@ class _ArticleContentState extends State<ArticleContent> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final bool like_check = false;
+    final bool bookmard_check = false;
     // _initSampleData();
   }
 
@@ -48,48 +54,14 @@ class _ArticleContentState extends State<ArticleContent> {
         _post = snapshot.data! as List<ArticlePost>;
         return Container(
           padding: EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: _buildTitle(),
-              ),
-              Expanded(
-                flex: 7,
-                child: _buildListViewContent(),
-              ),
-            ],
-          ),
+          child: _buildListViewContent(),
         );
-        // return ListView(
-        //   children: snapshot.data!.map((ArticlePost? articlePost) {
-        //     return ListTile(
-        //       title: Text(
-        //         articlePost?.title ?? 'null',
-        //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-        //       ),
-        //       subtitle: Text(articlePost?.content ?? 'null'),
-        //     );
-        //   }).toList(),
-        // );
       },
     );
   }
 
   void _initSampleData() {
     _post = ArticlePost.getSampleArticlePostList();
-  }
-
-  Row _buildTitle() {
-    return Row(
-      children: const [
-        Text(
-          'Popular articles',
-          style: TextStyle(
-              color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
   }
 
   ListView _buildListViewContent() {
@@ -110,64 +82,52 @@ class _ArticleContentState extends State<ArticleContent> {
             );
           },
           child: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             margin: const EdgeInsets.only(bottom: 5),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
-                blurRadius: 2,
+                blurRadius: 1,
                 offset: Offset(0.0, 3),
                 color: Colors.grey,
               ),
             ]),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
                     Column(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            height:
-                                MediaQuery.of(context).size.width * 0.15 - 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                padding:
+                                    const EdgeInsets.only(bottom: 5, left: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                      size: 14,
+                                    ),
+                                    RichText(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(
+                                        text: _post[index].author_id,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w100),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          ],
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          child: Center(
-                            child: RichText(
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              text: TextSpan(
-                                text: 'Nhat Tan',
-                                // text: 'a',
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
+                          width: MediaQuery.of(context).size.width * 0.65,
                           padding: const EdgeInsets.only(bottom: 5, left: 10),
                           child: RichText(
                             maxLines: 2,
@@ -176,73 +136,108 @@ class _ArticleContentState extends State<ArticleContent> {
                               text: _post[index].title,
                               // text: 'a',
                               style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.78,
-                          padding: const EdgeInsets.only(bottom: 5, left: 10),
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                    size: 20,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    _post[index]
-                                                .liked_users
-                                                ?.length
-                                                .toString() ==
-                                            null
-                                        ? '0 like'
-                                        : '${_post[index].liked_users?.length.toString()} likes',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10),
-                                  )
-                                ],
+                          padding: const EdgeInsets.only(left: 10, bottom: 3),
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: RichText(
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: _post[index].content,
+                              // text: 'a',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
                               ),
-                              Spacer(),
-                              Row(
-                                children: [
-                                  Icon(Icons.schedule, size: 20),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    formatter.format(_post[index].created_at!),
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
+                    //Spacer(),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Image(
+                      image: NetworkImage(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhthE22spXytCuZqX6_MiwxI16wlJV-03UA&usqp=CAU'),
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      //                    height: MediaQuery.of(context).size.height * 0.20,
+                    ),
                   ],
                 ),
-                const SizedBox(
-                  width: 15,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 20, bottom: 3),
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.timelapse,
+                            color: Colors.grey,
+                            size: 14,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              text: ' ' +
+                                  _calculatorDateAgo(_post[index].created_at),
+                              // text: 'a',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.favorite_rounded,
+                        size: 21,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {},
+                    ),
+                    Text(_buildLike(_post[index].liked_users?.length)),
+                    IconButton(
+                      icon: Icon(
+                        Icons.bookmark,
+                        size: 21,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {},
+                    ),
+                    SizedBox(
+                      width: 10,
+                    )
+                  ],
                 ),
               ],
             ),
           ),
         );
       },
+      // childCount: _post.length,
       childCount: _post.length,
     ));
+  }
+
+  String _calculatorDateAgo(DateTime? dt) {
+    return Jiffy(dt).fromNow();
+  }
+
+  String _buildLike(int? sl) {
+    return sl == null ? '0 like' : '${sl} likes';
   }
 }

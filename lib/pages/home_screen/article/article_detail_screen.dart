@@ -15,34 +15,36 @@ import 'package:intl/intl.dart';
 class AccountPart extends StatefulWidget {
   Account account;
   ArticlePost articlePost;
-  AccountPart({Key? key,required this.account,required this.articlePost}) : super(key: key);
+  AccountPart({Key? key, required this.account, required this.articlePost})
+      : super(key: key);
 
   @override
   State<AccountPart> createState() => _AccountPartState();
 }
 
 class _AccountPartState extends State<AccountPart> {
-
   late bool checkFollow;
   void initData() {
     checkFollow = false;
   }
+
   @override
   void initState() {
     // TODO: implement initState
     initData();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CircleAvatar(
-          radius: 24,
+          // radius: 24,
           backgroundImage: NetworkImage(widget.account.avatar!),
         ),
         const SizedBox(
-          width: 5,
+          width: 8,
         ),
         Column(
           children: [
@@ -56,7 +58,7 @@ class _AccountPartState extends State<AccountPart> {
           ],
         ),
         SizedBox(
-          width: 5,
+          width: 8,
         ),
         InkWell(
           onTap: () {
@@ -66,35 +68,33 @@ class _AccountPartState extends State<AccountPart> {
           },
           child: checkFollow == false
               ? Container(
-            height: 25,
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 3,
-              vertical: 7,
-            ),
-            child: Text(
-              'Follow',
-              style: TextStyle(color: Colors.white, fontSize: 10),
-            ),
-          )
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    'Follow',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                )
               : Container(
-            height: 25,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 3,
-              vertical: 7,
-            ),
-            child: Text(
-              'Followed',
-              style: TextStyle(color: Colors.black, fontSize: 10),
-            ),
-          ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    'Followed',
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ),
         ),
         const Spacer(),
         Icon(
@@ -102,7 +102,7 @@ class _AccountPartState extends State<AccountPart> {
           color: Colors.red,
         ),
         SizedBox(
-          width: 5,
+          width: 4,
         ),
         Text(
           widget.articlePost.liked_users == null
@@ -139,7 +139,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   void initData() {
     checkFollow = false;
     imageUrl =
-    'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
+        'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
     account = new Account(
         'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         'Nhat Tan',
@@ -192,7 +192,6 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                   buildTitle(),
                   Row(
                     children: [
-                      postedTime(),
                       Spacer(),
                       listCategory(),
                     ],
@@ -202,11 +201,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                   ),
                   imageArticle(),
                   articleContent(),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   //comment
-                  ArticleCommentPart(id: articlePost.id!,),
-
-
+                  ArticleCommentPart(
+                    id: articlePost.id!,
+                  ),
                 ],
               ),
             ),
@@ -222,16 +223,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       child: Text(
         articlePost.title!,
         style:
-        TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 1.6),
-      ),
-    );
-  }
-
-  Text postedTime() {
-    return Text(
-      'posted on ' + formatter.format(articlePost.created_at!),
-      style: TextStyle(
-        color: Colors.grey,
+            TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 1.6),
       ),
     );
   }
@@ -239,28 +231,28 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   Row listCategory() {
     return Row(
         children: List.generate(articlePost.categories!.length, (index) {
-          return Container(
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Center(
-                    child: Text(articlePost.categories![index]),
-                  ),
+      return Container(
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-              ],
+                borderRadius: BorderRadius.circular(24),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Center(
+                child: Text(articlePost.categories![index]),
+              ),
             ),
-          );
-        }));
+            SizedBox(
+              width: 5,
+            ),
+          ],
+        ),
+      );
+    }));
   }
 
   Container imageArticle() {

@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.1.1
   cloud_firestore: ^4.0.2
   email_validator: ^2.1.17
+  jiffy: ^5.0.0
 
 dev_dependencies:
   flutter_test:

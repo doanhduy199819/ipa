@@ -1,7 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:intl/intl.dart';
 
 class Comment {
@@ -18,10 +18,21 @@ class Comment {
     this.author_id,
     this.content,
     this.created_at,
-    this.upvote_users = const <String>[],
-    this.downvote_users = const <String>[],
+    this.upvote_users,
+    this.downvote_users,
     this.is_accepted = false,
   });
+
+  factory Comment.fromCurrentUser(String content) {
+    return Comment(author_id: AuthService().currentUserId, content: content);
+  }
+
+  factory Comment.createdNowFromCurrentUser(String content) {
+    return Comment(
+        author_id: AuthService().currentUserId,
+        created_at: DateTime.now(),
+        content: content);
+  }
 
   factory Comment.fromJson(Map<String, dynamic>? data) {
     final String? id = data?['id'];
