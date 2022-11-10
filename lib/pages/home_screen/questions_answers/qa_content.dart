@@ -27,14 +27,13 @@ class _QAContentState extends State<QAContent> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: DatabaseQAService().getQuestionsList(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         }
-        if (snapshot.data == null) {
-          return Text('This list is null');
-        }
+        // if (snapshot.data == null) {
+        //   return Text('This list is null');
+        // }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Loading");
         }
@@ -237,7 +236,8 @@ class _QAContentState extends State<QAContent> {
                         //Title
                         Container(
                           padding: const EdgeInsets.only(top: 1, bottom: 4),
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
+                          width:
+                              MediaQuery.of(context).size.width * 9 / 15 - 15,
                           child: RichText(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -286,7 +286,7 @@ class _QAContentState extends State<QAContent> {
                                 ],
                               )
                             : Row(
-                                children:const [
+                                children: const [
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -295,7 +295,8 @@ class _QAContentState extends State<QAContent> {
                         //Content
 
                         Container(
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
+                          width:
+                              MediaQuery.of(context).size.width * 9 / 15 - 15,
                           padding: const EdgeInsets.only(top: 2, bottom: 2),
                           //width: 150,
                           child: RichText(
@@ -339,7 +340,8 @@ class _QAContentState extends State<QAContent> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
-                            parseDateTime(display_list_question[index].created_at),
+                            parseDateTime(
+                                display_list_question[index].created_at),
                             style: const TextStyle(
                               fontSize: 8,
                             ),
@@ -357,13 +359,13 @@ class _QAContentState extends State<QAContent> {
       ),
     );
   }
-   String parseDateTime(DateTime? time){
-    if(time !=null){
-    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
-    return formatter;
-    } 
-    else{
-       return '1/1/2001';
-    } 
+
+  String parseDateTime(DateTime? time) {
+    if (time != null) {
+      String formatter = DateFormat('dd/MM/yyyy').format(time);
+      return formatter;
+    } else {
+      return '1/1/2001';
+    }
   }
 }

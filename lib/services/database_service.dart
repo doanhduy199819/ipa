@@ -94,4 +94,15 @@ class DatabaseService with ArticlePostHandle implements CommentService {
       return Comment();
     }).toList();
   }
+
+  @override
+  Future<void> deleteCommentFromArticle(
+      String commentId, String articleId) async {
+    db
+        .collection('articles')
+        .doc(articleId)
+        .collection('comments')
+        .doc(commentId)
+        .delete();
+  }
 }
