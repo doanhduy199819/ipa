@@ -36,7 +36,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     return Scaffold(
       body: _getBodyWidget(tabIndex),
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.blue,
+        fixedColor: Theme.of(context).secondaryHeaderColor,
         type: BottomNavigationBarType.fixed,
         onTap: (index) => setState(
           () => tabIndex = index,
@@ -53,10 +53,3 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     );
   }
 }
-
-
-
-//  Widget homePage() {
-    
-//   }
-// }

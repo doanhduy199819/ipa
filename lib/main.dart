@@ -38,8 +38,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'IPA',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+            scaffoldBackgroundColor: Color.fromRGBO(15, 20, 60, 1),
+            secondaryHeaderColor: Color.fromARGB(255, 5, 94, 195)),
+        // color: Color.fromARGB(255, 11, 5, 104),
         // home: const HomeContainerWidget(),
         home: Wrapper(),
         debugShowCheckedModeBanner: false,
