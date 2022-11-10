@@ -12,6 +12,7 @@ import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -83,7 +84,7 @@ class _ArticleContentState extends State<ArticleContent> {
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            margin: const EdgeInsets.only(bottom: 5),
+            margin: const EdgeInsets.only(bottom: 4),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
                 blurRadius: 1,
@@ -103,7 +104,7 @@ class _ArticleContentState extends State<ArticleContent> {
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.65,
                                 padding:
-                                    const EdgeInsets.only(bottom: 5, left: 10),
+                                    const EdgeInsets.only(bottom: 4, left: 8),
                                 child: Row(
                                   children: [
                                     Icon(
@@ -116,10 +117,7 @@ class _ArticleContentState extends State<ArticleContent> {
                                       overflow: TextOverflow.ellipsis,
                                       text: TextSpan(
                                         text: _post[index].author_id,
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w100),
+                                        style: HomeScreenFonts.description,
                                       ),
                                     ),
                                   ],
@@ -128,47 +126,39 @@ class _ArticleContentState extends State<ArticleContent> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.65,
-                          padding: const EdgeInsets.only(bottom: 5, left: 10),
+                          padding: const EdgeInsets.only(bottom: 4, left: 8),
                           child: RichText(
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
                               text: _post[index].title,
                               // text: 'a',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: HomeScreenFonts.title,
                             ),
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.only(left: 10, bottom: 3),
+                          padding: const EdgeInsets.only(left: 8, bottom: 4),
                           width: MediaQuery.of(context).size.width * 0.65,
                           child: RichText(
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              text: _post[index].content,
-                              // text: 'a',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                              ),
-                            ),
+                                text: _post[index].content,
+                                // text: 'a',
+                                style: HomeScreenFonts.content),
                           ),
                         ),
                       ],
                     ),
                     //Spacer(),
                     SizedBox(
-                      width: 20,
+                      width: 12,
                     ),
                     Image(
                       image: NetworkImage(
                           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhthE22spXytCuZqX6_MiwxI16wlJV-03UA&usqp=CAU'),
-                      width: MediaQuery.of(context).size.width * 0.25,
+                      width: MediaQuery.of(context).size.width * 0.26,
                       //                    height: MediaQuery.of(context).size.height * 0.20,
                     ),
                   ],
@@ -177,8 +167,7 @@ class _ArticleContentState extends State<ArticleContent> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(left: 20, bottom: 3),
-                      width: MediaQuery.of(context).size.width * 0.65,
+                      padding: const EdgeInsets.only(left: 8, bottom: 4),
                       child: Row(
                         children: [
                           Icon(
@@ -191,36 +180,41 @@ class _ArticleContentState extends State<ArticleContent> {
                               text: ' ' +
                                   _calculatorDateAgo(_post[index].created_at),
                               // text: 'a',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                              ),
+                              style: HomeScreenFonts.description,
                             ),
                           ),
                         ],
                       ),
                     ),
                     Spacer(),
+                    FlatButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.favorite_border_rounded,
+                                size: 21,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                _buildLike(_post[index].liked_users?.length),
+                                style: HomeScreenFonts.description,
+                              ),
+                            ],
+                          ),
+                        )),
                     IconButton(
                       icon: Icon(
-                        Icons.favorite_rounded,
+                        Icons.bookmark_border_rounded,
                         size: 21,
                         color: Colors.grey,
                       ),
                       onPressed: () {},
                     ),
-                    Text(_buildLike(_post[index].liked_users?.length)),
-                    IconButton(
-                      icon: Icon(
-                        Icons.bookmark,
-                        size: 21,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {},
-                    ),
-                    SizedBox(
-                      width: 10,
-                    )
                   ],
                 ),
               ],
@@ -228,7 +222,6 @@ class _ArticleContentState extends State<ArticleContent> {
           ),
         );
       },
-      // childCount: _post.length,
       childCount: _post.length,
     ));
   }
@@ -238,6 +231,6 @@ class _ArticleContentState extends State<ArticleContent> {
   }
 
   String _buildLike(int? sl) {
-    return sl == null ? '0 like' : '${sl} likes';
+    return sl == null ? '0' : '${sl}';
   }
 }

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class FontFamily{
-  static final arial="Arial";
-  static final inter='Inter';
-  static final urbanist='Urbanist';
+class FontFamily {
+  static final arial = "Arial";
+  static final inter = 'Inter';
+  static final urbanist = 'Urbanist';
 }
-class HomeScreenFonts{
-  static TextStyle h1=TextStyle(
+
+class HomeScreenFonts {
+  static TextStyle h1 = TextStyle(
     fontFamily: FontFamily.arial,
   );
   static TextStyle titleQuestion = TextStyle(
@@ -28,12 +31,6 @@ class HomeScreenFonts{
     color: const Color(0xff8DAAF8),
   );
 
-  static TextStyle content = TextStyle(
-    fontFamily: FontFamily.arial,
-    fontSize: 10,
-    color: const Color(0xff000000),
-  );
-  
   static TextStyle upvote = TextStyle(
     fontFamily: FontFamily.inter,
     fontSize: 10,
@@ -59,15 +56,40 @@ class HomeScreenFonts{
     fontSize: 9,
     color: const Color(0xff000000),
   );
-  static TextStyle h2=TextStyle(
+  static TextStyle h2 = TextStyle(
     fontFamily: FontFamily.arial,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: const Color(0xff000000),
   );
-  static TextStyle header=TextStyle(
+  static TextStyle header = TextStyle(
     fontFamily: FontFamily.inter,
     fontWeight: FontWeight.bold,
     color: const Color(0xff000000),
+  );
+  static TextStyle content = GoogleFonts.ubuntu(
+    fontSize: 10,
+    color: Colors.grey[900],
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle title = GoogleFonts.montserrat(
+    fontSize: 14,
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+  );
+  static TextStyle description = GoogleFonts.catamaran(
+    fontSize: 14,
+    color: Colors.grey[900],
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle category = GoogleFonts.roboto(
+    fontSize: 14,
+    color: Colors.black,
+    fontWeight: FontWeight.normal,
+  );
+  static TextStyle headStyle = GoogleFonts.playfairDisplay(
+    fontSize: 24,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   );
 }

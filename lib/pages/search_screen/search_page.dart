@@ -299,7 +299,9 @@ class _SearchPageState extends State<SearchPage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Text(
-                              display_list_question[index].numberOfUpvote .toString(),
+                              display_list_question[index]
+                                  .numberOfUpvote
+                                  .toString(),
                               style: const TextStyle(
                                 fontSize: 11,
                               ),
@@ -316,7 +318,8 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.only(left: 5, bottom: 2),
                           child: Text(
                             display_list_question[index]
-                                .numberOfAnswers.toString(),
+                                .numberOfAnswers
+                                .toString(),
                             style: const TextStyle(
                               fontSize: 11,
                             ),
@@ -516,8 +519,7 @@ class _SearchPageState extends State<SearchPage> {
     }));
   }
 
-  Padding searchBox()
-  {
+  Padding searchBox() {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Container(
@@ -538,6 +540,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -675,13 +678,13 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ));
   }
-   String parseDateTime(DateTime? time){
-    if(time !=null){
-    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
-    return formatter;
-    } 
-    else{
-       return '1/1/2001';
-    } 
+
+  String parseDateTime(DateTime? time) {
+    if (time != null) {
+      String formatter = DateFormat('dd/MM/yyyy').format(time);
+      return formatter;
+    } else {
+      return '1/1/2001';
+    }
   }
 }

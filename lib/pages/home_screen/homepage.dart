@@ -7,6 +7,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
+import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import '../../objects/Questions.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
+
   List<Question> display_list_question =
       List.from(Question.getSampleQuestion());
 
@@ -51,7 +53,10 @@ class _HomePageState extends State<HomePage> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text('Home'),
+      title: Text(
+        'Home',
+        style: HomeScreenFonts.headStyle,
+      ),
       actions: [
         IconButton(
           icon: Icon(Icons.notifications),
@@ -68,14 +73,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Row _buildMenu() {
-    return Row(children: [
-      _cardCategory('+'),
-      _cardCategory('All'),
-      _cardCategory('Popular'),
-      _cardCategory('For you'),
-      _cardCategory('Algorithm'),
-    ]);
+  Widget _buildMenu() {
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _cardCategory('+'),
+            _cardCategory('All'),
+            _cardCategory('Popular'),
+            _cardCategory('For you'),
+            _cardCategory('Algorithm'),
+            _cardCategory('Language'),
+          ],
+        ));
   }
 
   Card _cardCategory(String string) {
@@ -89,7 +99,7 @@ class _HomePageState extends State<HomePage> {
       child: FlatButton(
         child: Text(
           '${string}',
-          style: TextStyle(fontSize: 14),
+          style: HomeScreenFonts.category,
           textWidthBasis: TextWidthBasis.parent,
         ),
         minWidth: double.minPositive,
@@ -98,5 +108,11 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+
+  ListView _buildListCategories() {
+    return ListView.custom(
+        childrenDelegate:
+            SliverChildBuilderDelegate((BuildContext context, int index) {}));
   }
 }
