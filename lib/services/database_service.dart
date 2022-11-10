@@ -26,19 +26,11 @@ class DatabaseService with ArticlePostHandle implements CommentService {
 
   @override
   Stream<List<Comment>?> commentsFromArticle(String articleId) {
-    // db
-    //     .collection('articles')
-    //     .doc(articleId)
-    //     .collection('comments')
-    //     .snapshots()
-    //     .listen((event) {
-    //   print(event.docs);
-    // });
-
     return db
         .collection('articles')
         .doc(articleId)
         .collection('comments')
+        .orderBy("created_at", descending: false)
         .snapshots()
         .map(commentsFromQuerySnapshot);
   }

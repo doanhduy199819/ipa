@@ -177,42 +177,45 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 0,
-            top: 16,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AccountPart(account: account, articlePost: articlePost),
-                  buildTitle(),
-                  Row(
-                    children: [
-                      Spacer(),
-                      listCategory(),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  imageArticle(),
-                  articleContent(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  //comment
-                  ArticleCommentPart(
-                    id: articlePost.id!,
-                  ),
-                ],
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 0,
+              top: 16,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AccountPart(account: account, articlePost: articlePost),
+                    buildTitle(),
+                    Row(
+                      children: [
+                        Spacer(),
+                        listCategory(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    imageArticle(),
+                    articleContent(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    //comment
+                    ArticleCommentPart(
+                      id: articlePost.id!,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -56,6 +56,7 @@ class _InterractionIconState extends State<InterractionIcon> {
               child: Icon(
                 widget.activeIconData,
                 color: isActive ? Colors.white : Colors.grey,
+                size: 12.0,
               ),
             ),
             if (widget.label != null)

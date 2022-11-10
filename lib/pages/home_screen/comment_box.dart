@@ -6,7 +6,20 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/interaction_icon.dart';
 
 class CommentBoxWidget extends StatefulWidget {
-  const CommentBoxWidget({Key? key}) : super(key: key);
+  const CommentBoxWidget(
+      {Key? key,
+      this.photoUrl,
+      this.userName,
+      required this.isShowingUpvote,
+      this.content,
+      this.fontSize = 12})
+      : super(key: key);
+
+  final String? photoUrl;
+  final String? userName;
+  final String? content;
+  final bool isShowingUpvote;
+  final int? fontSize;
 
   @override
   State<CommentBoxWidget> createState() => _CommentBoxWidgetState();
@@ -20,33 +33,30 @@ class _CommentBoxWidgetState extends State<CommentBoxWidget> {
   Widget build(BuildContext context) {
     // const commentContent = 'What a value lesson !';
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitle(),
-          _buildCommentContent(),
-          const SizedBox(
-            height: 12.0,
+          _buildTitle(
+            photoUrl: widget.photoUrl,
+            userName: widget.userName,
           ),
+          _buildCommentContent(
+            commentContent: widget.content,
+          ),
+          // const SizedBox(height: 8.0),
           _buildInteractions(
             voteNum: updateVoteNum,
             voteState: voteStat,
+            isShowingUpvote: widget.isShowingUpvote,
             upVoteTap: () => setState(() {
-              if (voteStat == 1) {
-                voteStat = 0;
-              } else {
-                voteStat = 1;
-              }
+              voteStat = (voteStat == 1) ? 0 : 1;
             }),
             downVoteTap: () => setState(() {
-              if (voteStat == -1) {
-                voteStat = 0;
-              } else {
-                voteStat = -1;
-              }
+              voteStat = (voteStat == -1) ? 0 : -1;
             }),
           ),
+          Divider(),
         ],
       ),
     );
@@ -64,33 +74,37 @@ class _buildInteractions extends StatelessWidget {
     this.upVoteTap,
     this.downVoteTap,
     required this.voteState,
+    required this.isShowingUpvote,
   }) : super(key: key);
 
   final int voteNum;
   final void Function()? upVoteTap;
   final void Function()? downVoteTap;
   final int voteState;
+  final bool isShowingUpvote;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       // ignore: prefer_const_literals_to_create_immutables
       children: [
-        InterractionIcon(
-          activeIconData: Icons.arrow_upward_rounded,
-          onTap: upVoteTap,
-          isActive: voteState == 1,
-        ),
-        const SizedBox(width: 12.0),
-        Text(voteNum.toString()),
-        const SizedBox(width: 12.0),
-        InterractionIcon(
-          activeIconData: Icons.arrow_downward_rounded,
-          activeColor: Colors.red,
-          onTap: downVoteTap,
-          isActive: voteState == -1,
-        ),
-        const SizedBox(width: 12.0),
+        if (isShowingUpvote) ...[
+          InterractionIcon(
+            activeIconData: Icons.arrow_upward_rounded,
+            onTap: upVoteTap,
+            isActive: voteState == 1,
+          ),
+          const SizedBox(width: 12.0),
+          Text(voteNum.toString()),
+          const SizedBox(width: 12.0),
+          InterractionIcon(
+            activeIconData: Icons.arrow_downward_rounded,
+            activeColor: Colors.red,
+            onTap: downVoteTap,
+            isActive: voteState == -1,
+          ),
+          const SizedBox(width: 12.0),
+        ],
         _buildReplyButton(),
         const SizedBox(width: 16.0),
         Text(
@@ -105,7 +119,10 @@ class _buildInteractions extends StatelessWidget {
 class _buildReplyButton extends StatelessWidget {
   const _buildReplyButton({
     Key? key,
+    this.onPressed,
   }) : super(key: key);
+
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +134,19 @@ class _buildReplyButton extends StatelessWidget {
             decoration: BoxDecoration(
                 // color: Colors.amber,
                 border: Border.symmetric(
-                    vertical: BorderSide(width: 1, color: Colors.grey))),
-            child: Container(height: 24.0),
+                    vertical:
+                        BorderSide(width: 1, color: Colors.grey.shade300))),
+            child: Container(height: 12.0),
           ),
-          FlatButton(onPressed: () {}, child: Text('Reply')),
+          Container(
+            // decoration: BoxDecoration(color: Colors.redAccent),
+            child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+                onPressed: onPressed,
+                child: Text('Reply', style: TextStyle(fontSize: 12.0))),
+          ),
         ],
       ),
     );
@@ -130,19 +156,24 @@ class _buildReplyButton extends StatelessWidget {
 class _buildCommentContent extends StatelessWidget {
   const _buildCommentContent({
     Key? key,
+    this.commentContent,
   }) : super(key: key);
+
+  final String? commentContent;
 
   @override
   Widget build(BuildContext context) {
-    const commentContent =
+    const sampleCommentContent =
         'A paragraph is a collection of words strung together to make a longer unit than a sentence. Several sentences often make a paragraph. There are normally three to eight sentences in a paragraph. Paragraphs can start with a five-space indentation or by skipping a line and then starting over. This makes it simpler to tell when one paragraph ends and the next starts simply it has 3-9 lines≥≤?';
+    debugPrint(commentContent);
     return Row(
-      children: const [
+      children: [
         Expanded(
-            child: Text(
-          commentContent,
-          style: TextStyle(color: Color.fromARGB(255, 56, 55, 55)),
-        )),
+          child: Text(
+            commentContent ?? sampleCommentContent,
+            style: TextStyle(color: Color.fromARGB(255, 56, 55, 55)),
+          ),
+        ),
       ],
     );
   }
@@ -151,24 +182,30 @@ class _buildCommentContent extends StatelessWidget {
 class _buildTitle extends StatelessWidget {
   const _buildTitle({
     Key? key,
+    this.photoUrl,
+    this.userName,
   }) : super(key: key);
+
+  final String? photoUrl;
+  final String? userName;
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl = 'https://www.vietnamplus.vn/';
-    const userName = 'Pikachu';
-    const titleTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+    const samplephotoeUrl = 'https://www.vietnamplus.vn/';
+    const sampleUserName = 'Pikachu';
+    const titleTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 16, 8, 16),
+          padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
           child: CircleAvatar(
-            backgroundImage: NetworkImage(imageUrl),
-            radius: 20.0,
+            radius: 12,
+            backgroundImage: NetworkImage(photoUrl ?? samplephotoeUrl),
           ),
         ),
         Text(
-          userName,
+          userName ?? sampleUserName,
           style: titleTextStyle,
         ),
         Expanded(

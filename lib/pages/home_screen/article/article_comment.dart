@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/comment_box.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
 import '../../../objects/Account.dart';
@@ -58,15 +59,16 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
               SizedBox(
                 height: 10,
               ),
-              commentBox(comments),
+              commentInput(comments),
               Divider(),
-              commentBlocColumn(comments),
+              commentsList(comments),
             ],
           );
         });
   }
 
-  Container commentBox(List<Comment>? comments) {
+  // Where user input their comment
+  Container commentInput(List<Comment>? comments) {
     print('hechhc');
     return Container(
       child: Column(
@@ -107,6 +109,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                     debugPrint('Sent comment button is pressed');
                     _sendComment(commentContent);
                     _clearCommentContent();
+                    FocusManager.instance.primaryFocus?.unfocus();
                   }
                 },
               ),
@@ -159,113 +162,32 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     );
   }
 
+  // Send user input to server
   void _sendComment(String content) {
     DatabaseService().addCommentToArticle(content, widget.id);
   }
 
+  // Clear commentInput
   void _clearCommentContent() {
     _controller.clear();
   }
 
-  Widget commentBlocColumn(List<Comment>? comments) {
+  // List of comments of this article
+  Widget commentsList(List<Comment>? comments) {
     return Column(
       children: <Widget>[
-        // ...articlePost.comments!.map((item) {
-        //   return commentBloc(item);
-        // }).toList(),
         ...?comments?.map((comment) => commentBloc(comment)).toList()
       ],
     );
   }
 
+  // Each comment in commentsList
   Widget commentBloc(Comment comment) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image: NetworkImage(account.avatar!), fit: BoxFit.fill),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              account.name!,
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-            Spacer(),
-            Icon(Icons.more_horiz)
-          ],
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          comment.content!,
-          style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.grey.shade700,
-              fontSize: 12),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Row(
-          children: [
-            Icon(
-              Icons.favorite_outline,
-              size: 15,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              comment!.upvote.toString(),
-              style: TextStyle(fontSize: 10),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 15,
-              width: 1,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              'Reply',
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Container(
-              color: Colors.grey,
-              height: 15,
-              width: 1,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              formatter.format(comment.created_at!),
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey.shade400,
-              ),
-            )
-          ],
-        ),
-        Divider(),
-      ],
+    return CommentBoxWidget(
+      photoUrl: account.avatar,
+      userName: account.name,
+      isShowingUpvote: false,
+      content: comment.content,
     );
   }
 }
