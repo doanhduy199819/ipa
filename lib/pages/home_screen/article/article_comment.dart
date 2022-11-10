@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/comment_box.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../../objects/Account.dart';
 import '../../../objects/ArticlePost.dart';
 import '../../../objects/Comment.dart';
@@ -20,7 +23,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   String commentContent = "";
   final _formKey = GlobalKey<FormState>();
-  final _controller = TextEditingController();
+  final _textFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -77,7 +80,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
             child: Form(
               key: _formKey,
               child: TextFormField(
-                controller: _controller,
+                controller: _textFieldController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 minLines: 1,
@@ -110,6 +113,16 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                     _sendComment(commentContent);
                     _clearCommentContent();
                     FocusManager.instance.primaryFocus?.unfocus();
+                    // Move down to the end of screen
+                    ScrollController scrollControler =
+                        MyInheritedData.of(context).scrollController;
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      scrollControler.animateTo(
+                        scrollControler.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.fastOutSlowIn,
+                      );
+                    });
                   }
                 },
               ),
@@ -142,7 +155,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                   style: TextStyle(color: Colors.white, fontSize: 12)),
             ),
             top: -4,
-            right: -20,
+            right: -24,
           )
         ],
       ),
@@ -156,16 +169,21 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   // Clear commentInput
   void _clearCommentContent() {
-    _controller.clear();
+    _textFieldController.clear();
   }
 
   // List of comments of this article
   Widget commentsList(List<Comment>? comments) {
     return Column(
+      // controller: _scrollingController,
       children: <Widget>[
         ...?comments?.map((comment) => commentBloc(comment)).toList()
       ],
     );
+    // return ListView.builder(
+    //     controller: _scrollingController,
+    //     itemBuilder: (_, index) =>
+    //         (comments != null) ? commentBloc(comments[index]) : Row());
   }
 
   // Each comment in commentsList

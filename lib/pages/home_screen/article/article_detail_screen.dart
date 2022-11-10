@@ -5,9 +5,11 @@ import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
+import 'package:flutter_interview_preparation/pages/authentication/sign_up.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_comment.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
+import 'package:provider/provider.dart';
 import '../../../objects/Questions.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
@@ -119,6 +121,27 @@ class _AccountPartState extends State<AccountPart> {
   }
 }
 
+class MyInheritedData extends InheritedWidget {
+  const MyInheritedData({
+    super.key,
+    required this.scrollController,
+    required super.child,
+  });
+
+  final ScrollController scrollController;
+
+  static MyInheritedData of(BuildContext context) {
+    final MyInheritedData? result =
+        context.dependOnInheritedWidgetOfExactType<MyInheritedData>();
+    assert(result != null, 'No Data found in context');
+    return result!;
+  }
+
+  @override
+  bool updateShouldNotify(MyInheritedData oldWidget) =>
+      scrollController != oldWidget.scrollController;
+}
+
 class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({Key? key}) : super(key: key);
 
@@ -130,6 +153,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
   String sortedBySelected = SortedBy.array[0];
   DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final _scrollingController = ScrollController();
 
   late Account account;
   late ArticlePost articlePost;
@@ -186,31 +210,36 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               right: 16,
               bottom: 0,
               top: 16,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AccountPart(account: account, articlePost: articlePost),
-                    buildTitle(),
-                    Row(
-                      children: [
-                        Spacer(),
-                        listCategory(),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    imageArticle(),
-                    articleContent(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //comment
-                    ArticleCommentPart(
-                      id: articlePost.id!,
-                    ),
-                  ],
+              child: MyInheritedData(
+                scrollController: _scrollingController,
+                child: SingleChildScrollView(
+                  controller: _scrollingController,
+                  // reverse: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AccountPart(account: account, articlePost: articlePost),
+                      buildTitle(),
+                      Row(
+                        children: [
+                          Spacer(),
+                          listCategory(),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      imageArticle(),
+                      articleContent(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //comment
+                      ArticleCommentPart(
+                        id: articlePost.id!,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
