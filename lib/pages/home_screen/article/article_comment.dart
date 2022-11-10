@@ -117,41 +117,45 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     );
   }
 
-  Container headingComment(List<Comment>? comments) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: [
-          SizedBox(
-            height: 20,
+  Row headingComment(List<Comment>? comments) {
+    return Row(
+      children: [
+        Container(
+          width: 200,
+          child: Stack(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Comments',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              Positioned(
+                  left: 85,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            comments == null ? '0' : comments!.length.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      )))
+            ],
           ),
-          Text(
-            'Comments',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-          ),
-          Positioned(
-              left: 85,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        comments == null ? '0' : comments!.length.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                    ],
-                  )))
-        ],
-      ),
+        )
+      ],
     );
   }
 
