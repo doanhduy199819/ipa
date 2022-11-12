@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_interview_preparation/objects/Company.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/objects/Questions.dart';
+import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_detail_screen.dart';
-import 'package:flutter_interview_preparation/services/database_qa_service.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/search_bar.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
+import 'package:flutter_interview_preparation/services/qa_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
@@ -19,126 +22,38 @@ class QAContent extends StatefulWidget {
 }
 
 class _QAContentState extends State<QAContent> {
-  List<Question> display_list_question =
-      List.from(Question.getSampleQuestion());
+  List<Question> display_list_question = Question.getSampleQuestions();
   final List<Company> _sampleListCompany =
       List.from(Company.getSampleCompany());
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseQAService().getQuestionsList(),
-      builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
-        // if (snapshot.data == null) {
-        //   return Text('This list is null');
-        // }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
-        display_list_question = snapshot.data! as List<Question>;
-        return Container(
-          padding: EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: searchPart(),
-              ),
-              Expanded(
-                flex: 7,
-                child: contentListQuestions(),
-              ),
-            ],
+      future: DatabaseService().allQuestionsOnce(),
+      builder: (context, asyncSnapshot) =>
+          Helper().handleSnapshot(asyncSnapshot) ??
+          SafeArea(
+            minimum: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                searchBar(context: context),
+                const SizedBox(height: 16.0),
+                Expanded(child: contentListQuestions()),
+              ],
+            ),
           ),
-        );
-        // return ListView(
-        //   children: snapshot.data!.map((ArticlePost? articlePost) {
-        //     return ListTile(
-        //       title: Text(
-        //         articlePost?.title ?? 'null',
-        //         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-        //       ),
-        //       subtitle: Text(articlePost?.content ?? 'null'),
-        //     );
-        //   }).toList(),
-        // );
-      },
     );
-    // return Container(
-    //   padding: EdgeInsets.all(4.0),
-    //   child: Column(
-    //     children: [
-    //       Expanded(
-    //         flex: 1,
-    //         child: searchPart(),
-    //       ),
-    //       Expanded(
-    //         flex: 7,
-    //         child: contentListQuestions(),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
-  Widget searchPart() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 8.0, top: 2.0),
-          child: Text(
-            'All Questions',
-            style: HomeScreenFonts.h1
-                .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Row(
-          children: [
-            const Spacer(),
-            Text(
-              'Company',
-              style: HomeScreenFonts.h1
-                  .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.62,
-              height: 20,
-              decoration: const BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Color(0xffEDEAEA),
-              ),
-              child: TextField(
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(top: 1),
-                  // filled: true,
-                  //fillColor: Color(0xff302360),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-
-                  hintStyle: const TextStyle(fontSize: 12),
-                  hintText: 'Search Company',
-                  prefixIcon: const Icon(Icons.search, size: 17),
-                  prefixIconColor: Colors.purple.shade900,
-                  // border: InputBorder.none,
-                  // prefixIcon: Icon(Icons.search,size: 16,),
-                  // hintText: 'Search company',
-                  // hintStyle: TextStyle(fontSize: 12),
-                ),
-              ),
-            ),
-          ],
-        )
-      ],
+  onQuestionTap(BuildContext context, Object? arguments) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: false,
+        builder: (context) => QaDetailScreen(),
+        settings: RouteSettings(arguments: arguments),
+      ),
     );
   }
 
@@ -149,15 +64,13 @@ class _QAContentState extends State<QAContent> {
           return InkWell(
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  fullscreenDialog: false,
-                  builder: (context) => QaDetailScreen(),
-                  settings: RouteSettings(
-                    arguments: display_list_question[index],
-                  ),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                    fullscreenDialog: false,
+                    builder: (context) => QaDetailScreen(),
+                    settings:
+                        RouteSettings(arguments: display_list_question[index]),
+                  ));
             },
             child: Container(
               decoration: const BoxDecoration(color: Colors.white, boxShadow: [

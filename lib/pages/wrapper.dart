@@ -19,13 +19,7 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    // print('Wrapper rebuild');
     User? user = Provider.of<User?>(context);
     return user != null ? HomeContainerWidget() : Authenticate();
-    // return user != null
-    //     ? Profile(
-    //         userProfile: AuthService().userProfileObj,
-    //       )
-    //     : Authenticate();
   }
 }

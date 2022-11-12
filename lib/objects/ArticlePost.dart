@@ -72,11 +72,11 @@ class ArticlePost {
         ? List.from(data?['liked_users'])
         : null;
 
-    final List<Comment>? comments =
-        data?['comments'] is Iterable ? List.from(data?['comments']) : null;
+    // final List<Comment>? comments =
+    //     data?['comments'] is Iterable ? List.from(data?['comments']) : null;
 
     return ArticlePost(id, title, created_at, content, categories, author_id,
-        liked_users, comments);
+        liked_users, null);
   }
 
   factory ArticlePost.fromDocumentSnapshot(

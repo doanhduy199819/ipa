@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 
 class CommentBoxWidget extends StatefulWidget {
   const CommentBoxWidget(

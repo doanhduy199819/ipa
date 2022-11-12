@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../../objects/Account.dart';
 import '../../objects/ArticlePost.dart';
 import '../../objects/Comment.dart';
-import '../../objects/Questions.dart';
+import '../../objects/Question.dart';
 import '../../values/Home_Screen_Assets.dart';
 import '../../values/Home_Screen_Fonts.dart';
 import '../home_screen/article/article_detail_screen.dart';
@@ -251,7 +251,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Column qaPart() {
     List<Question> display_list_question =
-        List.from(Question.getSampleQuestion());
+        List.from(Question.getSampleQuestions());
     return Column(
         children: List.generate(3, (index) {
       return InkWell(

@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
@@ -204,10 +204,6 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
               Visibility(visible: true, child: Icon(Icons.more_horiz_rounded)),
           items: [
             if (comment.author_id == AuthService().currentUserId) ...[
-              // DropdownMenuItem(
-              //   child: Text('Edit'),
-              //   value: 'edit',
-              // ),
               DropdownMenuItem(
                 child: Text('Delete'),
                 value: 'delete',

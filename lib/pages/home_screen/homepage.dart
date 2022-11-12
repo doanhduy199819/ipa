@@ -8,7 +8,7 @@ import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
-import '../../objects/Questions.dart';
+import '../../objects/Question.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   List<Question> display_list_question =
-      List.from(Question.getSampleQuestion());
+      List.from(Question.getSampleQuestions());
 
   // @override
   void initState() {
