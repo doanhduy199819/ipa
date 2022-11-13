@@ -73,9 +73,10 @@ class _ArticleContentState extends State<ArticleContent> {
   }
 
   ListView _buildListViewContent() {
-    return ListView.custom(
-        childrenDelegate: SliverChildBuilderDelegate(
-      (BuildContext context, int index) {
+    return ListView.builder(
+      // childrenDelegate: SliverChildBuilderDelegate(
+      // separatorBuilder: (context, index) => Divider(),
+      itemBuilder: (BuildContext context, int index) {
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -91,14 +92,18 @@ class _ArticleContentState extends State<ArticleContent> {
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            margin: const EdgeInsets.only(bottom: 4),
-            decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                blurRadius: 1,
-                offset: Offset(0.0, 3),
-                color: Colors.grey,
-              ),
-            ]),
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 1,
+                  offset: Offset(0.0, 3),
+                  color: Colors.grey,
+                ),
+              ],
+              // borderRadius: BorderRadius.circular(4.0),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -178,7 +183,8 @@ class _ArticleContentState extends State<ArticleContent> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.timelapse,
+                            Icons.timer_rounded,
+                            // color: Color.fromARGB(255, 217, 130, 0),
                             color: Colors.grey,
                             size: 14,
                           ),
@@ -233,8 +239,8 @@ class _ArticleContentState extends State<ArticleContent> {
           ),
         );
       },
-      childCount: _post.length,
-    ));
+      itemCount: _post.length,
+    );
   }
 
   // String _calculatorDateAgo(DateTime? dt) {

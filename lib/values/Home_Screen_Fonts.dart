@@ -73,7 +73,7 @@ class HomeScreenFonts {
     fontWeight: FontWeight.normal,
   );
   static TextStyle title = GoogleFonts.montserrat(
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
     fontWeight: FontWeight.bold,
   );
