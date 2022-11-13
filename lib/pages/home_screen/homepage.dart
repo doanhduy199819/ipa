@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
@@ -20,11 +19,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
   List<String> categories = <String>[
-    "For you",
-    "All",
-    "Popular",
-    "Algorithm",
-    "Programming Language"
+   'For you',
+   'All',
+   'Popular',
+   'Algorithm',
   ];
 
   List<Question> display_list_question =
@@ -36,6 +34,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     isArticleTab = true;
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
@@ -23,7 +23,8 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     if (index == 0) {
       return HomePage();
     } else if (index == 1) {
-      return QAContent();
+     // return QAContent();
+     return const QAPage();
     } else if (index == 2) {
       return SearchPage();
     } else {
