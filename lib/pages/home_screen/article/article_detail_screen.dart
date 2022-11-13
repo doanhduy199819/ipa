@@ -12,7 +12,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/article/article_
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:provider/provider.dart';
-import '../../../objects/Questions.dart';
+import '../../../objects/Question.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
 

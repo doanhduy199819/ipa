@@ -12,6 +12,7 @@ class Comment {
   List<String>? upvote_users;
   List<String>? downvote_users;
   bool? is_accepted;
+  List<Comment>? replies;
 
   Comment({
     this.id,
@@ -21,6 +22,7 @@ class Comment {
     this.upvote_users,
     this.downvote_users,
     this.is_accepted = false,
+    this.replies,
   });
 
   factory Comment.fromCurrentUser(String content) {
@@ -50,7 +52,6 @@ class Comment {
     // DateFormat formatter = DateFormat('dd/MM/yyyy');
     final DateTime created_at = DateTime.parse(
         date_string_created ?? DateTime.utc(2001, 1, 1).toString());
-    // formatter.parse(date_string_created ?? '1/1/2001');
 
     return Comment(
         id: id,
@@ -97,6 +98,10 @@ class Comment {
 
   int get downvote {
     return (downvote_users?.length ?? 0);
+  }
+
+  int get vote {
+    return upvote - downvote;
   }
 
   static List<Comment> getSampleCommentsList() {

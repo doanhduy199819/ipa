@@ -42,11 +42,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       body: Container(
-        // decoration: BoxDecoration(color: Colors.pink),
-        // padding:
-        //     EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         decoration: signUpBackground,
         child: ListView(
           children: [
@@ -122,19 +118,10 @@ class buildInfoBox extends StatelessWidget {
         color: Colors.white70.withOpacity(0.2),
         borderRadius: const BorderRadius.all(Radius.circular(16.0)));
 
-    print('viewPadding ${MediaQuery.of(context).viewPadding.bottom}');
-    print('ViewInsets ${MediaQuery.of(context).viewInsets.bottom}');
-    print('Padding ${MediaQuery.of(context).padding.bottom}');
-
     return Container(
       decoration: blurBackground,
-      margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        top: 16.0,
-        bottom: 16.0,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           buildEmail(
@@ -257,7 +244,6 @@ class buildInfoBox extends StatelessWidget {
 //   }
 // }
 
-
 /*
 
  // child: Column(
@@ -285,8 +271,6 @@ class buildInfoBox extends StatelessWidget {
         // ),
 
 */
-
-
 
 /* 
   Column(

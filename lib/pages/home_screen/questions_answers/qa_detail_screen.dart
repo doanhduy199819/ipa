@@ -3,9 +3,11 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
+import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/up_down_vote_box.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Company.dart';
-import '../../../objects/Questions.dart';
+import '../../../objects/Question.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -26,26 +28,8 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
         ModalRoute.of(context)!.settings.arguments as Question;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(40.0),
-        child: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Image.asset(
-              HomeScreenAssets.backButton,
-            ),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          backgroundColor: const Color(0xffEDEAEA),
-          title: Text(
-            'Detail Question',
-            style: HomeScreenFonts.h1.copyWith(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ),
+        preferredSize: const Size.fromHeight(48.0),
+        child: AppBar(backgroundColor: Colors.transparent),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -133,8 +117,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 height: 30,
                 child: const CircleAvatar(
                   // Task : Pass a author avatar
-                 // backgroundImage: NetworkImage('${question.author!.avatar}'),
-                 backgroundImage:  NetworkImage('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
+                  // backgroundImage: NetworkImage('${question.author!.avatar}'),
+                  backgroundImage: NetworkImage(
+                      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
                 ),
               ),
             ],
@@ -180,11 +165,11 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
   Widget commentBlocColumn(Question question) {
     return Column(
       children: <Widget>[
-        if(question.answers!=null)
-        //Map => add vào toList xong rã ra từng Widget = ...
-        ...(question.answers!.map((item) {
-          return commentBloc(item);
-        }).toList()),
+        if (question.answers != null)
+          //Map => add vào toList xong rã ra từng Widget = ...
+          ...(question.answers!.map((item) {
+            return commentBloc(item);
+          }).toList()),
       ],
     );
   }
@@ -201,7 +186,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //Vote Comment Bloc
+    //Vote Comment Bloc
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -241,7 +226,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
               ),
             ],
           ),
-          //Content comment bloc
+    //Content comment bloc
           Padding(
             padding: const EdgeInsets.only(bottom: 4.0),
             child: Column(
@@ -476,26 +461,27 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
           ),
         ),
         //Tags
-        (question.categories!=null)?
-        Row(
-          children: [
-            for (var item in question.categories!)
-              Padding(
-                padding: const EdgeInsets.only(right: 3, bottom: 2, top: 2),
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    color: const Color(0xffDFE2EB),
-                    child: Text(item, style: HomeScreenFonts.tagsName)),
+        (question.categories != null)
+            ? Row(
+                children: [
+                  for (var item in question.categories!)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(right: 3, bottom: 2, top: 2),
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          color: const Color(0xffDFE2EB),
+                          child: Text(item, style: HomeScreenFonts.tagsName)),
+                    )
+                ],
               )
-          ],
-        )
-        : Row(
-          children: const[
-            SizedBox(
-              height: 20,
-            )
-          ],
-        ),
+            : Row(
+                children: const [
+                  SizedBox(
+                    height: 20,
+                  )
+                ],
+              ),
       ],
     );
   }
@@ -517,8 +503,8 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 width: 50,
                 height: 40,
                 //question.company!
-                Company.haveIdCompanyInSample(question.company_id!)?.logo ?? HomeScreenAssets.lgLogo
-                ),
+                Company.haveIdCompanyInSample(question.company_id!)?.logo ??
+                    HomeScreenAssets.lgLogo),
           ),
           //TimePost
           Padding(
@@ -580,13 +566,13 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
       ),
     );
   }
-  String parseDateTime(DateTime? time){
-    if(time !=null){
-    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
-    return formatter;
-    } 
-    else{
-       return '1/1/2001';
-    } 
+
+  String parseDateTime(DateTime? time) {
+    if (time != null) {
+      String formatter = DateFormat('dd/MM/yyyy').format(time);
+      return formatter;
+    } else {
+      return '1/1/2001';
+    }
   }
 }

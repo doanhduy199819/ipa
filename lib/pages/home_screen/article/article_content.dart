@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_interview_preparation/objects/Account.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
@@ -25,13 +26,19 @@ class ArticleContent extends StatefulWidget {
 
 class _ArticleContentState extends State<ArticleContent> {
   late List<ArticlePost> _post;
-  DateFormat formatter = DateFormat('dd-MM-yyyy');
+  late bool like_check;
+  late bool bookmard_check;
+
+  void initData() {
+    like_check = false;
+    bookmard_check = false;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    initData();
     super.initState();
-    final bool like_check = false;
-    final bool bookmard_check = false;
     // _initSampleData();
   }
 
@@ -83,7 +90,7 @@ class _ArticleContentState extends State<ArticleContent> {
             );
           },
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             margin: const EdgeInsets.only(bottom: 4),
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
@@ -97,38 +104,33 @@ class _ArticleContentState extends State<ArticleContent> {
               children: [
                 Row(
                   children: [
+                    Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                              size: 14,
+                            ),
+                            Text(
+                              _post[index].author_id.toString(),
+                              style: HomeScreenFonts.author,
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+                Row(
+                  children: [
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.65,
-                                padding:
-                                    const EdgeInsets.only(bottom: 4, left: 8),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.person,
-                                      color: Colors.grey,
-                                      size: 14,
-                                    ),
-                                    RichText(
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(
-                                        text: _post[index].author_id,
-                                        style: HomeScreenFonts.description,
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          padding: const EdgeInsets.only(bottom: 4, left: 8),
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          padding: const EdgeInsets.only(left: 8, bottom: 4),
                           child: RichText(
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
                               text: _post[index].title,
@@ -137,37 +139,42 @@ class _ArticleContentState extends State<ArticleContent> {
                             ),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 8, bottom: 4),
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          child: RichText(
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                                text: _post[index].content,
-                                // text: 'a',
-                                style: HomeScreenFonts.content),
-                          ),
-                        ),
+
+                        // Container(
+                        //   padding: const EdgeInsets.only(left: 8, bottom: 4),
+                        //   width: MediaQuery.of(context).size.width * 0.65,
+                        //   child: RichText(
+                        //     maxLines: 3,
+                        //     overflow: TextOverflow.ellipsis,
+                        //     text: TextSpan(
+                        //         text: _post[index].content,
+                        //         // text: 'a',
+                        //         style: HomeScreenFonts.content),
+                        //   ),
+                        // ),
                       ],
                     ),
                     //Spacer(),
                     SizedBox(
-                      width: 12,
+                      width: 16,
                     ),
-                    Image(
-                      image: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhthE22spXytCuZqX6_MiwxI16wlJV-03UA&usqp=CAU'),
-                      width: MediaQuery.of(context).size.width * 0.26,
-                      //                    height: MediaQuery.of(context).size.height * 0.20,
+                    Container(
+                      //         alignment: Alignment.center,
+                      child: Image(
+                        image: NetworkImage(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhthE22spXytCuZqX6_MiwxI16wlJV-03UA&usqp=CAU',
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.21,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                      ),
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(left: 8, bottom: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Row(
                         children: [
                           Icon(
@@ -175,30 +182,31 @@ class _ArticleContentState extends State<ArticleContent> {
                             color: Colors.grey,
                             size: 14,
                           ),
-                          RichText(
-                            text: TextSpan(
-                              text: ' ' +
-                                  _calculatorDateAgo(_post[index].created_at),
-                              // text: 'a',
-                              style: HomeScreenFonts.description,
-                            ),
+                          Text(
+                            ' ' + _buildCreate_at(_post[index].created_at),
+                            // text: 'a',
+                            style: HomeScreenFonts.author,
                           ),
+                          // RichText(
+                          //   text: TextSpan(
+                          //     text: _calculatorDateAgo(_post[index].created_at),
+                          //     // text: 'a',
+                          //     style: HomeScreenFonts.author,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                     Spacer(),
-                    FlatButton(
-                        onPressed: () {},
+                    InkWell(
+                        onTap: () {},
                         child: Container(
                           child: Row(
                             children: [
                               Icon(
                                 Icons.favorite_border_rounded,
-                                size: 21,
+                                size: 18,
                                 color: Colors.grey,
-                              ),
-                              SizedBox(
-                                width: 4,
                               ),
                               Text(
                                 _buildLike(_post[index].liked_users?.length),
@@ -207,14 +215,17 @@ class _ArticleContentState extends State<ArticleContent> {
                             ],
                           ),
                         )),
-                    IconButton(
-                      icon: Icon(
+                    InkWell(
+                      child: Icon(
                         Icons.bookmark_border_rounded,
-                        size: 21,
+                        size: 18,
                         color: Colors.grey,
                       ),
-                      onPressed: () {},
+                      onTap: () {},
                     ),
+                    SizedBox(
+                      width: 12,
+                    )
                   ],
                 ),
               ],
@@ -226,11 +237,17 @@ class _ArticleContentState extends State<ArticleContent> {
     ));
   }
 
-  String _calculatorDateAgo(DateTime? dt) {
-    return Jiffy(dt).fromNow();
-  }
+  // String _calculatorDateAgo(DateTime? dt) {
+  //   return Jiffy(dt).fromNow();
+  // }
 
   String _buildLike(int? sl) {
     return sl == null ? '0' : '${sl}';
+  }
+
+  String _buildCreate_at(DateTime? dateTime) {
+    return dateTime?.year == DateTime.now().year
+        ? Jiffy(dateTime).MMMd.toString()
+        : Jiffy(dateTime).fromNow();
   }
 }

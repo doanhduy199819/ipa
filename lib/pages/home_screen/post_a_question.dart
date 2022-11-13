@@ -15,102 +15,100 @@ class PostAQuestion extends StatefulWidget {
 class _PostAQuestionState extends State<PostAQuestion> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
+        backgroundColor: const Color(0xffD8F5F5),
+        appBar: AppBar(
           backgroundColor: const Color(0xffD8F5F5),
-          appBar: AppBar(
-            backgroundColor: const Color(0xffD8F5F5),
-            title: Text(
-              'Post A Question',
-              style: HomeScreenFonts.header,
-            ),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Image.asset(
-                HomeScreenAssets.backButton,
-              ),
-            ),
-            iconTheme: const IconThemeData(
-              color: Colors.black,
+          title: Text(
+            'Post A Question',
+            style: HomeScreenFonts.header,
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Image.asset(
+              HomeScreenAssets.backButton,
             ),
           ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 5,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              Text('Title :',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.left),
+              Text(
+                  'Be specific and imagine you’re asking a question to another person',
+                  style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
+                  textAlign: TextAlign.left),
+              SizedBox(
+                height: 10,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Title :",
+                  fillColor: Colors.lightBlue[100],
+                  filled: true,
                 ),
-                Text('Title :',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                    textAlign: TextAlign.left),
-                Text(
-                    'Be specific and imagine you’re asking a question to another person',
-                    style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
-                    textAlign: TextAlign.left),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Title :",
-                    fillColor: Colors.lightBlue[100],
-                    filled: true,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Content',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                    textAlign: TextAlign.left),
-                Text(
-                    'Include all the information someone would need to answer your question',
-                    style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
-                    textAlign: TextAlign.left),
-                SizedBox(
-                  height: 10,
-                ),
-                _buildContentField(),
-                Text('Related Fields :',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                    textAlign: TextAlign.left),
-                SizedBox(
-                  height: 5,
-                ),
-                _buildRelatedField(),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Company :',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                    textAlign: TextAlign.left),
-                Text('N/A',
-                    style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
-                    textAlign: TextAlign.left),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  child: RaisedButton(
-                      color: Colors.black,
-                      child: Text(
-                        'Next',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const SearchCompanyScreen()));
-                      }),
-                ),
-              ],
-            ),
-          )),
-    );
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text('Content',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.left),
+              Text(
+                  'Include all the information someone would need to answer your question',
+                  style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
+                  textAlign: TextAlign.left),
+              SizedBox(
+                height: 10,
+              ),
+              _buildContentField(),
+              Text('Related Fields :',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.left),
+              SizedBox(
+                height: 5,
+              ),
+              _buildRelatedField(),
+              SizedBox(
+                height: 5,
+              ),
+              Text('Company :',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  textAlign: TextAlign.left),
+              Text('N/A',
+                  style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
+                  textAlign: TextAlign.left),
+              Container(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                    color: Colors.black,
+                    child: Text(
+                      'Next',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SearchCompanyScreen()));
+                    }),
+              ),
+            ],
+          ),
+        ));
   }
 }
 

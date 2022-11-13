@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'Account.dart';
@@ -58,13 +59,6 @@ class Question {
       title: title,
     );
   }
-  // {
-  //   this.categories = <String>[];
-  //   this.upvote_users = <String>[];
-  //   this.downvote_users = <String>[];
-  //   this.answers = <Comment>[];
-  // }
-
   void setId(String? id) => this.id = id;
   void setAuthorId(String? id) => author_id = id;
 
@@ -89,11 +83,11 @@ class Question {
         ? List.from(json?['downvote_users'])
         : null;
 
-    final List<Comment>? answers =
-        json?['answers'] is Iterable ? List.from(json?['answers']) : null;
+    // final List<Comment>? answers =
+    //     json?['answers'] is Iterable ? List.from(json?['answers']) : null;
 
     return Question(id, title, content, created_at, author_id, company_id,
-        categories, upvote_users, downvote_users, answers);
+        categories, upvote_users, downvote_users, null);
   }
 
   Map<String, dynamic> toJson() => {
@@ -106,7 +100,7 @@ class Question {
         if (categories != null) 'categories': categories,
         if (upvote_users != null) 'upvote_users': upvote_users,
         if (downvote_users != null) 'downvote_users': downvote_users,
-        if (answers != null) 'answers': answers,
+        // if (answers != null) 'answers': answers,
       };
 
   void addUpvoteUser(String userId) {
@@ -145,7 +139,7 @@ class Question {
     return (answers?.length ?? 0);
   }
 
-  static List<Question> getSampleQuestion() {
+  static List<Question> getSampleQuestions() {
     List<Question> _sampleQuestion = [];
     _sampleQuestion
       ..add(Question(
@@ -231,8 +225,52 @@ class Question {
         ['0', '1', '2'],
         ['5'],
         Comment.getSampleCommentsList(),
+      ..add(Question.only(
+        title: 'Remove duplicate',
+        content: 'This is content remove duplicate',
+        created_at: DateTime(2021, 10, 11, 20, 30),
+        categories: ['C++', 'C#', 'Algorithm'],
+        // ['0', '1', '2'],
+        // ['5'],
+        answers: Comment.getSampleCommentsList(),
       ));
+    // ..add(Question(
+    //   '1',
+    //   'Remove duplicate character in string',
+    //   'This is content remove duplicate',
+    //   DateTime(2021, 10, 11, 20, 30),
+    //   '100',
+    //   '1',
+    //   ['c++', 'string', 'algorithm'],
+    //   ['0', '1', '2'],
+    //   ['5'],
+    //   Comment.getSampleCommentsList(),
+    // ))
+    // ..add(Question(
+    //   '0',
+    //   'Cleaning up data where it repeats daily',
+    //   'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+    //   DateTime(2022, 4, 11, 9, 30),
+    //   '101',
+    //   '2',
+    //   ['C++', 'C#', 'Algorithm'],
+    //   ['0', '1', '2'],
+    //   ['5'],
+    //   Comment.getSampleCommentsList(),
+    // ))
+    // ..add(Question(
+    //   '0',
+    //   'Cleaning up data where it repeats daily',
+    //   'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+    //   DateTime(2022, 4, 11, 9, 30),
+    //   '101',
+    //   '2',
+    //   ['C++', 'C#', 'Algorithm'],
+    //   ['0', '1', '2'],
+    //   ['5'],
+    //   Comment.getSampleCommentsList(),
+    // ));
+    debugPrint('Length: ${_sampleQuestion.length.toString()}');
     return _sampleQuestion;
   }
-
 }
