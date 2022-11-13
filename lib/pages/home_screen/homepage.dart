@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/article/article_
 import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
+import 'package:flutter_interview_preparation/pages/profile_screen/user_profile.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
@@ -56,7 +58,10 @@ class _HomePageState extends State<HomePage> {
       actions: [
         IconButton(
           icon: Icon(Icons.notifications),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => UserProfile()));
+          },
         ),
         IconButton(
           icon: Icon(Icons.person),
@@ -87,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    return Container(   
+    return Container(
       child: Column(
         //list articles post
         children: [
