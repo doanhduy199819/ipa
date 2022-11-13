@@ -24,13 +24,15 @@ class Helper {
     if (asyncSnapshot.hasError) {
       return Text('Something went wrong :(');
     }
-    if (asyncSnapshot.data == null ||
-        asyncSnapshot.connectionState == ConnectionState.waiting) {
+    if (asyncSnapshot.connectionState == ConnectionState.waiting) {
       return Column(
         children: [
           const Center(child: CircularProgressIndicator()),
         ],
       );
+    }
+    if (asyncSnapshot == null) {
+      return const Icon(Icons.question_mark);
     }
     return null;
   }

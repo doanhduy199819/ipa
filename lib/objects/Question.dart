@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'Account.dart';
+import 'FirestoreUser.dart';
 import 'package:intl/intl.dart';
 
 class Question {

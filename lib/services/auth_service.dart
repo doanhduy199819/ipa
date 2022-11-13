@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/CustomFirebaseAuthException.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -109,7 +111,13 @@ class AuthService {
         throw CustomFirebaseAuthException(
             CustomFirebaseAuthException.DUPLICATE_DISPLAY_NAME);
       }
-      return signUp(email, password);
+      // NO dup displayName
+      User? res = await signUp(email, password);
+      if (res != null) {
+        await res.updateDisplayName(displayName);
+        DatabaseService().createNewUserDoc(_auth.currentUser!);
+      }
+      return res;
     } on CustomFirebaseAuthException catch (e) {
       _handleAuthExceptionCode(e.code);
     }
@@ -141,6 +149,17 @@ class AuthService {
     }
   }
 
+  // void checkReadOthersData(String uid) async {
+  //   QuerySnapshot result = await FirebaseFirestore.instance
+  //       .collection("users")
+  //       .where("uid", isEqualTo: uid).get();
+  //   final List<DocumentSnapshot> docs = result.docs;
+  //   debugPrint(docs.toString());
+  //   if (docs.length == 0) {
+  //     debugPrint('new user');
+  //   }
+  // }
+
   Future<UserCredential> signInWithGoogleEmail() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
@@ -149,7 +168,10 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    return await _auth.signInWithCredential(credential);
+    return _auth.signInWithCredential(credential).then((value) {
+      DatabaseService().createNewUserDoc(value.user!);
+      return value;
+    });
   }
 
   // This function show a toast about FirebaseAuthException

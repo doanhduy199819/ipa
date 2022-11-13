@@ -73,6 +73,6 @@ class _buildRegisterButtonState extends State<buildRegisterButton> {
               ),
             ],
           )
-        : CircularProgressIndicator();
+        : Center(child: CircularProgressIndicator());
   }
 }

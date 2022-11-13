@@ -19,10 +19,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
   List<String> categories = <String>[
-   'For you',
-   'All',
-   'Popular',
-   'Algorithm',
+    'For you',
+    'All',
+    'Popular',
+    'Algorithm',
   ];
 
   List<Question> display_list_question =
@@ -34,8 +34,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     isArticleTab = true;
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +85,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    return Container(   
+    return Container(
       child: Column(
         //list articles post
         children: [
@@ -118,9 +116,9 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             '${string}',
             style: HomeScreenFonts.category,
-            textWidthBasis: TextWidthBasis.parent,
+            // textWidthBasis: TextWidthBasis.parent,
           ),
-          minWidth: double.minPositive,
+          // minWidth: double.minPositive,
           onPressed: () {
             //do something
           },

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/objects/Account.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
@@ -17,7 +17,7 @@ import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
 
 class AccountPart extends StatefulWidget {
-  Account account;
+  FirestoreUser account;
   ArticlePost articlePost;
   AccountPart({Key? key, required this.account, required this.articlePost})
       : super(key: key);
@@ -157,7 +157,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   final _scrollingController = ScrollController();
 
-  late Account account;
+  late FirestoreUser account;
   late ArticlePost articlePost;
   late List<Comment>? comments;
   late String imageUrl;
@@ -166,13 +166,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     checkFollow = false;
     imageUrl =
         'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
-    account = new Account(
-        'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        'Nhat Tan',
-        2871,
-        100,
-        100,
-        100);
+    // account = new Account(
+    //     'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    //     'Nhat Tan',
+    //     2871,
+    //     100,
+    //     100,
+    //     100);
   }
 
   @override
