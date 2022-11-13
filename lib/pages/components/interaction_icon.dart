@@ -15,7 +15,7 @@ class InterractionIcon extends StatefulWidget {
 
   final IconData? activeIconData;
   final String? label;
-  final bool? isActive;
+  final bool isActive;
   final void Function()? onTap;
   final MaterialColor activeColor;
   final MaterialColor unActiveColor;
@@ -25,13 +25,20 @@ class InterractionIcon extends StatefulWidget {
 }
 
 class _InterractionIconState extends State<InterractionIcon> {
+  late bool isActive;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    isActive = widget.isActive;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isActive = widget.isActive ?? false;
-
     return InkWell(
       onTap: () => setState(() {
-        widget.onTap!();
+        widget.onTap != null ? widget.onTap!() : null;
         isActive = !isActive;
       }),
       child: Container(

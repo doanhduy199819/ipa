@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 
 class CommentBoxWidget extends StatefulWidget {
   const CommentBoxWidget(
@@ -12,7 +12,8 @@ class CommentBoxWidget extends StatefulWidget {
       this.userName,
       required this.isShowingUpvote,
       this.content,
-      this.fontSize = 12})
+      this.fontSize = 12,
+      this.postFix})
       : super(key: key);
 
   final String? photoUrl;
@@ -20,6 +21,7 @@ class CommentBoxWidget extends StatefulWidget {
   final String? content;
   final bool isShowingUpvote;
   final int? fontSize;
+  final Widget? postFix;
 
   @override
   State<CommentBoxWidget> createState() => _CommentBoxWidgetState();
@@ -40,6 +42,7 @@ class _CommentBoxWidgetState extends State<CommentBoxWidget> {
           _buildTitle(
             photoUrl: widget.photoUrl,
             userName: widget.userName,
+            postFix: widget.postFix,
           ),
           _buildCommentContent(
             commentContent: widget.content,
@@ -183,11 +186,12 @@ class _buildTitle extends StatelessWidget {
   const _buildTitle({
     Key? key,
     this.photoUrl,
-    this.userName,
+    this.userName, this.postFix,
   }) : super(key: key);
 
   final String? photoUrl;
   final String? userName;
+  final Widget? postFix;
 
   @override
   Widget build(BuildContext context) {
@@ -209,13 +213,7 @@ class _buildTitle extends StatelessWidget {
           style: titleTextStyle,
         ),
         Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.more_horiz),
-            ),
-          ),
+          child: Align(alignment: Alignment.centerRight, child: postFix),
         ),
       ],
     );

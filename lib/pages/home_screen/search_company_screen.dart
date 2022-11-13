@@ -7,7 +7,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 import '../../objects/Account.dart';
 import '../../objects/Comment.dart';
-import '../../objects/Questions.dart';
+import '../../objects/Question.dart';
 import '../../values/Home_Screen_Assets.dart';
 import '../../values/Home_Screen_Fonts.dart';
 

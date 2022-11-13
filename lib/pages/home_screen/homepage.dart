@@ -8,7 +8,7 @@ import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
-import '../../objects/Questions.dart';
+import '../../objects/Question.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,9 +19,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
+  List<String> categories = <String>[
+    "For you",
+    "All",
+    "Popular",
+    "Algorithm",
+    "Programming Language"
+  ];
 
   List<Question> display_list_question =
-      List.from(Question.getSampleQuestion());
+      List.from(Question.getSampleQuestions());
 
   // @override
   void initState() {
@@ -41,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   AppBar _buildAppBar() {
     return AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text(
         'Home',
         style: HomeScreenFonts.headStyle,
@@ -62,18 +70,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMenu() {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _cardCategory('+'),
-            _cardCategory('All'),
-            _cardCategory('Popular'),
-            _cardCategory('For you'),
-            _cardCategory('Algorithm'),
-            _cardCategory('Language'),
-          ],
-        ));
+    // return SingleChildScrollView(
+    //   scrollDirection: Axis.horizontal,
+    //   child: Row(
+    //     children: [
+    //       // _cardCategory('+'),
+    //       _cardCategory('For you'),
+    //       _cardCategory('All'),
+    //       _cardCategory('Popular'),
+    //       _cardCategory('Algorithm'),
+    //       _cardCategory('Language'),
+    //     ],
+    //   ),
+    // );
+    return _buildListCategories();
   }
 
   Widget _buildBody() {
@@ -97,28 +107,38 @@ class _HomePageState extends State<HomePage> {
   Card _cardCategory(String string) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(48.0),
       ),
       //color: Colors.cyanAccent[100],//after tab this card
       color: Colors.lightBlue[100],
       elevation: 2,
-      child: FlatButton(
-        child: Text(
-          '${string}',
-          style: HomeScreenFonts.category,
-          textWidthBasis: TextWidthBasis.parent,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: FlatButton(
+          child: Text(
+            '${string}',
+            style: HomeScreenFonts.category,
+            textWidthBasis: TextWidthBasis.parent,
+          ),
+          minWidth: double.minPositive,
+          onPressed: () {
+            //do something
+          },
         ),
-        minWidth: double.minPositive,
-        onPressed: () {
-          //do something
-        },
       ),
     );
   }
 
   ListView _buildListCategories() {
-    return ListView.custom(
-        childrenDelegate:
-            SliverChildBuilderDelegate((BuildContext context, int index) {}));
+    // return ListView.custom(
+    //     childrenDelegate:
+    //         SliverChildBuilderDelegate((BuildContext context, int index) {}));
+    return ListView.builder(
+      itemBuilder: (_, index) {
+        return _cardCategory(categories[index]);
+      },
+      scrollDirection: Axis.horizontal,
+      itemCount: categories.length,
+    );
   }
 }

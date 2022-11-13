@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 
 mixin ArticlePostHandle {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
 
   List<ArticlePost>? _articlesFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
@@ -18,40 +19,63 @@ mixin ArticlePostHandle {
   }
 
   Stream<List<ArticlePost>?> get allArticles {
-    return db
+    return _db
         .collection('articles')
         .snapshots()
         .map(_articlesFromQuerySnapshot);
   }
 
   Future<List<ArticlePost>?> get allArticlesOnce {
-    return db.collection('articles').get().then(_articlesFromQuerySnapshot);
+    return _db.collection('articles').get().then(_articlesFromQuerySnapshot);
   }
 
   void addListArticles(List<ArticlePost> list) {
-    CollectionReference collection = db.collection('articles');
-    list.forEach((article) {
-      collection
-          .add(article.toJson())
-          .then((value) => print('Article added successfully'))
-          .catchError((onError) => print('Failed to add an article'));
-    });
+    list.forEach((article) => addArticle(article));
   }
 
   void addArticle(ArticlePost article) async {
-    DocumentReference doc = db.collection('articles').doc();
+    DocumentReference doc = _db.collection('articles').doc();
     String doc_id = doc.id;
     if (article.id == null) article.setId(doc_id);
     String? user_id = AuthService().currentUserId;
     article.setAuthorId(user_id);
-    CollectionReference subcollection =
-        db.collection('articles').doc(doc_id).collection('comments');
-    article.comments?.forEach((element) => subcollection.add(element.toJson()));
-    print(article.comments);
 
+    // Add article comments to firebase
+    CollectionReference subcollection =
+        _db.collection('articles').doc(doc_id).collection('comments');
+    article.comments?.forEach((element) => subcollection.add(element.toJson()));
+
+    // Add article to firebase
     doc
         .set(article.toJson())
         .then((value) => print('Article added successfully'))
         .catchError((error) => print('Failed to add an article'));
+  }
+
+  void postSampleArticle() {
+    ArticlePost articlePost =
+        ArticlePost.only(title: 'Testing comments', content: 'Nothing much');
+    articlePost.comments = Comment.getSampleCommentsList();
+    addArticle(articlePost);
+  }
+
+  Future<List<ArticlePost>?> getArticlesList() async {
+    CollectionReference collection = _db.collection('articles');
+    // return a QuerySnapshot, which is a collection query
+    // To access documents in a collection,
+    // querySnapshot.docs() => return a List<DocumentSnapshot>
+    List<ArticlePost>? result;
+    await collection.get().then((QuerySnapshot querySnapshot) {
+      // print(querySnapshot.docs.first.data());
+      result = querySnapshot.docs.map((doc) {
+        if (doc.exists) {
+          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+          ArticlePost a = ArticlePost.fromJson(data);
+          return a;
+        }
+        return ArticlePost.test();
+      }).toList();
+    });
+    return result;
   }
 }

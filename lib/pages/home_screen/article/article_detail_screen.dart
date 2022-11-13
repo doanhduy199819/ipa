@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -10,7 +12,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/article/article_
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:provider/provider.dart';
-import '../../../objects/Questions.dart';
+import '../../../objects/Question.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -236,7 +238,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                       ),
                       //comment
                       ArticleCommentPart(
-                        id: articlePost.id!,
+                        articleId: articlePost.id!,
                       ),
                     ],
                   ),
