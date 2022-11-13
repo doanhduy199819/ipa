@@ -225,14 +225,6 @@ class Question {
         ['0', '1', '2'],
         ['5'],
         Comment.getSampleCommentsList(),
-      ..add(Question.only(
-        title: 'Remove duplicate',
-        content: 'This is content remove duplicate',
-        created_at: DateTime(2021, 10, 11, 20, 30),
-        categories: ['C++', 'C#', 'Algorithm'],
-        // ['0', '1', '2'],
-        // ['5'],
-        answers: Comment.getSampleCommentsList(),
       ));
     // ..add(Question(
     //   '1',
