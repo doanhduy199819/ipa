@@ -27,8 +27,7 @@ class _QAContentState extends State<QAContent> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: DatabaseQAService().getQuestionsList(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         }
@@ -39,19 +38,30 @@ class _QAContentState extends State<QAContent> {
           return Text("Loading");
         }
         display_list_question = snapshot.data! as List<Question>;
-        return Container(
-          padding: EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: searchPart(),
-              ),
-              Expanded(
-                flex: 7,
-                child: contentListQuestions(),
-              ),
-            ],
+        return Scaffold(
+          appBar: _buildAppBar(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PostAQuestion()));
+            },
+            backgroundColor: Colors.lightBlue[100],
+            child: Icon(Icons.add_comment),
+          ),
+          body: Container(
+            padding: EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: searchPart(),
+                ),
+                Expanded(
+                  flex: 7,
+                  child: contentListQuestions(),
+                ),
+              ],
+            ),
           ),
         );
         // return ListView(
@@ -237,7 +247,8 @@ class _QAContentState extends State<QAContent> {
                         //Title
                         Container(
                           padding: const EdgeInsets.only(top: 1, bottom: 4),
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
+                          width:
+                              MediaQuery.of(context).size.width * 9 / 15 - 15,
                           child: RichText(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -286,7 +297,7 @@ class _QAContentState extends State<QAContent> {
                                 ],
                               )
                             : Row(
-                                children:const [
+                                children: const [
                                   SizedBox(
                                     height: 20,
                                   ),
@@ -295,7 +306,8 @@ class _QAContentState extends State<QAContent> {
                         //Content
 
                         Container(
-                          width: MediaQuery.of(context).size.width * 9 / 15 - 15,
+                          width:
+                              MediaQuery.of(context).size.width * 9 / 15 - 15,
                           padding: const EdgeInsets.only(top: 2, bottom: 2),
                           //width: 150,
                           child: RichText(
@@ -339,7 +351,8 @@ class _QAContentState extends State<QAContent> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
-                            parseDateTime(display_list_question[index].created_at),
+                            parseDateTime(
+                                display_list_question[index].created_at),
                             style: const TextStyle(
                               fontSize: 8,
                             ),
@@ -357,13 +370,22 @@ class _QAContentState extends State<QAContent> {
       ),
     );
   }
-   String parseDateTime(DateTime? time){
-    if(time !=null){
-    String formatter = DateFormat('dd/MM/yyyy').format(time) ;
-    return formatter;
-    } 
-    else{
-       return '1/1/2001';
-    } 
+
+  String parseDateTime(DateTime? time) {
+    if (time != null) {
+      String formatter = DateFormat('dd/MM/yyyy').format(time);
+      return formatter;
+    } else {
+      return '1/1/2001';
+    }
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(
+        'Q & A',
+        style: HomeScreenFonts.headStyle,
+      ),
+    );
   }
 }

@@ -73,7 +73,7 @@ class HomeScreenFonts {
     fontWeight: FontWeight.normal,
   );
   static TextStyle title = GoogleFonts.montserrat(
-    fontSize: 14,
+    fontSize: 18,
     color: Colors.black,
     fontWeight: FontWeight.bold,
   );
@@ -82,12 +82,17 @@ class HomeScreenFonts {
     color: Colors.grey[900],
     fontWeight: FontWeight.normal,
   );
+  static TextStyle author = GoogleFonts.catamaran(
+    fontSize: 12,
+    color: Colors.grey[900],
+    fontWeight: FontWeight.normal,
+  );
   static TextStyle category = GoogleFonts.roboto(
     fontSize: 14,
     color: Colors.black,
     fontWeight: FontWeight.normal,
   );
-  static TextStyle headStyle = GoogleFonts.playfairDisplay(
+  static TextStyle headStyle = GoogleFonts.robotoSlab(
     fontSize: 24,
     color: Colors.white,
     fontWeight: FontWeight.bold,

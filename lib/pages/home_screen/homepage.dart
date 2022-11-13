@@ -35,19 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _buildAppBar(),
       backgroundColor: Color.fromARGB(255, 233, 240, 243),
-      body: Column(
-        //list articles post
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildMenu(), // Extract to method for short code
-          ),
-          Expanded(
-            child: ArticleContent(),
-            flex: 9,
-          )
-        ],
-      ),
+      body: _buildBody(),
     );
   }
 
@@ -88,13 +76,31 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
+  Widget _buildBody() {
+    return Container(   
+      child: Column(
+        //list articles post
+        children: [
+          Expanded(
+            flex: 1,
+            child: _buildMenu(), // Extract to method for short code
+          ),
+          Expanded(
+            child: ArticleContent(),
+            flex: 9,
+          )
+        ],
+      ),
+    );
+  }
+
   Card _cardCategory(String string) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       //color: Colors.cyanAccent[100],//after tab this card
-      color: Colors.grey[300],
+      color: Colors.lightBlue[100],
       elevation: 2,
       child: FlatButton(
         child: Text(
