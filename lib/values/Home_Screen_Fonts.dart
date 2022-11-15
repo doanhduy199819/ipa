@@ -13,7 +13,7 @@ class HomeScreenFonts {
     fontFamily: FontFamily.arial,
   );
   static TextStyle titleQuestion = TextStyle(
-    fontFamily: FontFamily.arial,
+    fontFamily: FontFamily.inter,
     fontSize: 12,
     fontWeight: FontWeight.bold,
     color: const Color(0xff000000),
@@ -73,10 +73,17 @@ class HomeScreenFonts {
     fontWeight: FontWeight.normal,
   );
   static TextStyle title = GoogleFonts.montserrat(
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
     fontWeight: FontWeight.bold,
   );
+
+  static TextStyle interestTag = GoogleFonts.ubuntu(
+    color: Colors.lightBlue,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle description = GoogleFonts.catamaran(
     fontSize: 14,
     color: Colors.grey[900],

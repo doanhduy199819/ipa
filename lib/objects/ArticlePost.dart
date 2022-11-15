@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_interview_preparation/objects/Account.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
 import 'Comment.dart';
@@ -12,6 +12,7 @@ class ArticlePost {
   String? content;
   List<String>? categories;
   String? author_id;
+  String? photoUrl;
   List<String>? liked_users;
   List<Comment>? comments;
 
@@ -25,6 +26,7 @@ class ArticlePost {
     this.content,
     this.categories,
     this.author_id,
+    this.photoUrl,
     this.liked_users,
     this.comments,
   });
@@ -68,6 +70,7 @@ class ArticlePost {
     final List<String>? categories =
         data?['categories'] is Iterable ? List.from(data?['categories']) : null;
     final String? author_id = data?['author_id'];
+    final String? photoUrl = data?['photoUrl'];
     final List<String>? liked_users = data?['liked_users'] is Iterable
         ? List.from(data?['liked_users'])
         : null;
@@ -75,8 +78,17 @@ class ArticlePost {
     // final List<Comment>? comments =
     //     data?['comments'] is Iterable ? List.from(data?['comments']) : null;
 
-    return ArticlePost(id, title, created_at, content, categories, author_id,
-        liked_users, null);
+    // return ArticlePost(id, title, created_at, content, categories, author_id,
+    //     liked_users, null);
+    return ArticlePost.only(
+      id: id,
+      title: title,
+      created_at: created_at,
+      content: content,
+      categories: categories,
+      author_id: author_id,
+      photoUrl: photoUrl,
+    );
   }
 
   factory ArticlePost.fromDocumentSnapshot(
@@ -91,6 +103,7 @@ class ArticlePost {
         if (content != null) 'content': content,
         if (categories != null) 'categories': categories,
         if (author_id != null) 'author_id': author_id,
+        if (photoUrl != null) 'photoUrl': photoUrl,
         if (liked_users != null) 'liked_users': liked_users,
         if (comments != null) 'comments': comments,
       };

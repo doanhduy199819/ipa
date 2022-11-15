@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_content.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/user_profile.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
@@ -22,11 +21,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late bool isArticleTab;
   List<String> categories = <String>[
-    "For you",
-    "All",
-    "Popular",
-    "Algorithm",
-    "Programming Language"
+    'For you',
+    'All',
+    'Popular',
+    'Algorithm',
   ];
 
   List<Question> display_list_question =
@@ -123,9 +121,9 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             '${string}',
             style: HomeScreenFonts.category,
-            textWidthBasis: TextWidthBasis.parent,
+            // textWidthBasis: TextWidthBasis.parent,
           ),
-          minWidth: double.minPositive,
+          // minWidth: double.minPositive,
           onPressed: () {
             //do something
           },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 
-import '../../objects/Account.dart';
+import '../../objects/FirestoreUser.dart';
 import '../../objects/Comment.dart';
 import '../../values/Home_Screen_Fonts.dart';
 

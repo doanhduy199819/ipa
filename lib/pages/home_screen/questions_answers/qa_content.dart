@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
+
 import 'package:flutter_interview_preparation/objects/Company.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
@@ -11,8 +11,11 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/services/qa_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+
 import 'package:intl/intl.dart';
+
+import 'components/search_company_bloc.dart';
+import 'components/vote_bloc.dart';
 
 class QAContent extends StatefulWidget {
   const QAContent({Key? key}) : super(key: key);
@@ -57,6 +60,65 @@ class _QAContentState extends State<QAContent> {
     );
   }
 
+  // Widget searchPart() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.only(left: 8.0, top: 2.0),
+  //         child: Text(
+  //           'All Questions',
+  //           style: HomeScreenFonts.h1
+  //               .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+  //           textAlign: TextAlign.left,
+  //         ),
+  //       ),
+  //       Row(
+  //         children: [
+  //           const Spacer(),
+  //           Text(
+  //             'Company',
+  //             style: HomeScreenFonts.h1
+  //                 .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+  //           ),
+  //           const SizedBox(
+  //             width: 10,
+  //           ),
+  //           Container(
+  //             width: MediaQuery.of(context).size.width * 0.62,
+  //             height: 20,
+  //             decoration: const BoxDecoration(
+  //               shape: BoxShape.rectangle,
+  //               color: Color(0xffEDEAEA),
+  //             ),
+  //             child: TextField(
+  //               cursorColor: Colors.black,
+  //               decoration: InputDecoration(
+  //                 contentPadding: const EdgeInsets.only(top: 1),
+  //                 // filled: true,
+  //                 //fillColor: Color(0xff302360),
+  //                 border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(8),
+  //                   borderSide: BorderSide.none,
+  //                 ),
+
+  //                 hintStyle: const TextStyle(fontSize: 12),
+  //                 hintText: 'Search Company',
+  //                 prefixIcon: const Icon(Icons.search, size: 17),
+  //                 prefixIconColor: Colors.purple.shade900,
+  //                 // border: InputBorder.none,
+  //                 // prefixIcon: Icon(Icons.search,size: 16,),
+  //                 // hintText: 'Search company',
+  //                 // hintStyle: TextStyle(fontSize: 12),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       )
+  //     ],
+  //   );
+  // }
+
   Widget contentListQuestions() {
     return ListView.custom(
       childrenDelegate: SliverChildBuilderDelegate(
@@ -85,59 +147,65 @@ class _QAContentState extends State<QAContent> {
               child: Row(
                 children: [
                   //Vote bloc
-                  Container(
-                    padding: const EdgeInsets.only(left: 4),
-                    // color:Colors.red,
-                    width: MediaQuery.of(context).size.width / 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Vote
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 3.0, bottom: 12.0),
-                          child: Row(
-                            children: [
-                              Icon(display_list_question[index].numberOfUpvote >
-                                      0
-                                  ? Icons.arrow_upward
-                                  : Icons.arrow_downward),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Text(
-                                  display_list_question[index]
-                                      .numberOfUpvote
-                                      .toString(),
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Comment
-                        Row(
-                          children: [
-                            const Icon(Icons.comment),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 5, bottom: 2),
-                              child: Text(
-                                display_list_question[index]
-                                    .numberOfAnswers
-                                    .toString(),
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  VoteBloc(
+                      numberOfVotes:
+                          display_list_question[index].numberOfUpvote,
+                      numberOfAnswers:
+                          display_list_question[index].numberOfAnswers),
+
+                  // Container(
+                  //   padding: const EdgeInsets.only(left: 4),
+                  //   // color:Colors.red,
+                  //   width: MediaQuery.of(context).size.width / 5,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       // Vote
+                  //       Padding(
+                  //         padding:
+                  //             const EdgeInsets.only(top: 3.0, bottom: 12.0),
+                  //         child: Row(
+                  //           children: [
+                  //             Icon(display_list_question[index].numberOfUpvote >
+                  //                     0
+                  //                 ? Icons.arrow_upward
+                  //                 : Icons.arrow_downward),
+                  //             Padding(
+                  //               padding: const EdgeInsets.only(left: 4.0),
+                  //               child: Text(
+                  //                 display_list_question[index]
+                  //                     .numberOfUpvote
+                  //                     .toString(),
+                  //                 style: const TextStyle(
+                  //                   fontSize: 11,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       // Comment
+                  //       Row(
+                  //         children: [
+                  //           const Icon(Icons.comment),
+                  //           Padding(
+                  //             padding:
+                  //                 const EdgeInsets.only(left: 5, bottom: 2),
+                  //             child: Text(
+                  //               display_list_question[index]
+                  //                   .numberOfAnswers
+                  //                   .toString(),
+                  //               style: const TextStyle(
+                  //                 fontSize: 11,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                   //Content bloc
                   Padding(

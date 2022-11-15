@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 // ignore: prefer_const_literals_to_create_immutables
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 
 class CommentBoxWidget extends StatefulWidget {
   const CommentBoxWidget(
@@ -39,7 +41,7 @@ class _CommentBoxWidgetState extends State<CommentBoxWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitle(
+          UserInfoBox(
             photoUrl: widget.photoUrl,
             userName: widget.userName,
             postFix: widget.postFix,
@@ -182,40 +184,3 @@ class _buildCommentContent extends StatelessWidget {
   }
 }
 
-class _buildTitle extends StatelessWidget {
-  const _buildTitle({
-    Key? key,
-    this.photoUrl,
-    this.userName, this.postFix,
-  }) : super(key: key);
-
-  final String? photoUrl;
-  final String? userName;
-  final Widget? postFix;
-
-  @override
-  Widget build(BuildContext context) {
-    const samplephotoeUrl = 'https://www.vietnamplus.vn/';
-    const sampleUserName = 'Pikachu';
-    const titleTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
-          child: CircleAvatar(
-            radius: 12,
-            backgroundImage: NetworkImage(photoUrl ?? samplephotoeUrl),
-          ),
-        ),
-        Text(
-          userName ?? sampleUserName,
-          style: titleTextStyle,
-        ),
-        Expanded(
-          child: Align(alignment: Alignment.centerRight, child: postFix),
-        ),
-      ],
-    );
-  }
-}

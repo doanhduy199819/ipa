@@ -10,7 +10,7 @@ import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../objects/Account.dart';
+import '../../../objects/FirestoreUser.dart';
 import '../../../objects/ArticlePost.dart';
 import '../../../objects/Comment.dart';
 
@@ -24,7 +24,7 @@ class ArticleCommentPart extends StatefulWidget {
 
 class _ArticleCommentPartState extends State<ArticleCommentPart> {
   late List<Comment>? comments;
-  late Account account;
+  late FirestoreUser account;
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   String commentContent = "";
   final _formKey = GlobalKey<FormState>();
@@ -34,13 +34,13 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   @override
   void initState() {
-    account = new Account(
-        'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        'Nhat Tan',
-        2871,
-        100,
-        100,
-        100);
+    // account = new Account(
+    //     'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    //     'Nhat Tan',
+    //     2871,
+    //     100,
+    //     100,
+    //     100);
     // TODO: implement initState
     super.initState();
   }

@@ -5,7 +5,7 @@ import 'package:flutter_interview_preparation/objects/Company.dart';
 import 'package:flutter_interview_preparation/values/Quizz_Screen_Fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:intl/intl.dart';
-import '../../objects/Account.dart';
+import '../../objects/FirestoreUser.dart';
 import '../../objects/ArticlePost.dart';
 import '../../objects/Comment.dart';
 import '../../objects/Question.dart';

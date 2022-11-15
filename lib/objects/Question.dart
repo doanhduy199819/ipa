@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'Account.dart';
+import 'FirestoreUser.dart';
 import 'package:intl/intl.dart';
 
 class Question {
@@ -142,14 +142,89 @@ class Question {
   static List<Question> getSampleQuestions() {
     List<Question> _sampleQuestion = [];
     _sampleQuestion
-      ..add(Question.only(
-        title: 'Remove duplicate',
-        content: 'This is content remove duplicate',
-        created_at: DateTime(2021, 10, 11, 20, 30),
-        categories: ['C++', 'C#', 'Algorithm'],
-        // ['0', '1', '2'],
-        // ['5'],
-        answers: Comment.getSampleCommentsList(),
+      ..add(Question(
+        '0',
+        'Remove duplicate',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2021, 10, 11, 20, 30),
+        '100',
+        '1',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '1',
+        'Remove duplicate character in string',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2021, 10, 11, 20, 30),
+        '100',
+        '1',
+        ['c++', 'string', 'algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '0',
+        'Cleaning up data where it repeats daily',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2022, 4, 11, 9, 30),
+        '101',
+        '2',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '0',
+        'Cleaning up data where it repeats daily',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2022, 4, 11, 9, 30),
+        '101',
+        '2',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '0',
+        'Cleaning up data where it repeats daily',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2022, 4, 11, 9, 30),
+        '101',
+        '2',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '0',
+        'Cleaning up data where it repeats daily',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2022, 4, 11, 9, 30),
+        '101',
+        '2',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
+      ))
+      ..add(Question(
+        '0',
+        'Cleaning up data where it repeats daily',
+        'I am working with a Qualtrics survey where blocks of questions repeat themselves',
+        DateTime(2022, 4, 11, 9, 30),
+        '101',
+        '2',
+        ['C++', 'C#', 'Algorithm'],
+        ['0', '1', '2'],
+        ['5'],
+        Comment.getSampleCommentsList(),
       ));
     // ..add(Question(
     //   '1',
