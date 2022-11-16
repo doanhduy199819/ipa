@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_interview_preparation/pages/profile_screen/user_profile.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/saved_articles.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/saved_qa.dart';
@@ -119,7 +120,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: ListTile(
                     leading: Icon(Icons.account_circle),
-                    title: Text('Account'),
+                    title: Text('Accounts'),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              fullscreenDialog: false,
+                              builder: (context) => UserProfile()));
+                    },
                   ),
                 ),
                 Container(

@@ -186,7 +186,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-    //Vote Comment Bloc
+          //Vote Comment Bloc
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -226,7 +226,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
               ),
             ],
           ),
-    //Content comment bloc
+          //Content comment bloc
           Padding(
             padding: const EdgeInsets.only(bottom: 4.0),
             child: Column(

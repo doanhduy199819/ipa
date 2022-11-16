@@ -47,7 +47,7 @@ class _PostAQuestionState extends State<PostAQuestion> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   textAlign: TextAlign.left),
               Text(
-                  'Be specific and imagine you’re asking a question to another person',
+                  'Be spescific and imagine you’re asking a question to another person',
                   style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
                   textAlign: TextAlign.left),
               SizedBox(

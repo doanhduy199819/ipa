@@ -2,9 +2,27 @@ import 'package:flutter/material.dart';
 
 import '../../values/Home_Screen_Fonts.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
+  const UserProfile({Key? key}) : super(key: key);
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
   late double hei;
   late double wid;
+  late bool followCheck;
+  void initData() {
+    followCheck = false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initData();
+  }
+
   @override
   Widget build(BuildContext context) {
     hei = MediaQuery.of(context).size.height;
@@ -31,7 +49,7 @@ class UserProfile extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-            margin: EdgeInsets.only(bottom: hei * 0.1),
+            margin: EdgeInsets.only(bottom: hei * 0.1 + 4),
             child: _buildCoverImage()),
         Positioned(
           child: _buildUserImage(),
@@ -44,21 +62,31 @@ class UserProfile extends StatelessWidget {
   Widget _buildBody() {
     return Column(
       children: [
+        // _buildButtonFollow(),
         _buildGroup(Icons.person, 'Lê Hoàng Vỹ'),
         _buildGroup(Icons.calendar_month, '21/05/2001'),
         _buildGroup(Icons.mail, 'lehoangvy2105@gmail.com'),
         _buildGroup(Icons.people, 'Male'),
-        _buildArticle(),
         _buildQuestion()
       ],
     );
   }
 
-  Widget _buildUserImage() => CircleAvatar(
-        radius: hei * 0.1,
-        backgroundColor: Colors.grey.shade800,
-        backgroundImage: AssetImage("assets/images/avatar.png"),
-      );
+  Widget _buildUserImage() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white,
+          width: 4,
+        ),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: CircleAvatar(
+          radius: hei * 0.1,
+          backgroundColor: Colors.white,
+          backgroundImage: AssetImage("assets/images/avatar.png")),
+    );
+  }
 
   Widget _buildCoverImage() {
     return Container(
@@ -98,32 +126,66 @@ class UserProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildArticle() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        children: [
-          Text(
-            'Your Articles ',
-            style: HomeScreenFonts.title,
-          ),
-          Text(' '),
-        ],
+  Widget _buildQuestion() {
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Column(
+          children: [
+            Text(
+              'Your Question ',
+              style: HomeScreenFonts.title,
+            ),
+            Text(' '),
+          ],
+        ),
       ),
-    );
+    ]);
   }
 
-  Widget _buildQuestion() {
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            'Your Question ',
-            style: HomeScreenFonts.title,
-          ),
-          Text(' '),
-        ],
-      ),
-    );
-  }
+  // Widget _buildButtonFollow() {
+  //   return Container(
+  //     margin: EdgeInsets.only(top: hei * 0.075, left: hei * 0.2),
+  //     child: InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           followCheck = !followCheck;
+  //         });
+  //       },
+  //       child: followCheck == true
+  //           ? Container(
+  //               padding:
+  //                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+  //               decoration: BoxDecoration(
+  //                 color: Colors.blue.shade300,
+  //                 borderRadius: BorderRadius.circular(30),
+  //                 border: Border.all(
+  //                   color: Colors.white,
+  //                   width: 2,
+  //                 ),
+  //               ),
+  //               child: Text(
+  //                 'Following',
+  //                 style: HomeScreenFonts.description,
+  //               ),
+  //             )
+  //           : Container(
+  //               padding:
+  //                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+  //               decoration: BoxDecoration(
+  //                 color: Colors.grey.shade300,
+  //                 borderRadius: BorderRadius.circular(30),
+  //                 border: Border.all(
+  //                   color: Colors.white,
+  //                   width: 2,
+  //                 ),
+  //               ),
+  //               child: Text(
+  //                 'Follow',
+  //                 style: HomeScreenFonts.description,
+  //               ),
+  //             ),
+  //     ),
+  //   );
+  // }
 }
