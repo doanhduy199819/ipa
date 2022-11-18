@@ -3,22 +3,32 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class InterractionIcon extends StatefulWidget {
-  const InterractionIcon(
-      {Key? key,
-      this.activeIconData = Icons.arrow_upward_rounded,
-      this.onTap,
-      this.label,
-      this.activeColor = Colors.green,
-      this.unActiveColor = Colors.grey,
-      this.isActive = false})
-      : super(key: key);
+  const InterractionIcon({
+    Key? key,
+    // this.activeIconData = Icons.arrow_upward_rounded,
+    this.onTap,
+    this.label,
+    // this.activeColor = Colors.green,
+    // this.unActiveColor = Colors.grey,
+    this.isActive = false,
+    this.onActiveChange,
+    this.hasBackgroundDecoration = true,
+    // this.size = 12.0,
+    this.activeIcon,
+    this.unActiveIcon,
+  }) : super(key: key);
 
-  final IconData? activeIconData;
+  // final IconData? activeIconData;
+  final Icon? activeIcon;
+  final Icon? unActiveIcon;
   final String? label;
   final bool isActive;
+  final bool hasBackgroundDecoration;
+  // final double size;
   final void Function()? onTap;
-  final MaterialColor activeColor;
-  final MaterialColor unActiveColor;
+  final void Function(bool)? onActiveChange;
+  // final MaterialColor activeColor;
+  // final MaterialColor unActiveColor;
 
   @override
   State<InterractionIcon> createState() => _InterractionIconState();
@@ -40,19 +50,20 @@ class _InterractionIconState extends State<InterractionIcon> {
       onTap: () => setState(() {
         widget.onTap != null ? widget.onTap!() : null;
         isActive = !isActive;
+        widget.onActiveChange != null ? widget.onActiveChange!(isActive) : null;
       }),
       child: Container(
-        decoration: BoxDecoration(
-          color: isActive
-              ? widget.activeColor.shade300
-              : widget.unActiveColor.shade300,
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-              width: 0.5,
-              color: isActive
-                  ? widget.activeColor.shade500
-                  : widget.unActiveColor.shade500),
-        ),
+        decoration: widget.hasBackgroundDecoration
+            ? BoxDecoration(
+                color: isActive ? Colors.green.shade300 : Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(
+                    width: 0.5,
+                    color: isActive
+                        ? Colors.green.shade500
+                        : Colors.grey.shade500),
+              )
+            : null,
         padding: const EdgeInsets.all(4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,11 +71,12 @@ class _InterractionIconState extends State<InterractionIcon> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               // padding: EdgeInsets.zero,
-              child: Icon(
-                widget.activeIconData,
-                color: isActive ? Colors.white : Colors.grey,
-                size: 12.0,
-              ),
+              // child: Icon(
+              //   widget.activeIconData,
+              //   color: isActive ? Colors.white : Colors.grey,
+              //   size: widget.size,
+              // ),
+              child: isActive ? widget.activeIcon : widget.unActiveIcon,
             ),
             if (widget.label != null)
               Padding(

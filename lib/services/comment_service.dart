@@ -4,12 +4,6 @@ import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 mixin CommentService {
-  // Future<void> addCommentToArticle(String content, String articleId);
-  // Future<void> deleteCommentFromArticle(String commentId, String articleId);
-  // List<Comment>? commentsFromQuerySnapshot(
-  //     QuerySnapshot<Map<String, dynamic>> querySnapshot);
-
-  // Stream<List<Comment>?> commentsFromArticle(String aricleId);
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<void> addCommentToArticle(String content, String articleId) {

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_interview_preparation/objects/Company.dart';
@@ -25,27 +24,31 @@ class QAContent extends StatefulWidget {
 }
 
 class _QAContentState extends State<QAContent> {
-  List<Question> display_list_question = Question.getSampleQuestions();
+  // List<Question> display_list_question = Question.getSampleQuestions();
+  List<Question>? display_list_question;
   final List<Company> _sampleListCompany =
       List.from(Company.getSampleCompany());
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: DatabaseService().allQuestionsOnce(),
-      builder: (context, asyncSnapshot) =>
-          Helper().handleSnapshot(asyncSnapshot) ??
-          SafeArea(
-            minimum: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                searchBar(context: context),
-                const SizedBox(height: 16.0),
-                Expanded(child: contentListQuestions()),
-              ],
-            ),
-          ),
+    return FutureBuilder<List<Question>?>(
+      future: DatabaseService().allQuestionsOnce,
+      builder: (context, asyncSnapshot) {
+        display_list_question = asyncSnapshot.data;
+
+        return Helper().handleSnapshot(asyncSnapshot) ??
+            SafeArea(
+              minimum: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  searchBar(context: context),
+                  const SizedBox(height: 16.0),
+                  Expanded(child: contentListQuestions()),
+                ],
+              ),
+            );
+      },
     );
   }
 
@@ -131,7 +134,7 @@ class _QAContentState extends State<QAContent> {
                     fullscreenDialog: false,
                     builder: (context) => QaDetailScreen(),
                     settings:
-                        RouteSettings(arguments: display_list_question[index]),
+                        RouteSettings(arguments: display_list_question?[index]),
                   ));
             },
             child: Container(
@@ -149,9 +152,9 @@ class _QAContentState extends State<QAContent> {
                   //Vote bloc
                   VoteBloc(
                       numberOfVotes:
-                          display_list_question[index].numberOfUpvote,
+                          display_list_question?[index].numberOfUpvote ?? 0,
                       numberOfAnswers:
-                          display_list_question[index].numberOfAnswers),
+                          display_list_question?[index].numberOfAnswers ?? 0),
 
                   // Container(
                   //   padding: const EdgeInsets.only(left: 4),
@@ -223,7 +226,7 @@ class _QAContentState extends State<QAContent> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              text: display_list_question[index].title!,
+                              text: display_list_question?[index].title,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -239,11 +242,12 @@ class _QAContentState extends State<QAContent> {
                         ),
                         //Tags
 
-                        (display_list_question[index].categories != null)
+                        (display_list_question?[index].categories != null)
                             ? Row(
                                 children: [
-                                  for (var item in display_list_question[index]
-                                      .categories!)
+                                  for (var item in display_list_question?[index]
+                                          .categories ??
+                                      [])
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           right: 3, bottom: 2),
@@ -284,7 +288,7 @@ class _QAContentState extends State<QAContent> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              text: display_list_question[index].content!,
+                              text: display_list_question?[index].content,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
@@ -312,8 +316,8 @@ class _QAContentState extends State<QAContent> {
                               height: 50,
                               // Task: Change idCompany to picture of Company, default logo company is LG logo
                               Company.haveIdCompanyInSample(
-                                          display_list_question[index]
-                                              .company_id!)
+                                          display_list_question?[index]
+                                              .company_id ?? '')
                                       ?.logo ??
                                   HomeScreenAssets.lgLogo),
                         ),
@@ -322,7 +326,7 @@ class _QAContentState extends State<QAContent> {
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
                             parseDateTime(
-                                display_list_question[index].created_at),
+                                display_list_question?[index].created_at),
                             style: const TextStyle(
                               fontSize: 8,
                             ),
@@ -336,7 +340,7 @@ class _QAContentState extends State<QAContent> {
             ),
           );
         },
-        childCount: display_list_question.length,
+        childCount: display_list_question?.length,
       ),
     );
   }

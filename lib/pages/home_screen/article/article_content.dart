@@ -12,6 +12,8 @@ import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
+import 'package:flutter_interview_preparation/pages/components/bookmark.dart';
+import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
@@ -30,11 +32,11 @@ class ArticleContent extends StatefulWidget {
 class _ArticleContentState extends State<ArticleContent> {
   late List<ArticlePost> _post;
   late bool like_check;
-  late bool bookmard_check;
+  late bool bookmark_check;
 
   void initData() {
     like_check = false;
-    bookmard_check = false;
+    bookmark_check = false;
   }
 
   @override
@@ -42,7 +44,14 @@ class _ArticleContentState extends State<ArticleContent> {
     // TODO: implement initState
     initData();
     super.initState();
-    // _initSampleData();
+    _initSampleData();
+  }
+
+  Future<void> _pullRefresh() async {
+    List<ArticlePost>? list = await DatabaseService().allArticlesOnce;
+    setState(() {
+      _post = list ?? ArticlePost.getSampleArticlePostList();
+    });
   }
 
   @override
@@ -63,9 +72,12 @@ class _ArticleContentState extends State<ArticleContent> {
           );
         }
         _post = snapshot.data! as List<ArticlePost>;
-        return Container(
-          padding: EdgeInsets.all(4.0),
-          child: _buildListViewContent(),
+        return RefreshIndicator(
+          onRefresh: _pullRefresh,
+          child: Container(
+            padding: EdgeInsets.all(4.0),
+            child: _buildListViewContent(),
+          ),
         );
       },
     );
@@ -97,9 +109,16 @@ class _ArticleContentState extends State<ArticleContent> {
 
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
+        BookmarkIcon bookmark = BookmarkIcon(post: _post[index]);
         return InkWell(
-          onTap: () =>
-              _pushTo(context, const ArticleDetailScreen(), _post[index]),
+          onTap: () {
+            dynamic args = {
+              "articlePost": _post[index],
+              "bookmark": bookmark,
+            };
+            // _pushTo(context, const ArticleDetailScreen(), _post[index]),
+            _pushTo(context, const ArticleDetailScreen(), args);
+          },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             margin: const EdgeInsets.only(bottom: 8),
@@ -162,14 +181,7 @@ class _ArticleContentState extends State<ArticleContent> {
                               ],
                             )),
                         const SizedBox(width: 16.0),
-                        InkWell(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.bookmark_border_rounded,
-                            size: 18,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        BookmarkIcon(post: _post[index]),
                       ],
                     ),
                   ],

@@ -31,7 +31,16 @@ class _UpDownVoteBoxState extends State<UpDownVoteBox> {
     return Row(
       children: [
         InterractionIcon(
-          activeIconData: Icons.arrow_upward_rounded,
+          activeIcon: Icon(
+            Icons.arrow_upward_rounded,
+            size: 12.0,
+            color: Colors.white,
+          ),
+          unActiveIcon: Icon(
+            Icons.arrow_upward_rounded,
+            size: 12.0,
+            color: Colors.grey,
+          ),
           onTap: _upVoteTap,
           isActive: voteState == 1,
         ),
@@ -39,8 +48,16 @@ class _UpDownVoteBoxState extends State<UpDownVoteBox> {
         Text(voteNum.toString()),
         const SizedBox(width: 12.0),
         InterractionIcon(
-          activeIconData: Icons.arrow_downward_rounded,
-          activeColor: Colors.red,
+          activeIcon: Icon(
+            Icons.arrow_upward_rounded,
+            size: 12.0,
+            color: Colors.white,
+          ),
+          unActiveIcon: Icon(
+            Icons.arrow_upward_rounded,
+            size: 12.0,
+            color: Colors.grey,
+          ),
           onTap: _downVoteTap,
           isActive: voteState == -1,
         ),

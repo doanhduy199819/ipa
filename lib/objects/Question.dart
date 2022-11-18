@@ -67,9 +67,11 @@ class Question {
     final String? title = json?['title'];
     final String? content = json?['content'];
     final String? date_string_created = json?['created_at'];
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    final DateTime created_at =
-        formatter.parse(date_string_created ?? '1/1/2001');
+    // DateFormat formatter = DateFormat('dd/MM/yyyy');
+    // final DateTime created_at =
+    //     formatter.parse(date_string_created ?? '1/1/2001');
+    final DateTime created_at = DateTime.parse(
+        date_string_created ?? DateTime.utc(2001, 1, 1).toString());
     final String? author_id = json?['author_id'] as String?;
     final String? company_id = json?['company_id'] as String?;
     final List<String>? categories =
@@ -94,7 +96,7 @@ class Question {
         if (id != null) 'id': id,
         if (title != null) 'title': title,
         if (content != null) 'content': content,
-        if (created_at != null) 'created_at': created_at,
+        if (created_at != null) 'created_at': created_at.toString(),
         if (author_id != null) 'author_id': author_id,
         if (company_id != null) 'company_id': company_id,
         if (categories != null) 'categories': categories,
@@ -126,6 +128,8 @@ class Question {
       answers!.add(comment);
     }
   }
+
+  int get voteNum => numberOfUpvote - numberOfDownvote;
 
   int get numberOfUpvote {
     return (upvote_users?.length ?? 0);

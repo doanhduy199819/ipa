@@ -4,9 +4,13 @@ import '../../../../values/Home_Screen_Fonts.dart';
 class BuildTagFillter extends StatefulWidget {
   List<String>? fillters;
   int currentlyIndexFillters;
+  final Function(int)? onIndexChange;
 
   BuildTagFillter(
-      {Key? key, this.fillters, required this.currentlyIndexFillters})
+      {Key? key,
+      this.fillters,
+      required this.currentlyIndexFillters,
+      this.onIndexChange})
       : super(key: key);
 
   @override
@@ -34,6 +38,10 @@ class _BuildTagCategoryState extends State<BuildTagFillter> {
                   setState(() {
                     widget.currentlyIndexFillters = index;
                   });
+                  // This call when user tap at each filter
+                  widget.onIndexChange != null
+                      ? widget.onIndexChange!(index)
+                      : null;
                 },
                 child: (widget.currentlyIndexFillters == index)
                     ? CategoryWidget(

@@ -6,16 +6,17 @@ class FirestoreUser {
   String? displayName;
   String? photoUrl;
 
-  String? avatar;
-  String? name;
+  // String? avatar;
+  // String? name;
   int? numberOfPost;
   int? numberOfGold;
   int? numberOfSilver;
   int? numberOfBronze;
 
   FirestoreUser(
-      {this.avatar,
-      this.name,
+      {
+      // this.avatar,
+      // this.name,
       this.numberOfPost,
       this.numberOfGold,
       this.numberOfSilver,

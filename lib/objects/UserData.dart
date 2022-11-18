@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 class UserData {
   String? id;
   List<ArticlePost>? savedArticles;
 
-  UserData({this.id, this.savedArticles});
+  UserData._({this.id, this.savedArticles});
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -14,7 +15,7 @@ class UserData {
       };
 
   factory UserData.fromJson(Map<String, dynamic>? data) {
-    return UserData(
+    return UserData._(
       id: data?['id'],
       savedArticles: data?['savedArticles'],
     );

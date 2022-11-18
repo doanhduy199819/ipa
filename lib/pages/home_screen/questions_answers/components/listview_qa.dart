@@ -8,77 +8,72 @@ import '../qa_detail_screen.dart';
 import 'company_bloc.dart';
 
 class ListViewQAWidget extends StatelessWidget {
-
   List<Question>? questions;
-  String? urlImageCompany;
-  ListViewQAWidget({Key? key, required this.questions, required this.urlImageCompany}) : super(key: key);
+  // String? urlImageCompany;
+  ListViewQAWidget({Key? key, required this.questions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.custom(
-                childrenDelegate:
-                    SliverChildBuilderDelegate(childCount: questions!.length,
-                        (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          fullscreenDialog: false,
-                          builder: (context) => QaDetailScreen(),
-                          settings: RouteSettings(
-                            arguments: questions![index],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8.0,
-                            offset: Offset(0.0, 5.0),
-                          ),
-                        ],
-                      ),                  
-                      child: _buildItemListView(index),
-                    ),
-                  );
-                }),
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.custom(
+        childrenDelegate: SliverChildBuilderDelegate(
+            childCount: questions!.length, (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  fullscreenDialog: false,
+                  builder: (context) => QaDetailScreen(),
+                  settings: RouteSettings(
+                    arguments: questions![index],
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: 4.0,
               ),
-            );
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8.0,
+                    offset: Offset(0.0, 5.0),
+                  ),
+                ],
+              ),
+              child: _buildItemListView(index),
+            ),
+          );
+        }),
+      ),
+    );
   }
 
-    // Handle when item have image company or haven't
+  // Handle when item have image company or haven't
   Row _buildItemListView(int index) {
-    // Test with random img , index%2==0
-    (index % 2 == 0) ? urlImageCompany = '' : urlImageCompany = '123';
-
-    return (urlImageCompany!.compareTo('') != 0)
+    // return (questions?[index].company_id == null)
+    return (false)
         ? Row(
             children: [
               Padding(
                 padding:
                     const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
                 child: VoteBloc(
-                    numberOfVotes: questions![index].numberOfUpvote -
-                        questions![index].numberOfDownvote,
-                    numberOfAnswers: questions![index].numberOfAnswers),
+                    numberOfVotes: questions?[index].voteNum ?? 0,
+                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TitleTagContentQABloc(
-                    title: questions![index].title!,
-                    category: questions![index].categories,
-                    content: questions![index].content!,
+                    title: questions?[index].title,
+                    category: questions?[index].categories,
+                    content: questions?[index].content,
                     urlImageCompany: HomeScreenAssets.lgLogo),
               ),
             ],
@@ -89,23 +84,24 @@ class ListViewQAWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
                 child: VoteBloc(
-                    numberOfVotes: questions![index].numberOfUpvote -
-                        questions![index].numberOfDownvote,
-                    numberOfAnswers: questions![index].numberOfAnswers),
+                    numberOfVotes: questions?[index].voteNum ?? 0,
+                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TitleTagContentQABloc(
-                    title: questions![index].title!,
-                    category: questions![index].categories,
-                    content: questions![index].content!,
-                    urlImageCompany: urlImageCompany),
+                  title: questions?[index].title,
+                  category: questions?[index].categories,
+                  content: questions?[index].content,
+                ),
               ),
               const Spacer(),
-              CompanyBloc(
-                  idCompany: questions![index].company_id,
-                  timePosted: questions![index].created_at),
-              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: CompanyBloc(urlImage: questions?[index].company_id),
+              ),
+              // const Spacer(),
+              // ]
             ],
           );
   }

@@ -8,28 +8,30 @@ class UserInfoBox extends StatelessWidget {
     this.photoUrl,
     this.userName,
     this.postFix,
-    this.fontSize = 12,
+    this.avatarRadius = 12,
+    this.fontSize,
   }) : super(key: key);
 
   final String? photoUrl;
   final String? userName;
   final Widget? postFix;
-  final double fontSize;
+  final double? avatarRadius;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
     const samplephotoUrl =
         'https://w0.peakpx.com/wallpaper/871/154/HD-wallpaper-pikachu-amoled-iphone-pokemon-samsung.jpg';
     const sampleUserName = 'Pikachu';
-    var titleTextStyle =
-        TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize);
+    var titleTextStyle = TextStyle(
+        fontWeight: FontWeight.bold, fontSize: fontSize ?? avatarRadius);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+          padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
           child: CircleAvatar(
-            radius: fontSize,
+            radius: avatarRadius,
             backgroundImage: NetworkImage(photoUrl ?? samplephotoUrl),
           ),
         ),

@@ -6,143 +6,20 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
 import 'package:flutter_interview_preparation/pages/authentication/sign_up.dart';
+import 'package:flutter_interview_preparation/pages/components/bookmark.dart';
+import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_comment.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:provider/provider.dart';
 import '../../../objects/Question.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
-
-class AccountPart extends StatefulWidget {
-  FirestoreUser account;
-  ArticlePost articlePost;
-  AccountPart({Key? key, required this.account, required this.articlePost})
-      : super(key: key);
-
-  @override
-  State<AccountPart> createState() => _AccountPartState();
-}
-
-class _AccountPartState extends State<AccountPart> {
-  late bool checkFollow;
-  void initData() {
-    checkFollow = false;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    initData();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          // radius: 24,
-          backgroundImage: NetworkImage(widget.account.avatar!),
-        ),
-        const SizedBox(
-          width: 8,
-        ),
-        Column(
-          children: [
-            Text(
-              widget.account.name!,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        InkWell(
-          onTap: () {
-            setState(() {
-              checkFollow = !checkFollow;
-            });
-          },
-          child: checkFollow == false
-              ? Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 4,
-                  ),
-                  child: Text(
-                    'Follow',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 4,
-                  ),
-                  child: Text(
-                    'Followed',
-                    style: TextStyle(color: Colors.black, fontSize: 10),
-                  ),
-                ),
-        ),
-        const Spacer(),
-        Icon(
-          Icons.favorite,
-          color: Colors.red,
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Text(
-          widget.articlePost.liked_users == null
-              ? '0'
-              : widget.articlePost.liked_users!.length.toString(),
-          style: TextStyle(fontSize: 12),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.bookmark_add_outlined),
-        ),
-      ],
-    );
-  }
-}
-
-class MyInheritedData extends InheritedWidget {
-  const MyInheritedData({
-    super.key,
-    required this.scrollController,
-    required super.child,
-  });
-
-  final ScrollController scrollController;
-
-  static MyInheritedData of(BuildContext context) {
-    final MyInheritedData? result =
-        context.dependOnInheritedWidgetOfExactType<MyInheritedData>();
-    assert(result != null, 'No Data found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(MyInheritedData oldWidget) =>
-      scrollController != oldWidget.scrollController;
-}
 
 class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({Key? key}) : super(key: key);
@@ -153,41 +30,42 @@ class ArticleDetailScreen extends StatefulWidget {
 
 class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
-  String sortedBySelected = SortedBy.array[0];
-  DateFormat formatter = DateFormat('dd-MM-yyyy');
+  DateFormat _formatter = DateFormat('dd-MM-yyyy');
   final _scrollingController = ScrollController();
 
-  late FirestoreUser account;
+  late FirestoreUser author;
   late ArticlePost articlePost;
+  late UserInfoBox userInfoBox;
+  late BookmarkIcon bookmarkIcon;
   late List<Comment>? comments;
-  late String imageUrl;
+  late String samplePhotoUrl;
   late bool checkFollow;
+
   void initData() {
     checkFollow = false;
-    imageUrl =
+    samplePhotoUrl =
         'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
-    // account = new Account(
-    //     'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    //     'Nhat Tan',
-    //     2871,
-    //     100,
-    //     100,
-    //     100);
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     initData();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // get article from parent widget
-    articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
+
+    Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    articlePost = args['articlePost'] as ArticlePost;
+    // userInfoBox = args['userInfo'] as UserInfoBox;
+    bookmarkIcon = args['bookmark'] as BookmarkIcon;
+    // articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
     articlePost.categories = ['Mathematics', 'Java'];
-    print(articlePost.id);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -203,49 +81,53 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           ),
         ),
       ),
-      body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 0,
-              top: 16,
-              child: MyInheritedData(
-                scrollController: _scrollingController,
-                child: SingleChildScrollView(
-                  controller: _scrollingController,
-                  // reverse: true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: MyInheritedData(
+            scrollController: _scrollingController,
+            child: SingleChildScrollView(
+              controller: _scrollingController,
+              // reverse: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<FirestoreUser?>(
+                    future: DatabaseService()
+                        .getFirestoreUser(articlePost.author_id ?? '0'),
+                    builder: (context, snapshot) {
+                      return Helper().handleSnapshot(snapshot) ??
+                          AccountPart(
+                            account: snapshot.data,
+                            articlePost: articlePost,
+                            bookmarkIcon: bookmarkIcon,
+                          );
+                    },
+                  ),
+                  buildTitle(),
+                  Row(
                     children: [
-                      AccountPart(account: account, articlePost: articlePost),
-                      buildTitle(),
-                      Row(
-                        children: [
-                          Spacer(),
-                          listCategory(),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      imageArticle(),
-                      articleContent(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      //comment
-                      ArticleCommentPart(
-                        articleId: articlePost.id!,
-                      ),
+                      Spacer(),
+                      listCategory(),
                     ],
                   ),
-                ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  imageArticle(),
+                  articleContent(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //comment
+                  ArticleCommentPart(
+                    articleId: articlePost.id!,
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -297,7 +179,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         color: Colors.blue,
         image: DecorationImage(
           image: NetworkImage(
-            imageUrl,
+            samplePhotoUrl,
           ),
           fit: BoxFit.cover,
         ),
@@ -315,4 +197,121 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           fontFamily: FontFamily.urbanist),
     );
   }
+}
+
+class AccountPart extends StatefulWidget {
+  AccountPart(
+      {Key? key,
+      required this.account,
+      required this.articlePost,
+      this.bookmarkIcon})
+      : super(key: key);
+
+  final FirestoreUser? account;
+  final ArticlePost? articlePost;
+  final BookmarkIcon? bookmarkIcon;
+
+  @override
+  State<AccountPart> createState() => _AccountPartState();
+}
+
+class _AccountPartState extends State<AccountPart> {
+  late bool checkFollow;
+
+  void initData() {
+    checkFollow = false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        UserInfoBox(
+          photoUrl: widget.account?.photoUrl,
+          userName: widget.account?.displayName,
+          avatarRadius: 20.0,
+          fontSize: 16.0,
+        ),
+        const SizedBox(width: 8),
+        InkWell(
+          onTap: () {
+            setState(() {
+              checkFollow = !checkFollow;
+            });
+          },
+          child: checkFollow == false
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    'Follow',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 4,
+                  ),
+                  child: Text(
+                    'Followed',
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ),
+        ),
+        const Spacer(),
+        Icon(
+          Icons.favorite,
+          color: Colors.red,
+        ),
+        SizedBox(
+          width: 4,
+        ),
+        Text(
+          widget.articlePost?.liked_users?.length.toString() ?? '0',
+          style: TextStyle(fontSize: 12),
+        ),
+        widget.bookmarkIcon!
+        // ?? BookmarkIcon(post: widget.articlePost!),
+      ],
+    );
+  }
+}
+
+class MyInheritedData extends InheritedWidget {
+  const MyInheritedData({
+    super.key,
+    required this.scrollController,
+    required super.child,
+  });
+
+  final ScrollController scrollController;
+
+  static MyInheritedData of(BuildContext context) {
+    final MyInheritedData? result =
+        context.dependOnInheritedWidgetOfExactType<MyInheritedData>();
+    assert(result != null, 'No Data found in context');
+    return result!;
+  }
+
+  @override
+  bool updateShouldNotify(MyInheritedData oldWidget) =>
+      scrollController != oldWidget.scrollController;
 }

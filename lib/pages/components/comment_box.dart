@@ -95,16 +95,16 @@ class _buildInteractions extends StatelessWidget {
       children: [
         if (isShowingUpvote) ...[
           InterractionIcon(
-            activeIconData: Icons.arrow_upward_rounded,
             onTap: upVoteTap,
-            isActive: voteState == 1,
+            isActive: voteState == 1, activeIcon: Icon(Icons.arrow_upward_rounded, size: 12.0, color: Colors.white,), 
+            unActiveIcon: Icon(Icons.arrow_upward_rounded, size: 12.0, color: Colors.grey,),
           ),
           const SizedBox(width: 12.0),
           Text(voteNum.toString()),
           const SizedBox(width: 12.0),
           InterractionIcon(
-            activeIconData: Icons.arrow_downward_rounded,
-            activeColor: Colors.red,
+            activeIcon: Icon(Icons.arrow_downward_rounded, size: 12.0, color: Colors.red,), 
+            unActiveIcon: Icon(Icons.arrow_downward_rounded, size: 12.0, color: Colors.grey,),
             onTap: downVoteTap,
             isActive: voteState == -1,
           ),

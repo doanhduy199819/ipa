@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
@@ -24,7 +25,7 @@ class ArticleCommentPart extends StatefulWidget {
 
 class _ArticleCommentPartState extends State<ArticleCommentPart> {
   late List<Comment>? comments;
-  late FirestoreUser account;
+  // late FirestoreUser account;
   DateFormat formatter = DateFormat('dd-MM-yyyy');
   String commentContent = "";
   final _formKey = GlobalKey<FormState>();
@@ -79,7 +80,6 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   // Where user input their comment
   Container commentInput(List<Comment>? comments) {
-    print('hechhc');
     return Container(
       child: Column(
         children: [
@@ -155,17 +155,17 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
           ),
           Positioned(
+            top: -4,
+            right: -24,
             child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
               decoration: BoxDecoration(
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(12),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(comments?.length.toString() ?? '0',
                   style: TextStyle(color: Colors.white, fontSize: 12)),
             ),
-            top: -4,
-            right: -24,
           )
         ],
       ),
@@ -193,60 +193,66 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   // Each comment in commentsList
   Widget commentBloc(Comment comment) {
-    return CommentBoxWidget(
-      photoUrl: account.avatar,
-      userName: account.name,
-      isShowingUpvote: false,
-      content: comment.content,
-      postFix: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          icon:
-              Visibility(visible: true, child: Icon(Icons.more_horiz_rounded)),
-          items: [
-            if (comment.author_id == AuthService().currentUserId) ...[
-              DropdownMenuItem(
-                child: Text('Delete'),
-                value: 'delete',
+    return FutureBuilder(
+      future: DatabaseService().getFirestoreUser(comment.author_id ?? '0'),
+      builder: (context, AsyncSnapshot<FirestoreUser?> asyncSnapshot) =>
+          Helper().handleSnapshot(asyncSnapshot) ??
+          CommentBoxWidget(
+            photoUrl: asyncSnapshot.data?.photoUrl,
+            userName: asyncSnapshot.data?.displayName,
+            isShowingUpvote: false,
+            content: comment.content,
+            postFix: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                icon: Visibility(
+                    visible: true, child: Icon(Icons.more_horiz_rounded)),
+                items: [
+                  if (comment.author_id == AuthService().currentUserId) ...[
+                    DropdownMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  ],
+                  DropdownMenuItem(
+                    value: 'report',
+                    child: Text('Report'),
+                  ),
+                ],
+                onChanged: ((value) {
+                  if (value == 'report') {
+                  } else if (value == 'edit') {
+                  } else if (value == 'delete') {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('Delete?'),
+                              content: Text(
+                                  'Are you sure want to delete this comment?'),
+                              actions: [
+                                FlatButton(
+                                    onPressed: () {
+                                      _dissmissAlertDialog();
+                                    },
+                                    child: Text('No')),
+                                FlatButton(
+                                    onPressed: () {
+                                      _dissmissAlertDialog();
+                                      DatabaseService()
+                                          .deleteCommentFromArticle(
+                                              comment.id!, widget.articleId);
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(color: Colors.red),
+                                    )),
+                              ],
+                            ),
+                        barrierDismissible: true);
+                  }
+                }),
               ),
-            ],
-            DropdownMenuItem(
-              child: Text('Report'),
-              value: 'report',
             ),
-          ],
-          onChanged: ((value) {
-            if (value == 'report') {
-            } else if (value == 'edit') {
-            } else if (value == 'delete') {
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text('Delete?'),
-                        content:
-                            Text('Are you sure want to delete this comment?'),
-                        actions: [
-                          FlatButton(
-                              onPressed: () {
-                                _dissmissAlertDialog();
-                              },
-                              child: Text('No')),
-                          FlatButton(
-                              onPressed: () {
-                                _dissmissAlertDialog();
-                                DatabaseService().deleteCommentFromArticle(
-                                    comment.id!, widget.articleId);
-                              },
-                              child: Text(
-                                'Yes',
-                                style: TextStyle(color: Colors.red),
-                              )),
-                        ],
-                      ),
-                  barrierDismissible: true);
-            }
-          }),
-        ),
-      ),
+          ),
     );
   }
 

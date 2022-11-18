@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
@@ -77,5 +78,45 @@ mixin ArticlePostHandle {
       }).toList();
     });
     return result;
+  }
+
+  Future<bool> isInUserSaved(ArticlePost articlePost) async {
+    bool res = false;
+    DocumentReference docRef =
+        _db.collection('users').doc(AuthService().currentUserId);
+    await docRef.get().then((value) {
+      if (!value.exists) return;
+      final data = value.data() as Map<String, dynamic>?;
+      List<String>? savedArticlesIds = data?['savedArticles'] is Iterable
+          ? List.from(data?['savedArticles'])
+          : null;
+      res = savedArticlesIds?.contains(articlePost.id) ?? false;
+    });
+    return res;
+  }
+
+  Future<void> saveArticle(ArticlePost? article) async {
+    _db
+        .collection('users')
+        .doc(AuthService().currentUserId)
+        .update({
+          "savedArticles": FieldValue.arrayUnion([article?.id]),
+        })
+        .then((_) => debugPrint('Save article completed: ${article?.id}'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
+  }
+
+  Future<void> unSaveArticle(ArticlePost? article) async {
+    _db
+        .collection('users')
+        .doc(AuthService().currentUserId)
+        .update({
+          "savedArticles": FieldValue.arrayRemove([article?.id]),
+        })
+        .then(
+            (_) => debugPrint('Remove saved article completed: ${article?.id}'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }
 }

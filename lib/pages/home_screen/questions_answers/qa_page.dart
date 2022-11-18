@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/listview_qa.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/tag_fillter.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'components/company_bloc.dart';
-
 
 class QAPage extends StatefulWidget {
   const QAPage({Key? key}) : super(key: key);
@@ -18,15 +19,16 @@ class QAPage extends StatefulWidget {
 
 class _QAPageState extends State<QAPage> {
   late int currentlyIndexFillters;
-  late List<Question> questions;
+  late List<Question>? questions;
   late List<String> fillters;
   late String? urlImageCompany;
+
   @override
   void initState() {
     super.initState();
 
     currentlyIndexFillters = 0;
-    
+
     urlImageCompany = '';
 
     fillters = <String>[
@@ -36,7 +38,7 @@ class _QAPageState extends State<QAPage> {
       "Month",
     ];
 
-    questions = Question.getSampleQuestions();
+    // questions = Question.getSampleQuestions();
   }
 
   @override
@@ -77,14 +79,28 @@ class _QAPageState extends State<QAPage> {
           ),
           Expanded(
             flex: 9,
-            child: ListViewQAWidget(questions: questions,urlImageCompany: urlImageCompany),
+            child: FutureBuilder<List<Question>?>(
+                future: DatabaseService().allQuestionsOnce,
+                builder: (context, snapshot) {
+                  questions = snapshot.data;
+                  return RefreshIndicator(
+                    onRefresh: _pullRefresh,
+                    child: Helper().handleSnapshot(snapshot) ??
+                        ListViewQAWidget(
+                            questions: questions),
+                  );
+                }),
           )
         ],
       ),
     );
   }
 
-
+  Future<void> _pullRefresh() async {
+    setState(() async {
+      questions = await DatabaseService().allQuestionsOnce;
+    });
+  }
 
   // Handle when item have image company or haven't
   Row _buildItemListView(int index) {
@@ -98,16 +114,15 @@ class _QAPageState extends State<QAPage> {
                 padding:
                     const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
                 child: VoteBloc(
-                    numberOfVotes: questions[index].numberOfUpvote -
-                        questions[index].numberOfDownvote,
-                    numberOfAnswers: questions[index].numberOfAnswers),
+                    numberOfVotes: questions?[index].voteNum ?? 0,
+                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TitleTagContentQABloc(
-                    title: questions[index].title!,
-                    category: questions[index].categories,
-                    content: questions[index].content!,
+                    title: questions?[index].title!,
+                    category: questions?[index].categories,
+                    content: questions?[index].content!,
                     urlImageCompany: HomeScreenAssets.lgLogo),
               ),
             ],
@@ -118,22 +133,20 @@ class _QAPageState extends State<QAPage> {
                 padding:
                     const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
                 child: VoteBloc(
-                    numberOfVotes: questions[index].numberOfUpvote -
-                        questions[index].numberOfDownvote,
-                    numberOfAnswers: questions[index].numberOfAnswers),
+                    numberOfVotes: questions?[index].voteNum ?? 0,
+                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TitleTagContentQABloc(
-                    title: questions[index].title!,
-                    category: questions[index].categories,
-                    content: questions[index].content!,
+                    title: questions?[index].title!,
+                    category: questions?[index].categories,
+                    content: questions?[index].content!,
                     urlImageCompany: urlImageCompany),
               ),
               const Spacer(),
               CompanyBloc(
-                  idCompany: questions[index].company_id,
-                  timePosted: questions[index].created_at),
+                  urlImage: questions?[index].company_id),
               const Spacer(),
             ],
           );
