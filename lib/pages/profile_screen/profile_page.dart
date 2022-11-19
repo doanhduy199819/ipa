@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               fullscreenDialog: false,
-                              builder: (context) => UserProfile()));
+                              builder: (context) => UserProfilePage()));
                     },
                   ),
                 ),

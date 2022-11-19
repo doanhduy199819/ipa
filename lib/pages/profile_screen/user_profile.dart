@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/UserProfile.dart';
+import 'package:flutter_interview_preparation/pages/components/birthday_menu_box.dart';
+import 'package:flutter_interview_preparation/pages/components/gender_menu_box.dart';
+import 'package:flutter_interview_preparation/pages/components/name_menu_box.dart';
+import 'package:flutter_interview_preparation/pages/profile_screen/change_password_page.dart';
 
 import '../../values/Home_Screen_Fonts.dart';
 
-class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+class UserProfilePage extends StatefulWidget {
+  const UserProfilePage({Key? key}) : super(key: key);
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfilePageState extends State<UserProfilePage> {
   late double hei;
   late double wid;
   late bool followCheck;
+  late TextEditingController controller;
+  late UserProfile userProfile;
   void initData() {
     followCheck = false;
+    userProfile = UserProfile(
+        'Lê Hoàng Vỹ', DateTime.utc(2001, 5, 21), 0, 'hoangvy2105@gmail.com');
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    controller = TextEditingController();
     super.initState();
     initData();
   }
@@ -63,11 +73,22 @@ class _UserProfileState extends State<UserProfile> {
     return Column(
       children: [
         // _buildButtonFollow(),
-        _buildGroup(Icons.person, 'Lê Hoàng Vỹ'),
-        _buildGroup(Icons.calendar_month, '21/05/2001'),
-        _buildGroup(Icons.mail, 'lehoangvy2105@gmail.com'),
-        _buildGroup(Icons.people, 'Male'),
-        _buildQuestion()
+        NameBoxWidget(
+          string: userProfile.name,
+          context: context,
+        ),
+        BirthDayBoxWidget(
+          string: _getStringBirthday(userProfile.birthDay),
+          context: context,
+        ),
+        GenderBoxWidget(
+          gender: userProfile.gender,
+          context: context,
+        ),
+        EmailBoxWidget(
+          string: userProfile.email,
+        ),
+        _buildChangePassword(),
       ],
     );
   }
@@ -92,7 +113,7 @@ class _UserProfileState extends State<UserProfile> {
     return Container(
       color: Colors.lightBlue,
       child: Image(
-        image: AssetImage("assets/images/bg_profile.png"),
+        image: const AssetImage("assets/images/bg_profile.png"),
         height: hei * 0.3,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -116,82 +137,92 @@ class _UserProfileState extends State<UserProfile> {
         child: Row(
           children: [
             Icon(icon),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Text(string),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuestion() {
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-        child: Column(
-          children: [
-            Text(
-              'Your Question ',
-              style: HomeScreenFonts.title,
+            const Spacer(),
+            InkWell(
+              child: Icon(
+                Icons.edit,
+                size: 16,
+                color: Colors.grey,
+              ),
+              onTap: (() => _buildEdit(string)),
             ),
-            //_buildListYourQuestion(),
           ],
         ),
       ),
-    ]);
-  }
-
-  Widget _buildListYourQuestion() {
-    return ListView(
-      children: [],
     );
   }
 
-  // Widget _buildButtonFollow() {
-  //   return Container(
-  //     margin: EdgeInsets.only(top: hei * 0.075, left: hei * 0.2),
-  //     child: InkWell(
-  //       onTap: () {
-  //         setState(() {
-  //           followCheck = !followCheck;
-  //         });
-  //       },
-  //       child: followCheck == true
-  //           ? Container(
-  //               padding:
-  //                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-  //               decoration: BoxDecoration(
-  //                 color: Colors.blue.shade300,
-  //                 borderRadius: BorderRadius.circular(30),
-  //                 border: Border.all(
-  //                   color: Colors.white,
-  //                   width: 2,
-  //                 ),
-  //               ),
-  //               child: Text(
-  //                 'Following',
-  //                 style: HomeScreenFonts.description,
-  //               ),
-  //             )
-  //           : Container(
-  //               padding:
-  //                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-  //               decoration: BoxDecoration(
-  //                 color: Colors.grey.shade300,
-  //                 borderRadius: BorderRadius.circular(30),
-  //                 border: Border.all(
-  //                   color: Colors.white,
-  //                   width: 2,
-  //                 ),
-  //               ),
-  //               child: Text(
-  //                 'Follow',
-  //                 style: HomeScreenFonts.description,
-  //               ),
-  //             ),
-  //     ),
-  //   );
-  // }
+  Widget _buildChangePassword() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+      child: InkWell(
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          InkWell(
+            child: Text(
+              'Change password',
+              style: TextStyle(
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey),
+            ),
+            onTap: (() {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChangePassword()));
+            }),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Future _buildEdit(String str) => showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel')),
+            TextButton(
+                onPressed: () {
+                  //upload date len firebase
+                  Navigator.of(context).pop();
+                },
+                child: Text('Edit'))
+          ],
+          title: Text('Edit information'),
+          content: Container(
+            height: hei * 0.1,
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: "$str",
+                  ),
+                  controller: controller,
+                ),
+              ],
+            ),
+          ),
+        );
+      }));
+  Future<DateTime?> pickDay() => showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000, 1, 1),
+      lastDate: DateTime.now());
+  String _getStringBirthday(DateTime dt) {
+    return dt.day.toString() +
+        '/' +
+        dt.month.toString() +
+        '/' +
+        dt.year.toString();
+  }
 }
