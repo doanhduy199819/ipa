@@ -4,20 +4,21 @@ import 'package:intl/intl.dart';
 
 class CompanyBloc extends StatelessWidget {
   final String? urlImage;
-  const CompanyBloc(
-      {Key? key,
-      required this.urlImage})
-      : super(key: key);
+  const CompanyBloc({Key? key, required this.urlImage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 80,
-      height: 80,
+      // height: 80,
       child: Image.asset(
         urlImage ?? HomeScreenAssets.lgLogo,
         fit: BoxFit.cover,
       ),
     );
+    // return Image.asset(
+    //   urlImage ?? HomeScreenAssets.lgLogo,
+    //   fit: BoxFit.fitHeight,
+    // );
   }
 }

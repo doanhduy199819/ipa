@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class VoteBloc extends StatelessWidget {
-  int numberOfVotes;
-  int numberOfAnswers;
-  VoteBloc(
+  final int numberOfVotes;
+  final int numberOfAnswers;
+  const VoteBloc(
       {Key? key, required this.numberOfVotes, required this.numberOfAnswers})
       : super(key: key);
 
@@ -20,11 +20,8 @@ class VoteBloc extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
-              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(numberOfVotes > 0
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward),
+                const Icon(Icons.arrow_upward),
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: Text(
@@ -37,10 +34,7 @@ class VoteBloc extends StatelessWidget {
               ],
             ),
           ),
-
-          const SizedBox(
-            height: 8.0,
-          ),
+          const SizedBox(height: 8.0),
           // Answer
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),

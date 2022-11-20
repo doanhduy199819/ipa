@@ -137,7 +137,7 @@ class _SearchCompanyScreenState extends State<SearchCompanyScreen> {
                       color: Colors.black),
                   child: Center(
                       child: Image(
-                    image: AssetImage(_companyList[index].logo),
+                    image: AssetImage(_companyList[index].logoUrl),
                     // height: heightOfDevice / 9,
                     // width: widthOfDevice / 10,
                     height: 40,

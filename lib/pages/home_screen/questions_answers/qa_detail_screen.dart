@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/SortedBy.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 import 'package:flutter_interview_preparation/pages/components/up_down_vote_box.dart';
+import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/question_content.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Company.dart';
 import '../../../objects/Question.dart';
@@ -25,7 +32,8 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final Question question =
-        ModalRoute.of(context)!.settings.arguments as Question;
+        ModalRoute.of(context)?.settings.arguments as Question;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(48.0),
@@ -42,12 +50,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Author bloc
-                Row(
-                  children: [
-                    authorBloc(question),
-                  ],
-                ),
+                authorBloc(question: question),
                 //Content of Question
                 Container(
                   padding: const EdgeInsets.only(bottom: 20),
@@ -61,32 +64,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                   ]),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            voteBloc(question),
-                          ],
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 2 / 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: titleAndTagBloc(question),
-                              ),
-                              Text(
-                                question.content!,
-                                style: HomeScreenFonts.content,
-                              ),
-                            ],
-                          ),
-                        ),
-                        companyBloc(question),
-                      ],
+                    child: buildQuestionContent(
+                      question: question,
+                      isShowingDetail: true,
                     ),
                   ),
                 ),
@@ -97,67 +77,6 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget authorBloc(Question question) {
-    return Container(
-      margin: const EdgeInsets.only(top: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Avatar
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 65, top: 10),
-                width: 30,
-                height: 30,
-                child: const CircleAvatar(
-                  // Task : Pass a author avatar
-                  // backgroundImage: NetworkImage('${question.author!.avatar}'),
-                  backgroundImage: NetworkImage(
-                      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
-                ),
-              ),
-            ],
-          ),
-          //Details time, profile, bloc ...
-          Container(
-            padding: const EdgeInsets.only(left: 6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.only(top: 4, bottom: 4),
-                        child: Text(
-                          // Task: Pass an author Name
-                          //question.author!.name!
-                          'Huy Huy',
-                          style: HomeScreenFonts.nameAccount.copyWith(
-                            fontSize: 18,
-                            color: const Color(0xff000000),
-                            fontFamily: 'Urbanist',
-                          ),
-                        )),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '@tronghuyhihi',
-                      style: HomeScreenFonts.timePost,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -503,8 +422,9 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 width: 50,
                 height: 40,
                 //question.company!
-                Company.haveIdCompanyInSample(question.company_id!)?.logo ??
-                    HomeScreenAssets.lgLogo),
+                // TODO: change image
+                // Company.haveIdCompanyInSample(question.company_id)?.logoUrl ??
+                HomeScreenAssets.lgLogo),
           ),
           //TimePost
           Padding(
@@ -574,5 +494,33 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
     } else {
       return '1/1/2001';
     }
+  }
+}
+
+class authorBloc extends StatelessWidget {
+  const authorBloc({
+    Key? key,
+    required this.question,
+  }) : super(key: key);
+
+  final Question question;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FirestoreUser?>(
+        future: DatabaseService().getFirestoreUser(question.author_id ?? '0'),
+        builder: (context, snapshot) {
+          final author = snapshot.data;
+          return Container(
+            padding: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.only(left: 48.0),
+            child: Helper().handleSnapshot(snapshot) ??
+                UserInfoBox(
+                  userName: author?.displayName,
+                  photoUrl: author?.photoUrl,
+                  avatarRadius: 16.0,
+                ),
+          );
+        });
   }
 }

@@ -43,38 +43,21 @@ class _QAPageState extends State<QAPage> {
 
   @override
   Widget build(BuildContext context) {
-    double widthScreen = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: _buildAppBar(),
       backgroundColor: const Color.fromARGB(255, 233, 240, 243),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                child: Text(
-                  'Top Questions',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const _buildTitle(),
           Expanded(
             flex: 1,
-            child: Container(
-              margin: EdgeInsets.only(left: widthScreen / 4),
-              child: BuildTagFillter(
-                  fillters: fillters,
-                  currentlyIndexFillters: currentlyIndexFillters),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                BuildTagFillter(
+                    fillters: fillters,
+                    currentlyIndexFillters: currentlyIndexFillters),
+              ],
             ),
           ),
           Expanded(
@@ -86,8 +69,7 @@ class _QAPageState extends State<QAPage> {
                   return RefreshIndicator(
                     onRefresh: _pullRefresh,
                     child: Helper().handleSnapshot(snapshot) ??
-                        ListViewQAWidget(
-                            questions: questions),
+                        ListViewQAWidget(questions: questions),
                   );
                 }),
           )
@@ -131,7 +113,7 @@ class _QAPageState extends State<QAPage> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
+                    const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
                 child: VoteBloc(
                     numberOfVotes: questions?[index].voteNum ?? 0,
                     numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
@@ -145,8 +127,7 @@ class _QAPageState extends State<QAPage> {
                     urlImageCompany: urlImageCompany),
               ),
               const Spacer(),
-              CompanyBloc(
-                  urlImage: questions?[index].company_id),
+              CompanyBloc(urlImage: questions?[index].company_id),
               const Spacer(),
             ],
           );
@@ -159,6 +140,33 @@ class _QAPageState extends State<QAPage> {
         'Q & A',
         style: HomeScreenFonts.headStyle,
       ),
+    );
+  }
+}
+
+class _buildTitle extends StatelessWidget {
+  const _buildTitle({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      // ignore: prefer_const_literals_to_create_immutables
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          child: Text(
+            'Top Questions',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

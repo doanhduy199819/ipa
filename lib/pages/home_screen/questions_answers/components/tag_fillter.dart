@@ -21,7 +21,7 @@ class _BuildTagCategoryState extends State<BuildTagFillter> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: _buildListFillters(),
     );
   }
@@ -29,6 +29,8 @@ class _BuildTagCategoryState extends State<BuildTagFillter> {
   Widget _buildListFillters() {
     Widget tempWidget = (widget.fillters != null)
         ? ListView.custom(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             childrenDelegate:
                 SliverChildBuilderDelegate(childCount: widget.fillters!.length,

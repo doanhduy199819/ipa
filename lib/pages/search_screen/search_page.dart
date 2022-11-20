@@ -430,7 +430,7 @@ class _SearchPageState extends State<SearchPage> {
                           height: 50,
                           Company.haveIdCompanyInSample(
                                       display_list_question[index].company_id!)
-                                  ?.logo ??
+                                  ?.logoUrl ??
                               HomeScreenAssets.lgLogo),
                     ),
                     //TimePost
@@ -488,7 +488,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.black),
                   child: Center(
                       child: Image(
-                    image: AssetImage(_companyList[index].logo),
+                    image: AssetImage(_companyList[index].logoUrl),
                     height: MediaQuery.of(context).size.height / 9,
                     width: MediaQuery.of(context).size.width / 10,
                   )),
