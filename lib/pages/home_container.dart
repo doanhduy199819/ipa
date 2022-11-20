@@ -3,7 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
-import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/screen/quiz_overview.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
@@ -27,7 +27,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     } else if (index == 1) {
       return SearchPage();
     } else if (index == 2) {
-      return QuizzPage();
+      return QuizOverview();
     } else {
       return ProfilePage();
     }
