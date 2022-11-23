@@ -121,7 +121,10 @@ class ListQuiz extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
         child: Stack(children: [
-      background(color: color),
+      background(
+        color: color,
+        havenavigationbar: 0,
+      ),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           height: size.height * 0.1,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class background extends StatelessWidget {
-  const background({Key? key, required this.color}) : super(key: key);
-
+  const background(
+      {Key? key, required this.color, required this.havenavigationbar})
+      : super(key: key);
+  final int havenavigationbar;
   final List<Color> color;
   @override
   Widget build(BuildContext context) {
@@ -15,9 +17,9 @@ class background extends StatelessWidget {
           Circle(color: color[3]),
           Column(
             children: [
-              Container(height: size.height * 0.22),
+              Container(height: size.height * 0.20),
               Container(
-                height: size.height * 0.78,
+                height: size.height * 0.80 - havenavigationbar * 57,
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(15, 20, 60, 1),
                     borderRadius: BorderRadius.only(

@@ -113,10 +113,13 @@ class QuizOverview extends StatelessWidget {
     ];
     return Stack(
       children: [
-        background(color: color),
+        background(
+          color: color,
+          havenavigationbar: 1,
+        ),
         Column(children: [
           Container(
-            margin: EdgeInsets.only(top: 50, left: 20),
+            margin: EdgeInsets.only(top: 10, left: 20),
             padding: EdgeInsets.only(left: 15),
             child: Align(
               alignment: Alignment.topLeft,
@@ -130,7 +133,7 @@ class QuizOverview extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 220,
+            height: 206,
             child: Expanded(
               child: ScrollSnapList(
                   onItemFocus: (index) {},
@@ -160,7 +163,8 @@ class QuizOverview extends StatelessWidget {
           ),
           TopBar(),
           Container(
-            height: MediaQuery.of(context).size.height - 362,
+            margin: EdgeInsets.only(top: 4),
+            height: MediaQuery.of(context).size.height - 366,
             child: Stack(children: [
               Container(
                   child: MasonryGridView.count(
@@ -173,7 +177,7 @@ class QuizOverview extends StatelessWidget {
               )),
               Column(children: [
                 Container(
-                  height: (MediaQuery.of(context).size.height - 362) * 0.1,
+                  height: (MediaQuery.of(context).size.height - 366) * 0.1,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(colors: <Color>[
                     Color.fromRGBO(15, 20, 60, 1),
@@ -182,7 +186,7 @@ class QuizOverview extends StatelessWidget {
                 ),
                 Spacer(),
                 Container(
-                  height: (MediaQuery.of(context).size.height - 362) * 0.1,
+                  height: (MediaQuery.of(context).size.height - 366) * 0.1,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(colors: <Color>[
                     Color.fromRGBO(15, 20, 60, 0),

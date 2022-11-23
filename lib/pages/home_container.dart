@@ -16,7 +16,6 @@ class HomeContainerWidget extends StatefulWidget {
 
 class _HomeContainerWidgetState extends State<HomeContainerWidget> {
   int tabIndex = 0;
-
   Widget _getBodyWidget(int index) {
     if (index == 0) {
       return HomePage();
