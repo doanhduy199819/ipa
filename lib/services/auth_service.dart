@@ -32,6 +32,10 @@ class AuthService {
     return _auth.authStateChanges();
   }
 
+  Stream<User?> get userChanges {
+    return _auth.userChanges();
+  }
+
   String? get currentUserId {
     return _auth.currentUser?.uid;
   }
@@ -193,5 +197,16 @@ class AuthService {
   void _handleAuthExceptionCode(String code) {
     _showAuthExceptionToast(code);
     debugPrint(code);
+  }
+
+  Future<bool> updateDisplayName(String newName) async {
+    String oldDisplayName = currentUser?.displayName ?? '';
+    // Update Authentication
+    await currentUser?.updateDisplayName(newName);
+
+    // Update Data in Firestore
+    await DatabaseService().updateUserAuthInfo(currentUser!, oldDisplayName);
+
+    return true;
   }
 }

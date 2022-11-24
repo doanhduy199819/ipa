@@ -15,9 +15,6 @@ mixin AccountService {
         user = null;
       }
     });
-    if (user != null) {
-      debugPrint('${user?.displayName ?? 'noname'}');
-    }
     return user;
   }
 
@@ -40,5 +37,35 @@ mixin AccountService {
         .collection('users')
         .doc(user.uid)
         .set(account.toJson());
+  }
+
+  Future<void> _updateUserNameCollectionFirestoreData(
+      User user, String oldUserName) async {
+    Map<String, String> toJSONData = {
+      'user-id': user.uid,
+    };
+    // Add new
+    FirebaseFirestore.instance
+        .collection('usernames')
+        .doc(user.displayName)
+        .set(toJSONData);
+
+    // Delete old name
+    FirebaseFirestore.instance
+        .collection('usernames')
+        .doc(oldUserName)
+        .delete();
+  }
+
+  Future<void> _updatePublicInfodata(User user) async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set(FirestoreUser.fromFirebaseUser(user).toJson());
+  }
+
+  Future<void> updateUserAuthInfo(User user, String oldDisplayName) async {
+    _updatePublicInfodata(user);
+    _updateUserNameCollectionFirestoreData(user, oldDisplayName);
   }
 }

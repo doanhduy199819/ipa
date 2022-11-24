@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/components/info_dialog.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class NameBoxWidget extends StatefulWidget {
   const NameBoxWidget({
     Key? key,
-    required this.string,
+    required this.userName,
     required this.context,
   }) : super(key: key);
-  final String string;
+  final String userName;
   final BuildContext context;
 
   @override
@@ -15,10 +18,17 @@ class NameBoxWidget extends StatefulWidget {
 
 class _NameBoxWidgetState extends State<NameBoxWidget> {
   final _controller = TextEditingController();
-  // final ValueChanged<String> onSubmit;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      // ignore: prefer_const_constructors
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -32,19 +42,17 @@ class _NameBoxWidgetState extends State<NameBoxWidget> {
         onTap: (() {}),
         child: Row(
           children: [
-            Icon(Icons.person),
+            Icon(Icons.person,
+                color: Theme.of(context).scaffoldBackgroundColor),
             const SizedBox(
               width: 20,
             ),
-            Text(widget.string),
+            Text(widget.userName),
             const Spacer(),
             InkWell(
-              child: Icon(
-                Icons.edit,
-                size: 16,
-                color: Colors.grey,
-              ),
-              onTap: (() => _buildEdit(widget.string)),
+              child: Icon(Icons.edit,
+                  size: 16, color: Theme.of(context).scaffoldBackgroundColor),
+              onTap: (() => _buildEdit(widget.userName)),
             ),
           ],
         ),
@@ -52,45 +60,26 @@ class _NameBoxWidgetState extends State<NameBoxWidget> {
     );
   }
 
-  Future _buildEdit(String str) => showDialog(
-      context: widget.context,
-      builder: ((context) {
-        return AlertDialog(
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Cancel')),
-            TextButton(
-                onPressed: () {
-                  //upload date len firebase
-                  Navigator.of(context).pop();
-                },
-                child: Text('Change'))
-          ],
-          title: Text('Change your name'),
-          content: Container(
-            height: 60,
-            child: Column(
-              children: [
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "$str",
-                  ),
-                  controller: _controller,
-                  onChanged: (Text) {
-                    setState(() {
-                      //do something
-                      str = Text;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      }));
+  void _buildEdit(String oldName) async {
+    // editNameDialog will show a dialog an then return the value
+    // in textfield
+    showDialog(
+      context: context,
+      builder: (_) => InfoAlertDialog(
+        title: "Change display name",
+        hint: oldName,
+        initialInputValue: widget.userName,
+        handleInputValue: (name) async {
+          if (!await AuthService().isDisplayNameExist(name)) {
+            AuthService().updateDisplayName(name);
+          } else {
+            // Already logged in
+            Fluttertoast.showToast(msg: "Existing user name");
+          }
+        },
+      ),
+    );
+  }
 }
 
 class EmailBoxWidget extends StatelessWidget {
@@ -113,7 +102,7 @@ class EmailBoxWidget extends StatelessWidget {
         onTap: (() {}),
         child: Row(
           children: [
-            Icon(Icons.mail),
+            Icon(Icons.mail, color: Theme.of(context).scaffoldBackgroundColor),
             const SizedBox(
               width: 20,
             ),
