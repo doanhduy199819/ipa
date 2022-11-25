@@ -4,10 +4,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/objects/SortedBy.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 import 'package:flutter_interview_preparation/pages/components/up_down_vote_box.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/qa_comments.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/question_content.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
@@ -27,7 +27,21 @@ class QaDetailScreen extends StatefulWidget {
 
 class _QaDetailScreenState extends State<QaDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
-  String sortedBySelected = SortedBy.array[0];
+  final sortOptions = [
+    'Highest score (default)',
+    'Trending (recent votes count more)',
+    'Date modified (newest first)',
+    'Date created (oldest first)',
+  ];
+  late String? currentSortOption;
+  // String sortedBySelected = SortedBy.array[0];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    currentSortOption = sortOptions[0];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +86,8 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 ),
 
                 answersAndSortByBloc(question),
-                commentBlocColumn(question),
+                // commentBlocColumn(question),
+                QAComments(questionId: question.id ?? '0')
               ],
             ),
           ),
@@ -292,77 +307,56 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
   }
 
   Widget answersAndSortByBloc(Question question) {
-    return Container(
-      height: 37,
-      decoration: const BoxDecoration(
-        color: Color(0xffEDEAEA),
-      ),
-      child: Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            child: Text(
-              '${question.numberOfAnswers} Answers',
-              style: const TextStyle(
-                color: Color(0xff000000),
-                fontWeight: FontWeight.bold,
-              ),
+    return Row(
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: 10),
+          child: Text(
+            '${question.numberOfAnswers} Answers',
+            style: const TextStyle(
+              color: Color(0xff000000),
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 106, right: 5, top: 10),
-                // ignore: prefer_const_constructors
+        ),
+        const Spacer(),
+        const Text(
+          "Sort by:",
+          style: TextStyle(fontSize: 10, fontFamily: 'Arial'),
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: 12),
+          padding: const EdgeInsets.only(left: 12),
+          // width: 130,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 0.2),
+          ),
+          child: DropdownButton<String>(
+            // To delete underline in dropdownbutton
+            underline: const SizedBox(),
+            value: currentSortOption,
+            style: const TextStyle(color: Colors.black),
+            onChanged: (val) {
+              // This is called when the user selects an item.
+              setState(() {
+                currentSortOption = val;
+              });
+            },
+            items: sortOptions.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
                 child: Text(
-                  "Sort by:",
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontFamily: 'Arial',
+                  value,
+                  style: HomeScreenFonts.content.copyWith(
+                    fontSize: 8,
                   ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 12, right: 12),
-                margin: const EdgeInsets.only(top: 10),
-                height: 25,
-                width: 130,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 0.2),
-                ),
-                child: DropdownButton<String>(
-                  // To delete underline in dropdownbutton
-                  underline: const SizedBox(),
-                  isExpanded: true,
-                  value: sortedBySelected,
-                  icon: const Icon(Icons.arrow_downward, size: 9),
-                  elevation: 8,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                  onChanged: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      sortedBySelected = value!;
-                    });
-                  },
-                  items: SortedBy.array
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: HomeScreenFonts.content.copyWith(
-                          fontSize: 8,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
+              );
+            }).toList(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

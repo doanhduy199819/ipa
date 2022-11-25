@@ -1,74 +1,46 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
-import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import '../../../objects/FirestoreUser.dart';
-import '../../../objects/ArticlePost.dart';
-import '../../../objects/Comment.dart';
 
-class ArticleCommentPart extends StatefulWidget {
-  String articleId;
-  ArticleCommentPart({Key? key, required this.articleId}) : super(key: key);
+import '../../../../services/auth_service.dart';
+
+class QAComments extends StatefulWidget {
+  String questionId;
+
+  QAComments({Key? key, required this.questionId}) : super(key: key);
 
   @override
-  State<ArticleCommentPart> createState() => _ArticleCommentPartState();
+  State<QAComments> createState() => _QACommentsState();
 }
 
-class _ArticleCommentPartState extends State<ArticleCommentPart> {
-  late List<Comment>? comments;
-  // late FirestoreUser account;
-  DateFormat formatter = DateFormat('dd-MM-yyyy');
+class _QACommentsState extends State<QAComments> {
   String commentContent = "";
+  late List<Comment>? comments;
   final _formKey = GlobalKey<FormState>();
   final _textFieldController = TextEditingController();
   final _commentFocusNode = FocusNode();
-  // bool isSendButtonDisabled = true;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: DatabaseService().commentsFromArticle(widget.articleId),
+        stream: DatabaseService().commentsFromQuestion(widget.questionId),
         builder: (BuildContext context,
-            AsyncSnapshot<List<Comment>?> asyncSnapshot) {
-          if (asyncSnapshot.hasError) {
-            return Text('Something went wrong :(');
-          }
-          if (asyncSnapshot.data == null ||
-              asyncSnapshot.connectionState == ConnectionState.waiting) {
-            return Column(
+                AsyncSnapshot<List<Comment>?> asyncSnapshot) =>
+            Helper().handleSnapshot(asyncSnapshot) ??
+            Column(
               children: [
-                CircularProgressIndicator(),
+                commentInput(),
+                Divider(),
+                commentsList(asyncSnapshot.data),
               ],
-            );
-          }
-          comments = asyncSnapshot.data;
-          return Column(
-            children: [
-              headingComment(),
-              SizedBox(
-                height: 10,
-              ),
-              commentInput(),
-              Divider(),
-              commentsList(comments),
-            ],
-          );
-        });
+            ));
   }
 
   // Where user input their comment
@@ -134,7 +106,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     }
   }
 
-  Widget headingComment() {
+  Widget headingComment(int numberOfComments) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Stack(
@@ -154,7 +126,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(comments?.length.toString() ?? '0',
+              child: Text(numberOfComments.toString(),
                   style: TextStyle(color: Colors.white, fontSize: 12)),
             ),
           )
@@ -165,7 +137,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   // Send user input to server
   void _sendComment(String content) async {
-    await DatabaseService().addCommentToArticle(content, widget.articleId);
+    await DatabaseService().addCommentToQuestion(content, widget.questionId);
   }
 
   // Clear commentInput
@@ -173,8 +145,9 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     _textFieldController.clear();
   }
 
-  // List of comments of this article
+  // List of comments of this question
   Widget commentsList(List<Comment>? comments) {
+    debugPrint(comments.toString());
     return Column(
       children: <Widget>[
         ...?comments?.map((comment) => commentBloc(comment)).toList()
@@ -191,7 +164,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
           CommentBoxWidget(
             photoUrl: asyncSnapshot.data?.photoUrl,
             userName: asyncSnapshot.data?.displayName,
-            isShowingUpvote: false,
+            isShowingUpvote: true,
             content: comment.content,
             postFix: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -222,15 +195,15 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                               actions: [
                                 FlatButton(
                                     onPressed: () {
-                                      _dissmissAlertDialog();
+                                      _dissmissAlertDialog(context);
                                     },
                                     child: Text('No')),
                                 FlatButton(
                                     onPressed: () {
-                                      _dissmissAlertDialog();
+                                      _dissmissAlertDialog(context);
                                       DatabaseService()
                                           .deleteCommentFromArticle(
-                                              comment.id!, widget.articleId);
+                                              comment.id!, widget.questionId);
                                     },
                                     child: Text(
                                       'Yes',
@@ -247,7 +220,7 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
     );
   }
 
-  void _dissmissAlertDialog() {
+  void _dissmissAlertDialog(BuildContext context) {
     // Navigator.pop(context);
     // Navigator.of(context, rootNavigator: true).pop('dialog');
     Navigator.of(context, rootNavigator: true).pop();

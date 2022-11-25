@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 mixin CommentService {
@@ -40,6 +41,16 @@ mixin CommentService {
         .map(commentsFromQuerySnapshot);
   }
 
+  Stream<List<Comment>?> commentsFromQuestion(questionID) {
+    return _db
+        .collection('questions')
+        .doc(questionID)
+        .collection('answers')
+        .orderBy("created_at", descending: false)
+        .snapshots()
+        .map(commentsFromQuerySnapshot);
+  }
+
   Future<void> deleteCommentFromArticle(
       String commentId, String articleId) async {
     _db
@@ -50,12 +61,23 @@ mixin CommentService {
         .delete();
   }
 
+  Future<void> deleteCommentFromQuestion(
+      String commentId, String articleId) async {
+    _db
+        .collection('questions')
+        .doc(articleId)
+        .collection('answers')
+        .doc(commentId)
+        .delete();
+  }
+
   List<Comment>? commentsFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
     return querySnapshot.docs
         .map((QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-      if (documentSnapshot.exists)
+      if (documentSnapshot.exists) {
         return Comment.fromQuerySnapshot(documentSnapshot);
+      }
       return Comment();
     }).toList();
   }

@@ -31,11 +31,18 @@ class CommentBoxWidget extends StatefulWidget {
 
 class _CommentBoxWidgetState extends State<CommentBoxWidget> {
   int upVoteNum = 10;
-  int voteStat = 0;
+  late int voteStat;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    voteStat = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // const commentContent = 'What a value lesson !';
+    debugPrint('rebuild comment box ${voteStat}');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -73,7 +80,7 @@ class _CommentBoxWidgetState extends State<CommentBoxWidget> {
 }
 
 class _buildInteractions extends StatelessWidget {
-  const _buildInteractions({
+  _buildInteractions({
     Key? key,
     required this.voteNum,
     this.upVoteTap,
@@ -90,23 +97,47 @@ class _buildInteractions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('rebuild interactions');
+    debugPrint('vote state $voteState');
+
     return Row(
       // ignore: prefer_const_literals_to_create_immutables
       children: [
         if (isShowingUpvote) ...[
           InterractionIcon(
             onTap: upVoteTap,
-            isActive: voteState == 1, activeIcon: Icon(Icons.arrow_upward_rounded, size: 12.0, color: Colors.white,), 
-            unActiveIcon: Icon(Icons.arrow_upward_rounded, size: 12.0, color: Colors.grey,),
+            isActive: (voteState == 1),
+            activeIcon: Icon(
+              Icons.arrow_upward_rounded,
+              size: 12.0,
+              color: Colors.white,
+            ),
+            activeBackgroundColor: Colors.green,
+            unActiveIcon: Icon(
+              Icons.arrow_upward_rounded,
+              size: 12.0,
+              color: Colors.grey,
+            ),
+            unActiveBackgroundColor: Colors.white,
           ),
           const SizedBox(width: 12.0),
           Text(voteNum.toString()),
           const SizedBox(width: 12.0),
           InterractionIcon(
-            activeIcon: Icon(Icons.arrow_downward_rounded, size: 12.0, color: Colors.red,), 
-            unActiveIcon: Icon(Icons.arrow_downward_rounded, size: 12.0, color: Colors.grey,),
+            activeIcon: Icon(
+              Icons.arrow_downward_rounded,
+              size: 12.0,
+              color: Colors.white,
+            ),
+            activeBackgroundColor: Colors.red,
+            unActiveIcon: Icon(
+              Icons.arrow_downward_rounded,
+              size: 12.0,
+              color: Colors.grey,
+            ),
+            unActiveBackgroundColor: Colors.white,
             onTap: downVoteTap,
-            isActive: voteState == -1,
+            isActive: (voteState == -1),
           ),
           const SizedBox(width: 12.0),
         ],
@@ -183,4 +214,3 @@ class _buildCommentContent extends StatelessWidget {
     );
   }
 }
-

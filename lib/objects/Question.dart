@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
@@ -51,11 +52,13 @@ class Question {
     var content = 'sample content';
     var created_at = DateTime.now();
     var title = 'This is a test questions';
+    var company_id = 'RvxU3Ir2KkQp1hjKzRcg';
     return Question.only(
       id: id,
       answers: comments,
       content: content,
       created_at: created_at,
+      company_id: company_id,
       title: title,
     );
   }
@@ -90,6 +93,11 @@ class Question {
 
     return Question(id, title, content, created_at, author_id, company_id,
         categories, upvote_users, downvote_users, null);
+  }
+
+  factory Question.fromQuerySnapshot(
+    QueryDocumentSnapshot<Map<String, dynamic>> queryDocumentSnapshot) {
+    return Question.fromJson(queryDocumentSnapshot.data());
   }
 
   Map<String, dynamic> toJson() => {

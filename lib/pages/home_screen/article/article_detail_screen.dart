@@ -7,7 +7,6 @@ import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/objects/SortedBy.dart';
 import 'package:flutter_interview_preparation/pages/authentication/sign_up.dart';
 import 'package:flutter_interview_preparation/pages/components/bookmark.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
