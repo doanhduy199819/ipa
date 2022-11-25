@@ -7,7 +7,6 @@ import 'package:flutter_interview_preparation/pages/home_container.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/interest_screen/Interest_Page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
-import 'package:flutter_interview_preparation/pages/quizz_screen/quizz_page.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
 import 'package:flutter_interview_preparation/pages/wrapper.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
