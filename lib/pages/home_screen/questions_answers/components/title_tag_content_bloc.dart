@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_interview_preparation/objects/Category.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 

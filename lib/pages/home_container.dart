@@ -27,7 +27,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     } else if (index == 2) {
       return SearchPage();
     } else {
-      return QuizzPage();
+      return QuizOverview();
     }
   }
 
