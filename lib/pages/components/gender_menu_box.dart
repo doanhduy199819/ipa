@@ -31,7 +31,7 @@ class _GenderBoxWidgetState extends State<GenderBoxWidget> {
         onTap: (() {}),
         child: Row(
           children: [
-            const Icon(Icons.person),
+            const Icon(Icons.male),
             const SizedBox(
               width: 20,
             ),

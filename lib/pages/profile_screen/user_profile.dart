@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/UserProfile.dart';
 import 'package:flutter_interview_preparation/pages/components/birthday_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/components/gender_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/components/name_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/change_password_page.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 import '../../values/Home_Screen_Fonts.dart';
 
@@ -18,11 +20,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
   late double wid;
   late bool followCheck;
   late TextEditingController controller;
-  late UserProfile userProfile;
+  late User? userProfile;
   void initData() {
     followCheck = false;
-    userProfile = UserProfile(
-        'Lê Hoàng Vỹ', DateTime.utc(2001, 5, 21), 0, 'hoangvy2105@gmail.com');
   }
 
   @override
@@ -38,18 +38,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
     hei = MediaQuery.of(context).size.height;
     wid = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('Account', style: HomeScreenFonts.headStyle),
-      ),
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          _buildTop(),
-          _buildBody(),
-        ],
-      ),
+    return StreamBuilder<User?>(
+      stream: AuthService().userChanges,
+      builder: (context, snapshot) {
+        userProfile = AuthService().currentUser;
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text('Account', style: HomeScreenFonts.headStyle),
+          ),
+          body: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              _buildTop(),
+              _buildBody(
+                  userProfile?.displayName ?? '', userProfile?.email ?? ''),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -69,24 +76,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(String name, String email) {
     return Column(
       children: [
         // _buildButtonFollow(),
         NameBoxWidget(
-          string: userProfile.name,
-          context: context,
-        ),
-        BirthDayBoxWidget(
-          string: _getStringBirthday(userProfile.birthDay),
-          context: context,
-        ),
-        GenderBoxWidget(
-          gender: userProfile.gender,
+          userName: name,
           context: context,
         ),
         EmailBoxWidget(
-          string: userProfile.email,
+          string: email,
         ),
         _buildChangePassword(),
       ],
