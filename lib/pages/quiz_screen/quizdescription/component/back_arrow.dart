@@ -15,7 +15,7 @@ class BackArrowButton extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () {
-          // to do back pre page
+          Navigator.of(context).pop();
         },
         icon: const Icon(
           Icons.arrow_back_ios_rounded,

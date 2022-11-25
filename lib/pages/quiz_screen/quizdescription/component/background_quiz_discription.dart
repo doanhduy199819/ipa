@@ -8,7 +8,7 @@ class BackgroundQuizDiscription extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
         height: size.height * 0.25,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             boxShadow: [
               BoxShadow(
                 color: Color.fromRGBO(145, 171, 217, 1),
