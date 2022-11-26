@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../component/custom_box.dart';
-import '../object/categories.dart';
+import '../../component/custom_box.dart';
+import '../../object/categories.dart';
+import '../../object/categories.dart';
 
 class CustomBoxCategories extends StatelessWidget {
   CustomBoxCategories(
@@ -14,7 +15,7 @@ class CustomBoxCategories extends StatelessWidget {
   final double height;
   final double width;
   final List<Color> color;
-  final Categories categories;
+  final DataBoxCategories categories;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class CustomBoxCategories extends StatelessWidget {
                   Container(
                       child: Align(
                     alignment: Alignment.center,
-                    child: Text(categories.specialized,
+                    child: Text(categories.specialized.toString(),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -49,7 +50,7 @@ class CustomBoxCategories extends StatelessWidget {
                   Container(
                     child: Align(
                       // alignment: Alignment.topLeft,
-                      child: Text(categories.name,
+                      child: Text(categories.name.toString(),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

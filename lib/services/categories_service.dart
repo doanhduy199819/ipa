@@ -26,6 +26,27 @@ class CategoriesService {
   //   return result;
   // }
 
+  Future<List<Categories>?> getCategoriesList(String jobId) async {
+    CollectionReference collection =
+        _db.collection('quizzes').doc(jobId).collection('categories');
+    // return a QuerySnapshot, which is a collection query
+    // To access documents in a collection,
+    // querySnapshot.docs() => return a List<DocumentSnapshot>
+    List<Categories>? result;
+    await collection.get().then((QuerySnapshot querySnapshot) {
+      // print(querySnapshot.docs.first.data());
+      result = querySnapshot.docs.map((doc) {
+        if (doc.exists) {
+          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+          Categories a = Categories.fromJson(data, doc.id);
+          return a;
+        }
+        return Categories();
+      }).toList();
+    });
+    return result;
+  }
+
   List<Categories>? _categoriesFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
     return querySnapshot.docs

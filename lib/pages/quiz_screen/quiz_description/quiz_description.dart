@@ -1,40 +1,45 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/controller/question_controller.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
+import '../quiz_description/component/achievement_bloc.dart';
 import '../quiz/quiz.dart';
-import '../quizdescription/component/achievement_bloc.dart';
 
-import '../quizdescription/component/back_arrow.dart';
-import '../quizdescription/component/background_quiz_discription.dart';
+import '../quiz_description/component/back_arrow.dart';
+import '../quiz_description/component/background_quiz_discription.dart';
 
-import '../quizdescription/component/button_start_quiz.dart';
+import '../quiz_description/component/button_start_quiz.dart';
 
-import '../quizdescription/component/text_function_bloc.dart';
-import '../quizdescription/content_description.dart';
-import '../quizdescription/top_bloc_description.dart';
+import '../quiz_description/component/text_function_bloc.dart';
+import '../quiz_description/content_description.dart';
+import '../quiz_description/top_bloc_description.dart';
 
 class QuizDescription extends StatelessWidget {
+  QuizDescription(
+      {Key? key, required this.dataBoxCategories, required this.setOfQuiz})
+      : super(key: key);
+
+  final DataBoxCategories dataBoxCategories;
+  final SetOfQuiz setOfQuiz;
   String numberOfQuizz = '30';
   int yourHighestScores = 180;
   int maxScoresOfQuizz = 300;
   String imgCrownPath = 'assets/icons/crown_icon.png';
   String imgTroyphyPath = 'assets/icons/trophy.png';
-  QuizDescription({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double widthOfDevice = MediaQuery.of(context).size.width;
     double heightOfDevice = MediaQuery.of(context).size.height;
 
-    List<String> contentDescription = [
-      '- All questions are for 10 marks',
-      '- This set of topics will help you review programming skills & knowledge',
-      '- You will be more confident in the interview after completing this set of questions'
-    ];
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            // background
+            Container(
+              color: Colors.white,
+            ),
             Container(
               height: heightOfDevice * 0.25,
               width: widthOfDevice,
@@ -68,6 +73,8 @@ class QuizDescription extends StatelessWidget {
                           imgTroyphyPath: imgTroyphyPath,
                           yourHighestScores: yourHighestScores,
                           maxScoresOfQuizz: maxScoresOfQuizz,
+                          dataBoxCategories: dataBoxCategories,
+                          setOfQuiz: setOfQuiz,
                         ),
                         Container(
                             margin: const EdgeInsets.only(top: 16.0),
@@ -81,8 +88,10 @@ class QuizDescription extends StatelessWidget {
                         Row(
                           children: [
                             ContentDescriptionWidget(
-                                widthOfDevice: widthOfDevice,
-                                contentDescription: contentDescription),
+                              widthOfDevice: widthOfDevice,
+                              dataBoxCategories: dataBoxCategories,
+                              setOfQuiz: setOfQuiz,
+                            ),
                           ],
                         ),
                         //Button
@@ -90,11 +99,12 @@ class QuizDescription extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: InkWell(
                             onTap: () {
+                              QuesionController().startQuiz();
+                              Navigator.pop(context);
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Quiz()),
-                              );
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Quiz()));
                             },
                             child: Row(
                               children: const [

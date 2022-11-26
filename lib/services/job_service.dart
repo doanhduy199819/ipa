@@ -39,4 +39,20 @@ mixin JobService {
   Future<List<Job>?> get allJobOnce {
     return _db.collection('quizzes').get().then(_jobFromQuerySnapshot);
   }
+
+  Future<List<Job>?> getJobList() async {
+    CollectionReference collection = _db.collection('quizzes');
+    List<Job>? result;
+    await collection.get().then((QuerySnapshot querySnapshot) {
+      result = querySnapshot.docs.map((doc) {
+        if (doc.exists) {
+          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+          Job a = Job.fromJson(data, doc.id);
+          return a;
+        }
+        return Job();
+      }).toList();
+    });
+    return result;
+  }
 }

@@ -1,5 +1,8 @@
-class Categories {
-  String specialized;
-  String name;
-  Categories(this.specialized, this.name);
+class DataBoxCategories {
+  String? jobid;
+  String? specialized;
+  String? categoriesid;
+  String? name;
+  DataBoxCategories(
+      {this.jobid, this.specialized, this.categoriesid, this.name});
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_list/component/list_box_quiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/component/list_box_categories.dart';
 import '../component/backgound.dart';
 import '../object/categories.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -14,7 +16,7 @@ class ListQuiz extends StatelessWidget {
 
   final List<String> listquiz;
   final List<Color> color;
-  final Categories categories;
+  final DataBoxCategories categories;
 
   final List<List<Color>> listColor = [
     [
@@ -43,15 +45,6 @@ class ListQuiz extends StatelessWidget {
     ],
   ];
 
-  final List<String> recently_quiz_name = [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "MySQL",
-    "Python",
-    "PHP"
-  ];
-
   Widget CustomBoxHeader(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
@@ -71,7 +64,7 @@ class ListQuiz extends StatelessWidget {
             ]),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Spacer(),
-          Text(categories.name,
+          Text(categories.name.toString(),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -80,7 +73,7 @@ class ListQuiz extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.w100,
               )),
-          Text(categories.specialized,
+          Text(categories.specialized.toString(),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -89,31 +82,6 @@ class ListQuiz extends StatelessWidget {
                   fontSize: 26,
                   fontFamily: "RobotoSlab")),
         ]));
-  }
-
-  Widget _buildItemQuiz(BuildContext context, int index) {
-    double customHeight = 165;
-    if ((index - 1) == 0) customHeight = 185;
-
-    return Container(
-      width: 145,
-      height: customHeight,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            height: 165,
-            width: 135,
-            child: CustomBoxQuiz(
-              height: 165,
-              width: 135,
-              color: listColor[(index) % listColor.length],
-              quizName: recently_quiz_name[index],
-            ),
-          )
-        ],
-      ),
-    );
   }
 
   @override
@@ -136,7 +104,7 @@ class ListQuiz extends StatelessWidget {
               color: color[2],
             ),
             onTap: () {
-              Navigator.pop(context);
+              if (Navigator.canPop(context)) Navigator.pop(context);
             },
           ),
         ),
@@ -145,16 +113,9 @@ class ListQuiz extends StatelessWidget {
             height: size.height * 0.7 - 20,
             child: Stack(children: [
               Container(
-                child: MasonryGridView.count(
-                  itemCount: recently_quiz_name.length,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 30,
-                  crossAxisSpacing: 0,
-                  itemBuilder: (context, index) {
-                    return _buildItemQuiz(context, index);
-                  },
-                ),
-              ),
+                  child: ListBoxQuiz(
+                dataBoxCategories: categories,
+              )),
               Column(children: [
                 Container(
                   height: (size.height * 0.7 - 20) * 0.1,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
 import '../component/custom_box.dart';
 import '../controller/question_controller.dart';
-import '../quizdescription/quiz_description.dart';
+import '../quiz_description/quiz_description.dart';
 
 class CustomBoxQuiz extends StatelessWidget {
   CustomBoxQuiz(
@@ -9,13 +11,15 @@ class CustomBoxQuiz extends StatelessWidget {
       required this.height,
       required this.width,
       required this.color,
-      required this.quizName})
+      required this.setOfQuiz,
+      required this.dataBoxCategories})
       : super(key: key);
 
   final double height;
   final double width;
   final List<Color> color;
-  final String quizName;
+  final DataBoxCategories dataBoxCategories;
+  final SetOfQuiz setOfQuiz;
 
   Widget CustomButton(BuildContext context) {
     return GestureDetector(
@@ -43,10 +47,13 @@ class CustomBoxQuiz extends StatelessWidget {
       ),
       onTap: (() {
         QuesionController().reset();
-        QuesionController().addDataTemplate();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizDescription()),
+          MaterialPageRoute(
+              builder: (context) => QuizDescription(
+                    dataBoxCategories: dataBoxCategories,
+                    setOfQuiz: setOfQuiz,
+                  )),
         );
       }),
     );
@@ -86,7 +93,7 @@ class CustomBoxQuiz extends StatelessWidget {
                   Container(
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text(quizName,
+                      child: Text(setOfQuiz.name.toString(),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
