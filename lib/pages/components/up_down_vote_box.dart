@@ -6,23 +6,34 @@ import 'package:flutter_interview_preparation/pages/components/interaction_icon.
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
 class UpDownVoteBox extends StatefulWidget {
-  const UpDownVoteBox({Key? key, required this.comment}) : super(key: key);
+  const UpDownVoteBox(
+      {Key? key,
+      this.defaultVoteState,
+      this.voteNum,
+      this.iconSize = 12.0,
+      this.upVoteHandle,
+      this.downVoteHandle})
+      : super(key: key);
 
-  final Comment comment;
+  final int? defaultVoteState;
+  final int? voteNum;
+  final double iconSize;
+
+  // Expose methods
+  final Function(bool)? upVoteHandle;
+  final Function(bool)? downVoteHandle;
 
   @override
   State<UpDownVoteBox> createState() => _UpDownVoteBoxState();
 }
 
 class _UpDownVoteBoxState extends State<UpDownVoteBox> {
-  int voteState = 0;
-  late int voteNum;
+  late int voteState;
 
   @override
   void initState() {
     // TODO: implement initState
-    voteNum = widget.comment.vote;
-
+    voteState = widget.defaultVoteState ?? 0;
     super.initState();
   }
 
@@ -33,44 +44,47 @@ class _UpDownVoteBoxState extends State<UpDownVoteBox> {
         InterractionIcon(
           activeIcon: Icon(
             Icons.arrow_upward_rounded,
-            size: 12.0,
+            size: widget.iconSize,
             color: Colors.white,
           ),
           unActiveIcon: Icon(
             Icons.arrow_upward_rounded,
-            size: 12.0,
+            size: widget.iconSize,
             color: Colors.grey,
           ),
-          onTap: _upVoteTap,
           isActive: voteState == 1,
         ),
         const SizedBox(width: 12.0),
-        Text(voteNum.toString()),
-        const SizedBox(width: 12.0),
+        if (widget.voteNum != null) ...[
+          Text(widget.voteNum.toString()),
+          const SizedBox(width: 12.0),
+        ],
         InterractionIcon(
           activeIcon: Icon(
             Icons.arrow_upward_rounded,
-            size: 12.0,
+            size: widget.iconSize,
             color: Colors.white,
           ),
           unActiveIcon: Icon(
             Icons.arrow_upward_rounded,
-            size: 12.0,
+            size: widget.iconSize,
             color: Colors.grey,
           ),
-          onTap: _downVoteTap,
           isActive: voteState == -1,
         ),
       ],
     );
   }
 
-  void _upVoteTap() {
+  void _upVoteHandle(bool isUpvoteActive) {
     // TODO: Add userId to upvote_users field of this comment
-    DatabaseService().upVote(widget.comment);
+    setState(() {
+      voteState == 1 ? 0 : 1;
+    });
   }
 
-  void _downVoteTap() {
+  void _downVoteHandle() {
     // TODO: Add userId to downvote_users field of this comment
+    voteState == -1 ? 0 : -1;
   }
 }

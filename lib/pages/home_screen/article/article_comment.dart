@@ -116,21 +116,9 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
 
   void _onSendButtonPressed() {
     if (_formKey.currentState!.validate()) {
-      // debugPrint('Sent comment button is pressed');
       _sendComment(commentContent);
       _clearCommentContent();
-
-      // Move down to the end of screen
-      ScrollController scrollControler =
-          MyInheritedData.of(context).scrollController;
-      // SchedulerBinding.instance.scheduleFrameCallback((_) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        scrollControler.animateTo(
-          scrollControler.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn,
-        );
-      });
+      _scrollDownToEndList();
     }
   }
 
@@ -166,6 +154,28 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
   // Send user input to server
   void _sendComment(String content) async {
     await DatabaseService().addCommentToArticle(content, widget.articleId);
+  }
+
+  void _scrollDownToEndList() {
+    // Move down to the end of screen
+    ScrollController scrollControler =
+        MyInheritedData.of(context).scrollController;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollControler.hasClients) {
+        scrollControler.jumpTo(scrollControler.position.maxScrollExtent);
+      } else {
+        setState(() => null);
+      }
+    });
+    
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   scrollControler.animateTo(
+    //     scrollControler.position.maxScrollExtent,
+    //     duration: const Duration(milliseconds: 300),
+    //     curve: Curves.fastOutSlowIn,
+    //   );
+    // });
   }
 
   // Clear commentInput

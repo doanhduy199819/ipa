@@ -86,7 +86,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                 ),
 
                 answersAndSortByBloc(question),
-                // commentBlocColumn(question),
+                UpDownVoteBox(),
                 QAComments(questionId: question.id ?? '0')
               ],
             ),

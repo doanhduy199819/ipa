@@ -22,7 +22,7 @@ mixin CommentService {
   Future<void> addCommentToQuestion(String content, String questionId) {
     Comment comment = Comment.createdNowFromCurrentUser(content);
     DocumentReference docRef =
-        _db.collection('questions').doc(questionId).collection('comments').doc();
+        _db.collection('questions').doc(questionId).collection('answers').doc();
     comment.id ??= docRef.id;
     comment.author_id ??= AuthService().currentUserId;
     return docRef.set(comment.toJson()).then((_) {
