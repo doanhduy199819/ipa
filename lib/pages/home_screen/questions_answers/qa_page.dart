@@ -79,9 +79,9 @@ class _QAPageState extends State<QAPage> {
   }
 
   Future<void> _pullRefresh() async {
-    setState(() async {
-      questions = await DatabaseService().allQuestionsOnce;
-    });
+    // setState(() async {
+    //   questions = await DatabaseService().allQuestionsOnce;
+    // });
   }
 
   // Handle when item have image company or haven't

@@ -11,6 +11,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/question_content.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../objects/Company.dart';
@@ -34,6 +35,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
     'Date created (oldest first)',
   ];
   late String? currentSortOption;
+  late Question question;
   // String sortedBySelected = SortedBy.array[0];
 
   @override
@@ -45,8 +47,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Question question =
-        ModalRoute.of(context)?.settings.arguments as Question;
+    question = ModalRoute.of(context)?.settings.arguments as Question;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -65,28 +66,33 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 authorBloc(question: question),
-                //Content of Question
-                Container(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  decoration:
-                      const BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                      blurRadius: 2,
-                      offset: Offset(0.0, 3),
-                      color: Colors.grey,
-                    ),
-                  ]),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: buildQuestionContent(
-                      question: question,
-                      isShowingDetail: true,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: buildQuestionContent(
+                    question: question,
+                    isShowingDetail: true,
                   ),
                 ),
-
-                answersAndSortByBloc(question),
-                UpDownVoteBox(),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: FutureBuilder<int>(
+                    future: _getDefaultUpDownVoteState(),
+                    builder: (context, snapshot) {
+                      return Helper().handleSnapshot(snapshot, false) ??
+                          UpDownVoteBox(
+                            iconSize: 16.0,
+                            isHorizontal: true,
+                            upVoteHandle: _handleUpvote,
+                            downVoteHandle: _handleDownvote,
+                            defaultVoteState: snapshot.data,
+                          );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: answersAndSortByBloc(question),
+                ),
                 QAComments(questionId: question.id ?? '0')
               ],
             ),
@@ -96,222 +102,34 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
     );
   }
 
-  Widget commentBlocColumn(Question question) {
-    return Column(
-      children: <Widget>[
-        if (question.answers != null)
-          //Map => add vào toList xong rã ra từng Widget = ...
-          ...(question.answers!.map((item) {
-            return commentBloc(item);
-          }).toList()),
-      ],
-    );
+  void _handleUpvote(bool isUpvote) {
+    DatabaseService().upVoteQuestion(question, !isUpvote);
+    if (!isUpvote) DatabaseService().downVoteQuestion(question, false);
   }
 
-  Widget commentBloc(Comment comment) {
-    return Container(
-      // color: Colors.white,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(width: 0.6),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //Vote Comment Bloc
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //upvote comment bloc
-              Container(
-                padding: const EdgeInsets.only(top: 8),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 8),
-                      child: const Icon(Icons.arrow_upward),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(
-                        comment.upvote.toString(),
-                        style: HomeScreenFonts.upvote,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              //answer accepted bloc
-              Container(
-                margin: const EdgeInsets.only(left: 8, top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    comment.is_accepted ?? false
-                        ? const Icon(
-                            Icons.beenhere,
-                            color: Colors.green,
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          //Content comment bloc
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 12, left: 12),
-                  width: MediaQuery.of(context).size.width - 70,
-                  child: Text(
-                    comment.content!,
-                    style: HomeScreenFonts.content,
-                  ),
-                ),
-                // Avatar Bloc
-                Container(
-                  margin: const EdgeInsets.only(top: 15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Avatar
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 105, top: 10),
-                            width: 30,
-                            height: 30,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  // Task: Account avatar
-                                  // NetworkImage('${comment.account!.avatar}'),
-                                  NetworkImage(
-                                      'https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      //Details time, profile, bloc ...
-                      Container(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  parseDateTime(comment.created_at),
-                                  style: HomeScreenFonts.timePost,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 4, bottom: 4),
-                                    child: Text(
-                                      // Task: accouunt name
-                                      // comment.account!.name!,
-                                      'Duy',
-                                      style: HomeScreenFonts.nameAccount,
-                                    )),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  // Task
-                                  // comment.account!.numberOfPost!.toString(),
-                                  10.toString(),
-                                  style: HomeScreenFonts.numberOfPost,
-                                ),
+  void _handleDownvote(bool isDownvote) {
+    DatabaseService().downVoteQuestion(question, !isDownvote);
+    if (!isDownvote) DatabaseService().upVoteQuestion(question, false);
+  }
 
-                                //Medal
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      margin: const EdgeInsets.only(
-                                          right: 2, left: 2),
-                                      child: Image.asset(
-                                        HomeScreenAssets.goldMedal,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                    Text(
-                                      // Task
-                                      // comment.account!.numberOfGold!.toString(),
-                                      20.toString(),
-                                      style: HomeScreenFonts.numberOfPost,
-                                    ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      margin: const EdgeInsets.only(
-                                          right: 2, left: 2),
-                                      child: Image.asset(
-                                        HomeScreenAssets.silverMedal,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                    Text(
-                                      // Task
-                                      // comment.account!.numberOfSilver!
-                                      //     .toString(),
-                                      20.toString(),
-                                      style: HomeScreenFonts.numberOfPost,
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          right: 2, left: 2),
-                                      width: 20,
-                                      height: 20,
-                                      child: Image.asset(
-                                        HomeScreenAssets.bronzeMedal,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                    Text(
-                                      // Task
-                                      // comment.account!.numberOfBronze!
-                                      //     .toString(),
-                                      20.toString(),
-                                      style: HomeScreenFonts.numberOfPost,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+  Future<int> _getDefaultUpDownVoteState() async {
+    if (await DatabaseService().isAlreadyVoteQuestion(question, true)) {
+      debugPrint('state = 1');
+      return 1;
+    } else if (await DatabaseService().isAlreadyVoteQuestion(question, false)) {
+      debugPrint('state = -1');
+      return -1;
+    }
+    debugPrint('state = 0');
+
+    return 0;
   }
 
   Widget answersAndSortByBloc(Question question) {
     return Row(
-      // crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          margin: const EdgeInsets.only(left: 10),
+          margin: const EdgeInsets.all(8.0),
           child: Text(
             '${question.numberOfAnswers} Answers',
             style: const TextStyle(
@@ -358,136 +176,6 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
         ),
       ],
     );
-  }
-
-  Widget titleAndTagBloc(Question question) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //Title
-        Container(
-          padding: const EdgeInsets.only(top: 2, bottom: 4),
-          width: MediaQuery.of(context).size.width * 9 / 15 - 5,
-          child: Text(
-            question.title!,
-            style: HomeScreenFonts.titleQuestion,
-          ),
-        ),
-        //Tags
-        (question.categories != null)
-            ? Row(
-                children: [
-                  for (var item in question.categories!)
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(right: 3, bottom: 2, top: 2),
-                      child: Container(
-                          alignment: Alignment.centerLeft,
-                          color: const Color(0xffDFE2EB),
-                          child: Text(item, style: HomeScreenFonts.tagsName)),
-                    )
-                ],
-              )
-            : Row(
-                children: const [
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
-              ),
-      ],
-    );
-  }
-
-//Widget companybloc
-  Widget companyBloc(Question question) {
-    return SizedBox(
-      //color: Colors.red,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          //Company Icon
-          SizedBox(
-            // padding: EdgeInsets.only(left: 15),
-            child: Image.asset(
-                alignment: Alignment.centerRight,
-                fit: BoxFit.contain,
-                width: 50,
-                height: 40,
-                //question.company!
-                // TODO: change image
-                // Company.haveIdCompanyInSample(question.company_id)?.logoUrl ??
-                HomeScreenAssets.lgLogo),
-          ),
-          //TimePost
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              parseDateTime(question.created_at),
-              style: const TextStyle(
-                fontSize: 8,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  //Widget VoteBloc
-  Widget voteBloc(Question question) {
-    return Container(
-      padding: const EdgeInsets.only(left: 4),
-      // color:Colors.red,
-      width: MediaQuery.of(context).size.width / 6.2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Vote
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
-            child: Row(
-              children: [
-                Icon(question.numberOfUpvote > 0
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Text(
-                    question.numberOfDownvote.toString(),
-                    style: HomeScreenFonts.upvote,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Comment
-          Row(
-            children: [
-              const Icon(Icons.comment),
-              Padding(
-                padding: const EdgeInsets.only(left: 5, bottom: 2),
-                child: Text(
-                  question.numberOfAnswers.toString(),
-                  style: HomeScreenFonts.comment,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  String parseDateTime(DateTime? time) {
-    if (time != null) {
-      String formatter = DateFormat('dd/MM/yyyy').format(time);
-      return formatter;
-    } else {
-      return '1/1/2001';
-    }
   }
 }
 

@@ -34,8 +34,8 @@ class InterractionIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onTap ?? onTap!();
-        onActiveChange ?? onActiveChange!(isActive);
+        // (onTap != null) ? onTap!() : null;
+        (onActiveChange != null) ? onActiveChange!(isActive) : null;
       },
       child: Container(
         decoration: hasBackgroundDecoration

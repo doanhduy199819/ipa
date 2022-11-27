@@ -12,16 +12,18 @@ class UpDownVoteBox extends StatefulWidget {
       this.voteNum,
       this.iconSize = 12.0,
       this.upVoteHandle,
-      this.downVoteHandle})
+      this.downVoteHandle,
+      this.isHorizontal = true})
       : super(key: key);
 
   final int? defaultVoteState;
   final int? voteNum;
   final double iconSize;
+  final bool isHorizontal;
 
   // Expose methods
-  final Function(bool)? upVoteHandle;
-  final Function(bool)? downVoteHandle;
+  final void Function(bool)? upVoteHandle;
+  final void Function(bool)? downVoteHandle;
 
   @override
   State<UpDownVoteBox> createState() => _UpDownVoteBoxState();
@@ -39,52 +41,77 @@ class _UpDownVoteBoxState extends State<UpDownVoteBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        InterractionIcon(
-          activeIcon: Icon(
-            Icons.arrow_upward_rounded,
-            size: widget.iconSize,
-            color: Colors.white,
-          ),
-          unActiveIcon: Icon(
-            Icons.arrow_upward_rounded,
-            size: widget.iconSize,
-            color: Colors.grey,
-          ),
-          isActive: voteState == 1,
-        ),
-        const SizedBox(width: 12.0),
-        if (widget.voteNum != null) ...[
-          Text(widget.voteNum.toString()),
-          const SizedBox(width: 12.0),
+    debugPrint('build updown box');
+    if (widget.isHorizontal) {
+      return Row(children: _getChildren());
+    } else {
+      return Row(
+        children: [
+          Column(children: _getChildren()),
         ],
-        InterractionIcon(
-          activeIcon: Icon(
-            Icons.arrow_upward_rounded,
-            size: widget.iconSize,
-            color: Colors.white,
-          ),
-          unActiveIcon: Icon(
-            Icons.arrow_upward_rounded,
-            size: widget.iconSize,
-            color: Colors.grey,
-          ),
-          isActive: voteState == -1,
+      );
+    }
+  }
+
+  List<Widget> _getChildren() {
+    return [
+      InterractionIcon(
+        activeIcon: Icon(
+          Icons.arrow_upward_rounded,
+          size: widget.iconSize,
+          color: Colors.white,
         ),
+        activeBackgroundColor: Colors.green,
+        unActiveIcon: Icon(
+          Icons.arrow_upward_rounded,
+          size: widget.iconSize,
+          color: Colors.grey,
+        ),
+        unActiveBackgroundColor: Colors.white,
+        isActive: voteState == 1,
+        onActiveChange: (isActive) {
+          _upVoteHandle(isActive);
+          if (widget.upVoteHandle != null) widget.upVoteHandle!(isActive);
+        },
+      ),
+      const SizedBox(width: 12.0, height: 12.0),
+      if (widget.voteNum != null) ...[
+        Text(widget.voteNum.toString()),
+        const SizedBox(width: 12.0),
       ],
-    );
+      InterractionIcon(
+        activeIcon: Icon(
+          Icons.arrow_downward_rounded,
+          size: widget.iconSize,
+          color: Colors.white,
+        ),
+        activeBackgroundColor: Colors.red,
+        unActiveIcon: Icon(
+          Icons.arrow_downward_rounded,
+          size: widget.iconSize,
+          color: Colors.grey,
+        ),
+        unActiveBackgroundColor: Colors.white,
+        isActive: voteState == -1,
+        onActiveChange: (isActive) {
+          _downVoteHandle(isActive);
+          if (widget.downVoteHandle != null) widget.downVoteHandle!(isActive);
+        },
+      ),
+    ];
   }
 
   void _upVoteHandle(bool isUpvoteActive) {
     // TODO: Add userId to upvote_users field of this comment
     setState(() {
-      voteState == 1 ? 0 : 1;
+      voteState = (isUpvoteActive) ? 0 : 1;
     });
   }
 
-  void _downVoteHandle() {
+  void _downVoteHandle(bool isUpvoteActive) {
     // TODO: Add userId to downvote_users field of this comment
-    voteState == -1 ? 0 : -1;
+    setState(() {
+      voteState = (isUpvoteActive) ? 0 : -1;
+    });
   }
 }

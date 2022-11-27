@@ -20,16 +20,22 @@ class Helper {
     }
   }
 
-  Widget? handleSnapshot(AsyncSnapshot<dynamic> asyncSnapshot) {
+  Widget? handleSnapshot(AsyncSnapshot<dynamic> asyncSnapshot,
+      [bool showCircleLoading = true]) {
     if (asyncSnapshot.hasError) {
       return Text('Something went wrong :(');
     }
     if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-      return Column(
-        children: [
-          const Center(child: CircularProgressIndicator()),
-        ],
-      );
+      return (showCircleLoading)
+          ? Column(
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            )
+          : SizedBox(
+              width: 16.0,
+              height: 16.0,
+            );
     }
     if (asyncSnapshot == null) {
       return const Icon(Icons.question_mark);

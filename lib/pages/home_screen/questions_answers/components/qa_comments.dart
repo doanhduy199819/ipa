@@ -201,8 +201,9 @@ class _QACommentsState extends State<QAComments> {
                                 FlatButton(
                                     onPressed: () {
                                       _dissmissAlertDialog(context);
+                                      debugPrint('Comfirm delete comment');
                                       DatabaseService()
-                                          .deleteCommentFromArticle(
+                                          .deleteCommentFromQuestion(
                                               comment.id!, widget.questionId);
                                     },
                                     child: Text(

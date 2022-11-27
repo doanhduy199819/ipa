@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/company_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 
 class buildQuestionContent extends StatelessWidget {
   const buildQuestionContent({
@@ -26,9 +28,26 @@ class buildQuestionContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
               top: 8.0, bottom: 8.0, left: 4.0, right: 8.0),
-          child: VoteBloc(
-              numberOfVotes: question.voteNum ?? 0,
-              numberOfAnswers: question.numberOfAnswers ?? 0),
+          child: StreamBuilder<int>(
+              stream: DatabaseService().getVoteNum(question.id ?? '0'),
+              builder: (context, voteNumSnapshot) {
+                return Helper().handleSnapshot(voteNumSnapshot) ??
+                    StreamBuilder<int>(
+                        stream: DatabaseService()
+                            .getNumberOfAnswers(question.id ?? '0'),
+                        builder: (context, numberOfAnswersSnapshot) {
+                          return Helper()
+                                  .handleSnapshot(numberOfAnswersSnapshot) ??
+                              VoteBloc(
+                                  numberOfVotes: voteNumSnapshot.data ?? 0,
+                                  numberOfAnswers:
+                                      numberOfAnswersSnapshot.data ?? 0);
+                        });
+              }),
+          // child: VoteBloc(
+          //   numberOfAnswers: question.numberOfAnswers,
+          //   numberOfVotes: question.voteNum,
+          // ),
         ),
         Expanded(
           child: Padding(
