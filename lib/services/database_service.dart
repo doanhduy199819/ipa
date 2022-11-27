@@ -29,4 +29,6 @@ class DatabaseService
         JobService,
         CategoriesService,
         SetOfQuizService,
-        QuizService {}
+        QuizService,
+        CompanyService
+{}
