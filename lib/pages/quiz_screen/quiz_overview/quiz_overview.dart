@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/controller/job_controller.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/component/list_box_categories.dart';
+import '../../../objects/Categories.dart';
+import '../../../objects/Job.dart';
 import '../component/backgound.dart';
-import '../component/custom_box_categories.dart';
+import 'component/custom_box_categories.dart';
 import '../component/custom_box_quiz.dart';
-import '../component/topbarjobs.dart';
-import '../object/categories.dart';
-import '../screen/list_quiz.dart';
+import 'component/topbarjobs.dart';
+import '../quiz_list/list_quiz.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import 'component/topbarjobs.dart';
+
 class QuizOverview extends StatelessWidget {
-  QuizOverview({Key? key}) : super(key: key);
+  QuizOverview({
+    Key? key,
+  }) : super(key: key);
   final List<List<Color>> listColor = [
     [
       Color.fromRGBO(43, 35, 139, 1),
@@ -46,15 +54,6 @@ class QuizOverview extends StatelessWidget {
     "PHP"
   ];
 
-  final List<Categories> categories = [
-    Categories("IT", "Programming"),
-    Categories("IT", "Data Analytics"),
-    Categories("IT", "Data Analytics 1  "),
-    Categories("IT", "Data Analytics 2"),
-    Categories("IT", "Data Analytics 3"),
-    Categories("IT", "Data Analytics 4"),
-  ];
-
   Widget _buildListItemQuiz(BuildContext context, int index) {
     //horizontal
     return Container(
@@ -62,46 +61,21 @@ class QuizOverview extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            child: CustomBoxQuiz(
-              height: 165,
-              width: 135,
-              color: listColor[index % listColor.length],
-              quizName: recently_quiz_name[index],
-            ),
-          )
+              // child: CustomBoxQuiz(
+              //   height: 165,
+              //   width: 135,
+              //   color: listColor[index % listColor.length],
+              //   setOfQuiz: recently_quiz_name[index],
+              // ),
+              )
         ],
       ),
     );
   }
 
-  Widget _buildCategories(BuildContext context, int index) {
-    double customHeight = 165;
-    if ((index - 1) == 0) customHeight = 185;
-
-    return Container(
-      height: customHeight,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          InkWell(
-            child: Container(
-              child: CustomBoxCategories(
-                height: 165,
-                width: 135,
-                color: listColor[(index) % listColor.length],
-                categories: categories[index],
-              ),
-            ),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ListQuiz(
-                    listquiz: recently_quiz_name,
-                    color: listColor[(index) % listColor.length],
-                    categories: categories[index]))),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget listBoxCategories() {
+  //   return.whenComplete(() => null);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +85,13 @@ class QuizOverview extends StatelessWidget {
       Color.fromRGBO(39, 25, 98, 1),
       Color.fromRGBO(50, 37, 107, 1),
     ];
+    // List<Job>? data = await JobController().add();
+    // List<DataBoxCategories> tam = JobController().getDataBoxCategories();
+    // print("Categories: ${tam.length}");
+    // tam.forEach((element) {
+    //   print("specialized: ${element.specialized}, name: ${element.name}");
+    // });
+
     return Stack(
       children: [
         background(
@@ -167,14 +148,8 @@ class QuizOverview extends StatelessWidget {
             height: MediaQuery.of(context).size.height - 366,
             child: Stack(children: [
               Container(
-                  child: MasonryGridView.count(
-                itemCount: categories.length,
-                crossAxisCount: 2,
-                mainAxisSpacing: 30,
-                crossAxisSpacing: 0,
-                itemBuilder: (context, index) =>
-                    _buildCategories(context, index),
-              )),
+                child: ListBoxCategories(),
+              ),
               Column(children: [
                 Container(
                   height: (MediaQuery.of(context).size.height - 366) * 0.1,

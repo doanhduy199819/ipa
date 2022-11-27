@@ -5,7 +5,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
-import 'package:flutter_interview_preparation/pages/quiz_screen/screen/quiz_overview.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/quiz_overview.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 
@@ -17,7 +17,7 @@ class HomeContainerWidget extends StatefulWidget {
 }
 
 class _HomeContainerWidgetState extends State<HomeContainerWidget> {
-  int tabIndex = 0;
+  int tabIndex = 3;
   Widget _getBodyWidget(int index) {
     if (index == 0) {
       return HomePage();

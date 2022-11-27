@@ -44,8 +44,8 @@ class SelectionBloc extends StatelessWidget {
               child: CustomBloc(Icons.auto_mode_rounded, "Play again"),
               onTap: () {
                 Navigator.pop(context);
-                QuesionController().reset();
-                QuesionController().addDataTemplate();
+                QuesionController().startQuiz();
+                // QuesionController().addDataTemplate();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const Quiz()),

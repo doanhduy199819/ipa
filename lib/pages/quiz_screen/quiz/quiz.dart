@@ -29,7 +29,7 @@ class _QuizState extends State<Quiz> {
 
   @override
   void initState() {
-    QuesionController().addDataTemplate();
+    // QuesionController().addDataTemplate();
     super.initState();
   }
 
@@ -141,6 +141,13 @@ class _QuizState extends State<Quiz> {
 
   @override
   Widget build(BuildContext context) {
+    QuesionController.listQuestion ??
+        [].forEach(
+          (element) {
+            debugPrint(element.toString());
+          },
+        );
+
     return Scaffold(
         key: _key,
         endDrawer: endDrawer(),

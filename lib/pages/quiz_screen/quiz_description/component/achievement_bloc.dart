@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../objects/SetOfQuiz.dart';
+import '../../object/categories.dart';
 import 'achievement_details_widget.dart';
 import 'big_text_in_achievement.dart';
+import 'number_of_quiz.dart';
 
 class AchievementBloc extends StatelessWidget {
   String imgCrownPath;
@@ -15,8 +18,13 @@ class AchievementBloc extends StatelessWidget {
       required this.numberOfQuizz,
       required this.imgTroyphyPath,
       required this.yourHighestScores,
-      required this.maxScoresOfQuizz})
+      required this.maxScoresOfQuizz,
+      required this.dataBoxCategories,
+      required this.setOfQuiz})
       : super(key: key);
+
+  final DataBoxCategories dataBoxCategories;
+  final SetOfQuiz setOfQuiz;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +53,10 @@ class AchievementBloc extends StatelessWidget {
                         left: 12.0, right: 12.0, top: 4.0),
                     child: Row(
                       children: [
-                        BigTextInAchievement(
-                            frontText: numberOfQuizz, behindText: 'Quizz'),
+                        NumberOfQuiz(
+                          dataBoxCategories: dataBoxCategories,
+                          setOfQuiz: setOfQuiz,
+                        ),
                         const Spacer(),
                       ],
                     ),

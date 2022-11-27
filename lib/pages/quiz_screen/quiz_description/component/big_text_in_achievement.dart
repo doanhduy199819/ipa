@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Question.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
 
 class BigTextInAchievement extends StatelessWidget {
+  BigTextInAchievement(
+      {Key? key, required this.frontText, required this.behindText})
+      : super(key: key);
   String frontText;
   String behindText;
-  BigTextInAchievement({Key? key, required this.frontText, required this.behindText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

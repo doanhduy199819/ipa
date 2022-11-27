@@ -18,7 +18,7 @@ class _CustomQuestionQuizState extends State<CustomQuestionQuiz> {
       ColorQuizTheme().list[ColorQuizTheme.index].backgroundQuestionColor;
   Color textColor =
       ColorQuizTheme().list[ColorQuizTheme.index].textQuestionColor;
-  Question question = QuesionController.listQuestion[QuesionController.index];
+  Question question = QuesionController.listQuestion![QuesionController.index];
   int numberQuestion = QuesionController.numberQuestion;
   double proccess = QuesionController.process;
   double radiusCircle = 35;
@@ -27,7 +27,7 @@ class _CustomQuestionQuizState extends State<CustomQuestionQuiz> {
     backgroundColor =
         ColorQuizTheme().list[ColorQuizTheme.index].backgroundQuestionColor;
     textColor = ColorQuizTheme().list[ColorQuizTheme.index].textQuestionColor;
-    question = QuesionController.listQuestion[QuesionController.index];
+    question = QuesionController.listQuestion![QuesionController.index];
     numberQuestion = QuesionController.numberQuestion;
     proccess = QuesionController.process;
     Size size = MediaQuery.of(context).size;
@@ -40,10 +40,10 @@ class _CustomQuestionQuizState extends State<CustomQuestionQuiz> {
 
   Container ListBoxQuestion(BuildContext context, int myAnswer) {
     List<Widget> listboxquestion = [];
-    for (int i = 0; i < question.answers.length; i++) {
+    for (int i = 0; i < question.answers!.length; i++) {
       InkWell inkWell = InkWell(
         child: Option(
-          content: question.answers[i],
+          content: question.answers![i]!,
           correct: QuesionController().checkStatusAnswerOption(i),
         ),
         onTap: (() {
@@ -90,7 +90,7 @@ class _CustomQuestionQuizState extends State<CustomQuestionQuiz> {
             ]),
         child: SingleChildScrollView(
           child: Text(
-            question.question,
+            question.question.toString(),
             style: TextStyle(
               decoration: TextDecoration.none,
               color: textColor,
