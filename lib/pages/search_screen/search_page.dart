@@ -250,8 +250,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Column qaPart() {
-    List<Question> display_list_question =
-        List.from(Question.getSampleQuestions());
+    List<Question> display_list_question = List.from(Question.getSampleQuestions());
     return Column(
         children: List.generate(3, (index) {
       return InkWell(

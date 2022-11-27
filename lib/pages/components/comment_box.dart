@@ -5,141 +5,96 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/up_down_vote_box.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 
-class CommentBoxWidget extends StatefulWidget {
-  const CommentBoxWidget(
-      {Key? key,
-      this.photoUrl,
-      this.userName,
-      required this.isShowingUpvote,
-      this.content,
-      this.fontSize = 12,
-      this.postFix})
-      : super(key: key);
+class CommentBoxWidget extends StatelessWidget {
+  const CommentBoxWidget({
+    Key? key,
+    this.photoUrl,
+    this.userName,
+    this.content,
+    this.fontSize = 12,
+    this.postFix,
+    this.defaultVoteState,
+    this.voteNum,
+    this.upVoteHandle,
+    this.downVoteHandle,
+  }) : super(key: key);
 
+  // For user info
   final String? photoUrl;
   final String? userName;
+
+  // For content
   final String? content;
-  final bool isShowingUpvote;
   final int? fontSize;
+
+  // For custom postfix buttons
   final Widget? postFix;
 
-  @override
-  State<CommentBoxWidget> createState() => _CommentBoxWidgetState();
-}
-
-class _CommentBoxWidgetState extends State<CommentBoxWidget> {
-  int upVoteNum = 10;
-  late int voteStat;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    voteStat = 0;
-  }
+  /// For up/down vote
+  final int? defaultVoteState;
+  final int? voteNum;
+  final void Function(bool)? upVoteHandle;
+  final void Function(bool)? downVoteHandle;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('rebuild comment box ${voteStat}');
+    debugPrint('rebuild comment box');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UserInfoBox(
-            photoUrl: widget.photoUrl,
-            userName: widget.userName,
-            postFix: widget.postFix,
+            photoUrl: photoUrl,
+            userName: userName,
+            postFix: postFix,
           ),
           _buildCommentContent(
-            commentContent: widget.content,
+            commentContent: content,
           ),
           // const SizedBox(height: 8.0),
           _buildInteractions(
-            voteNum: updateVoteNum,
-            voteState: voteStat,
-            isShowingUpvote: widget.isShowingUpvote,
-            upVoteTap: () => setState(() {
-              voteStat = (voteStat == 1) ? 0 : 1;
-            }),
-            downVoteTap: () => setState(() {
-              voteStat = (voteStat == -1) ? 0 : -1;
-            }),
+            voteNum: voteNum,
+            defaultVoteState: defaultVoteState,
+            upVoteHandle: upVoteHandle,
+            downVoteHandle: downVoteHandle,
           ),
           Divider(),
         ],
       ),
     );
   }
-
-  int get updateVoteNum {
-    return upVoteNum + voteStat;
-  }
 }
 
 class _buildInteractions extends StatelessWidget {
   _buildInteractions({
     Key? key,
-    required this.voteNum,
-    this.upVoteTap,
-    this.downVoteTap,
-    required this.voteState,
-    required this.isShowingUpvote,
+    this.voteNum,
+    this.defaultVoteState = 0,
+    this.upVoteHandle,
+    this.downVoteHandle,
   }) : super(key: key);
 
-  final int voteNum;
-  final void Function()? upVoteTap;
-  final void Function()? downVoteTap;
-  final int voteState;
-  final bool isShowingUpvote;
+  final int? voteNum;
+  final int? defaultVoteState;
+  final void Function(bool)? upVoteHandle;
+  final void Function(bool)? downVoteHandle;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('rebuild interactions');
-    debugPrint('vote state $voteState');
-
     return Row(
       // ignore: prefer_const_literals_to_create_immutables
       children: [
-        if (isShowingUpvote) ...[
-          InterractionIcon(
-            onTap: upVoteTap,
-            isActive: (voteState == 1),
-            activeIcon: Icon(
-              Icons.arrow_upward_rounded,
-              size: 12.0,
-              color: Colors.white,
-            ),
-            activeBackgroundColor: Colors.green,
-            unActiveIcon: Icon(
-              Icons.arrow_upward_rounded,
-              size: 12.0,
-              color: Colors.grey,
-            ),
-            unActiveBackgroundColor: Colors.white,
+        if (voteNum != null) ...[
+          UpDownVoteBox(
+            voteNum: voteNum,
+            defaultVoteState: defaultVoteState,
+            upVoteHandle: upVoteHandle,
+            downVoteHandle: downVoteHandle,
           ),
-          const SizedBox(width: 12.0),
-          Text(voteNum.toString()),
-          const SizedBox(width: 12.0),
-          InterractionIcon(
-            activeIcon: Icon(
-              Icons.arrow_downward_rounded,
-              size: 12.0,
-              color: Colors.white,
-            ),
-            activeBackgroundColor: Colors.red,
-            unActiveIcon: Icon(
-              Icons.arrow_downward_rounded,
-              size: 12.0,
-              color: Colors.grey,
-            ),
-            unActiveBackgroundColor: Colors.white,
-            onTap: downVoteTap,
-            isActive: (voteState == -1),
-          ),
-          const SizedBox(width: 12.0),
         ],
         _buildReplyButton(),
         const SizedBox(width: 16.0),

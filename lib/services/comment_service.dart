@@ -82,18 +82,37 @@ mixin CommentService {
     }).toList();
   }
 
+  Stream<int> getCommentVoteNum(String questionId, String commentId) {
+    return _db
+        .collection('questions')
+        .doc(questionId)
+        .collection('answers')
+        .doc(commentId)
+        .snapshots()
+        .map((snapshot) {
+      final data = snapshot.data();
+      List<String>? upVoteList = data?['upvote_users'] is Iterable
+          ? List.from(data?['upvote_users'])
+          : null;
+      List<String>? downVoteList = data?['downvote_users'] is Iterable
+          ? List.from(data?['downvote_users'])
+          : null;
+      return (upVoteList?.length ?? 0) - (downVoteList?.length ?? 0);
+    });
+  }
+
   // Check if this user already upvote this comment
-  bool _isUpvote(Question question, Comment comment, bool isUp) {
+  Future<bool> isUpvoteComment(String questionId, String commentId, bool isUp) async {
     if (AuthService().currentUserId == null) {
       throw Exception('No user');
     }
     bool res = false;
     String userId = AuthService().currentUserId!;
-    _db
+    await _db
         .collection('questions')
-        .doc(question.id)
+        .doc(questionId)
         .collection('answers')
-        .doc(comment.id)
+        .doc(commentId)
         .get()
         .then((docSnap) {
       final data = docSnap.data();
@@ -106,56 +125,28 @@ mixin CommentService {
     return res;
   }
 
-  void upVoteComment(Question question, Comment comment, bool active) {
-    if (!_isUpvote(question, comment, true)) {
-      debugPrint('This user already upvoted this comment');
-      return;
-    }
+  void upVoteComment(String questionId, String commentId, bool active) {
     if (active) {
-      _db
-          .collection('questions')
-          .doc(question.id)
-          .collection('answers')
-          .doc(comment.id)
-          .update({
+      _db.collection('questions').doc(questionId).collection('answers').doc(commentId).update({
         "upvote_users": FieldValue.arrayUnion([AuthService().currentUserId]),
       });
       debugPrint('Upvote success');
     } else {
-      _db
-          .collection('questions')
-          .doc(question.id)
-          .collection('answers')
-          .doc(comment.id)
-          .update({
+      _db.collection('questions').doc(questionId).collection('answers').doc(commentId).update({
         "upvote_users": FieldValue.arrayRemove([AuthService().currentUserId]),
       });
       debugPrint('remove Upvote success');
     }
   }
 
-  void downVoteComment(Question question, Comment comment, bool active) {
-    if (!_isUpvote(question, comment, false)) {
-      debugPrint('This user already downvoted this comment');
-      return;
-    }
+  void downVoteComment(String questionId, String commentId, bool active) {
     if (active) {
-      _db
-          .collection('questions')
-          .doc(question.id)
-          .collection('answers')
-          .doc(comment.id)
-          .update({
+      _db.collection('questions').doc(questionId).collection('answers').doc(commentId).update({
         "downvote_users": FieldValue.arrayUnion([AuthService().currentUserId]),
       });
       debugPrint('Downvote success');
     } else {
-      _db
-          .collection('questions')
-          .doc(question.id)
-          .collection('answers')
-          .doc(comment.id)
-          .update({
+      _db.collection('questions').doc(questionId).collection('answers').doc(commentId).update({
         "downvote_users": FieldValue.arrayRemove([AuthService().currentUserId]),
       });
       debugPrint('remove Downvote success');

@@ -201,7 +201,6 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
           CommentBoxWidget(
             photoUrl: asyncSnapshot.data?.photoUrl,
             userName: asyncSnapshot.data?.displayName,
-            isShowingUpvote: false,
             content: comment.content,
             postFix: DropdownButtonHideUnderline(
               child: DropdownButton<String>(

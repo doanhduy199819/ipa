@@ -21,21 +21,18 @@ class Helper {
   }
 
   Widget? handleSnapshot(AsyncSnapshot<dynamic> asyncSnapshot,
-      [bool showCircleLoading = true]) {
+      [Widget? waitingWidget]) {
     if (asyncSnapshot.hasError) {
       return Text('Something went wrong :(');
     }
     if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-      return (showCircleLoading)
+      return (waitingWidget == null)
           ? Column(
-              children: [
+              children: const [
                 Center(child: CircularProgressIndicator()),
               ],
             )
-          : SizedBox(
-              width: 16.0,
-              height: 16.0,
-            );
+          : waitingWidget;
     }
     if (asyncSnapshot == null) {
       return const Icon(Icons.question_mark);

@@ -78,7 +78,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                   child: FutureBuilder<int>(
                     future: _getDefaultUpDownVoteState(),
                     builder: (context, snapshot) {
-                      return Helper().handleSnapshot(snapshot, false) ??
+                      return Helper().handleSnapshot(snapshot) ??
                           UpDownVoteBox(
                             iconSize: 16.0,
                             isHorizontal: true,
@@ -114,14 +114,10 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
 
   Future<int> _getDefaultUpDownVoteState() async {
     if (await DatabaseService().isAlreadyVoteQuestion(question, true)) {
-      debugPrint('state = 1');
       return 1;
     } else if (await DatabaseService().isAlreadyVoteQuestion(question, false)) {
-      debugPrint('state = -1');
       return -1;
     }
-    debugPrint('state = 0');
-
     return 0;
   }
 
