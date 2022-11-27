@@ -103,7 +103,6 @@ mixin QAService {
               : null;
       res = list?.contains(userId) ?? false;
     });
-    debugPrint(res.toString());
     return res;
   }
 

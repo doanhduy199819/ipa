@@ -41,7 +41,6 @@ class CommentBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('rebuild comment box');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -156,7 +155,6 @@ class _buildCommentContent extends StatelessWidget {
   Widget build(BuildContext context) {
     const sampleCommentContent =
         'A paragraph is a collection of words strung together to make a longer unit than a sentence. Several sentences often make a paragraph. There are normally three to eight sentences in a paragraph. Paragraphs can start with a five-space indentation or by skipping a line and then starting over. This makes it simpler to tell when one paragraph ends and the next starts simply it has 3-9 lines≥≤?';
-    debugPrint(commentContent);
     return Row(
       children: [
         Expanded(

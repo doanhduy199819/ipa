@@ -124,7 +124,7 @@ mixin CommentService {
     });
     return res;
   }
-
+  
   void upVoteComment(String questionId, String commentId, bool active) {
     if (active) {
       _db.collection('questions').doc(questionId).collection('answers').doc(commentId).update({
