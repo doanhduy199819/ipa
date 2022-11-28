@@ -10,7 +10,7 @@ import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import 'package:jiffy/jiffy.dart';
@@ -222,7 +222,7 @@ class _buildAvatarAndAuthorName extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseService().getFirestoreUser(authorId),
       builder: (context, AsyncSnapshot<FirestoreUser?> snapshot) =>
-      Helper().handleSnapshot(snapshot) ??
+      Helper.handleSnapshot(snapshot) ??
           UserInfoBox(
             photoUrl: snapshot.data?.photoUrl,
             userName: snapshot.data?.displayName,

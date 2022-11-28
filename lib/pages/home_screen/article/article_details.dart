@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,16 +5,11 @@ import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/authentication/sign_up.dart';
-import 'package:flutter_interview_preparation/pages/components/bookmark.dart';
-import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
+import 'package:flutter_interview_preparation/pages/components/bookmarks/bookmark.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_comment.dart';
-import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/components/article_comments_part.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'package:provider/provider.dart';
-import '../../../objects/Question.dart';
+import 'package:flutter_interview_preparation/values/constants.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +22,6 @@ class ArticleDetailScreen extends StatefulWidget {
 
 class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   TextEditingController dropdownfieldController = TextEditingController();
-  DateFormat _formatter = DateFormat('dd-MM-yyyy');
   final _scrollingController = ScrollController();
 
   late FirestoreUser author;
@@ -40,44 +32,26 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
   late String samplePhotoUrl;
   late bool checkFollow;
 
-  void initData() {
-    checkFollow = false;
-    samplePhotoUrl =
-        'https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1294521676?b=1&k=20&m=1294521676&s=170667a&w=0&h=7pqhrZcqqbQq43Q0_TD0Y_YjInAyvA9xiht9bto030U=';
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
-    initData();
+    // Get article from parent widget
+    Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    articlePost = args['articlePost'] as ArticlePost;
+    articlePost.categories = ['Mathematics', 'Java'];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // get article from parent widget
-
-    Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    articlePost = args['articlePost'] as ArticlePost;
-    // userInfoBox = args['userInfo'] as UserInfoBox;
-    bookmarkIcon = args['bookmark'] as BookmarkIcon;
-    // articlePost = ModalRoute.of(context)!.settings.arguments as ArticlePost;
-    articlePost.categories = ['Mathematics', 'Java'];
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40.0),
         child: AppBar(
-          backgroundColor: Colors.white70,
-          elevation: 0,
-          foregroundColor: Colors.black,
-          title: Text(
-            'Detail Articles',
-            style: HomeScreenFonts.h1.copyWith(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title:
+              Text('Detail Articles', style: Constants.DETAILED_ARTICLE_TITLE),
         ),
       ),
       body: Padding(
@@ -88,7 +62,6 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             scrollController: _scrollingController,
             child: SingleChildScrollView(
               controller: _scrollingController,
-              // reverse: true,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -96,7 +69,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                     future: DatabaseService()
                         .getFirestoreUser(articlePost.author_id ?? '0'),
                     builder: (context, snapshot) {
-                      return Helper().handleSnapshot(snapshot) ??
+                      return Helper.handleSnapshot(snapshot) ??
                           AccountPart(
                             account: snapshot.data,
                             articlePost: articlePost,
@@ -120,7 +93,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                     height: 20,
                   ),
                   //comment
-                  ArticleCommentPart(
+                  ArticleCommentsPart(
                     articleId: articlePost.id!,
                   ),
                 ],

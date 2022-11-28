@@ -2,32 +2,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/components/comment_input.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
-import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/components/comment/comment_input.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
+import 'package:flutter_interview_preparation/pages/components/comment/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/components/article_comment.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/more-options_button.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../objects/FirestoreUser.dart';
-import '../../../objects/ArticlePost.dart';
-import '../../../objects/Comment.dart';
+import '../../../../objects/FirestoreUser.dart';
+import '../../../../objects/ArticlePost.dart';
+import '../../../../objects/Comment.dart';
 
-class ArticleCommentPart extends StatefulWidget {
+class ArticleCommentsPart extends StatefulWidget {
   String articleId;
-  ArticleCommentPart({Key? key, required this.articleId}) : super(key: key);
+  ArticleCommentsPart({Key? key, required this.articleId}) : super(key: key);
 
   @override
-  State<ArticleCommentPart> createState() => _ArticleCommentPartState();
+  State<ArticleCommentsPart> createState() => _ArticleCommentsPartState();
 }
 
-class _ArticleCommentPartState extends State<ArticleCommentPart> {
+class _ArticleCommentsPartState extends State<ArticleCommentsPart> {
   late Stream<List<Comment>?> _stream;
 
   @override
   void initState() {
-    // TODO: implement initState
     _stream = DatabaseService().commentsFromArticle(widget.articleId);
     super.initState();
   }
@@ -35,15 +35,14 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        // stream: DatabaseService().commentsFromArticle(widget.articleId),
         stream: _stream,
         builder: (BuildContext context,
             AsyncSnapshot<List<Comment>?> asyncSnapshot) {
           List<Comment>? comments = asyncSnapshot.data;
-          return Helper().handleSnapshot(asyncSnapshot) ??
+          return Helper.handleSnapshot(asyncSnapshot) ??
               Column(
                 children: [
-                  _commentHeading(numberOfComments: comments?.length ?? 0),
+                  _buildHeading(numberOfComments: comments?.length ?? 0),
                   SizedBox(
                     height: 10,
                   ),
@@ -54,21 +53,35 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
                         .addCommentToArticle(content, widget.articleId),
                   ),
                   Divider(),
-                  commentsList(comments),
+                  _buildCommentsList(
+                    comments: comments,
+                    articleId: widget.articleId,
+                  ),
                 ],
               );
         });
   }
+}
 
-  // List of comments of this article
-  Widget commentsList(List<Comment>? comments) {
+// ignore: camel_case_types
+class _buildCommentsList extends StatelessWidget {
+  const _buildCommentsList({
+    Key? key,
+    required this.comments,
+    required this.articleId,
+  }) : super(key: key);
+
+  final List<Comment>? comments;
+  final String articleId;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
-        // ...?comments?.map((comment) => commentBloc(comment)).toList()
+      children: [
         ...?comments
-            ?.map((comment) => ArticleCommentInput(
+            ?.map((comment) => ArticleComment(
                   comment: comment,
-                  articleId: widget.articleId,
+                  articleId: articleId,
                 ))
             .toList()
       ],
@@ -76,8 +89,9 @@ class _ArticleCommentPartState extends State<ArticleCommentPart> {
   }
 }
 
-class _commentHeading extends StatelessWidget {
-  const _commentHeading({
+// ignore: camel_case_types
+class _buildHeading extends StatelessWidget {
+  const _buildHeading({
     Key? key,
     required this.numberOfComments,
   }) : super(key: key);
@@ -111,48 +125,6 @@ class _commentHeading extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class ArticleCommentInput extends StatefulWidget {
-  const ArticleCommentInput(
-      {Key? key, required this.comment, required this.articleId})
-      : super(key: key);
-
-  final Comment comment;
-  final String articleId;
-
-  @override
-  State<ArticleCommentInput> createState() => _ArticleCommentInputState();
-}
-
-class _ArticleCommentInputState extends State<ArticleCommentInput> {
-  late Future<FirestoreUser?> _future;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    _future =
-        DatabaseService().getFirestoreUser(widget.comment.author_id ?? '0');
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, AsyncSnapshot<FirestoreUser?> asyncSnapshot) =>
-          Helper().handleSnapshot(asyncSnapshot) ??
-          CommentBoxWidget(
-              photoUrl: asyncSnapshot.data?.photoUrl,
-              userName: asyncSnapshot.data?.displayName,
-              content: widget.comment.content,
-              postFix: MoreOptionsDropDownButton(
-                comment: widget.comment,
-                onDelete: () => DatabaseService().deleteCommentFromArticle(
-                    widget.comment.id!, widget.articleId),
-              )),
     );
   }
 }

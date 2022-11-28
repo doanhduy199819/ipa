@@ -55,7 +55,7 @@ class ContentDescriptionWidget extends StatelessWidget {
     return FutureBuilder(
       future: LoadData(),
       builder: (context, AsyncSnapshot<List<String>?> snapshot) {
-        return Helper().handleSnapshot(snapshot) ?? ItemBuild(snapshot.data!);
+        return Helper.handleSnapshot(snapshot) ?? ItemBuild(snapshot.data!);
       },
     );
   }

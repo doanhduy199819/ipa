@@ -77,7 +77,7 @@ class ListBoxQuiz extends StatelessWidget {
     return FutureBuilder(
       future: loadData(),
       builder: (context, AsyncSnapshot<List<SetOfQuiz>?> snapshot) {
-        return Helper().handleSnapshot(snapshot) ??
+        return Helper.handleSnapshot(snapshot) ??
             MasonryGridView.count(
               itemCount: snapshot.data!.length,
               crossAxisCount: 2,

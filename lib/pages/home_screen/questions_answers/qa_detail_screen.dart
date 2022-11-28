@@ -78,7 +78,7 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                   child: FutureBuilder<int>(
                     future: _getDefaultUpDownVoteState(),
                     builder: (context, snapshot) {
-                      return Helper().handleSnapshot(snapshot) ??
+                      return Helper.handleSnapshot(snapshot) ??
                           UpDownVoteBox(
                             iconSize: 16.0,
                             isHorizontal: true,
@@ -192,7 +192,7 @@ class authorBloc extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(8.0),
             margin: const EdgeInsets.only(left: 48.0),
-            child: Helper().handleSnapshot(snapshot) ??
+            child: Helper.handleSnapshot(snapshot) ??
                 UserInfoBox(
                   userName: author?.displayName,
                   photoUrl: author?.photoUrl,

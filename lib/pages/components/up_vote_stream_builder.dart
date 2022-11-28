@@ -21,12 +21,12 @@ class UpVoteStreamBuilder extends StatelessWidget {
     return StreamBuilder<int>(
         stream: DatabaseService().getVoteNum(question.id ?? '0'),
         builder: (context, voteNumSnapshot) {
-          return Helper().handleSnapshot(voteNumSnapshot, defaultVoteBloc) ??
+          return Helper.handleSnapshot(voteNumSnapshot, defaultVoteBloc) ??
               StreamBuilder<int>(
                   stream:
                       DatabaseService().getNumberOfAnswers(question.id ?? '0'),
                   builder: (context, numberOfAnswersSnapshot) {
-                    return Helper().handleSnapshot(
+                    return Helper.handleSnapshot(
                             numberOfAnswersSnapshot, defaultVoteBloc) ??
                         child(voteNumSnapshot.data ?? 0,
                             numberOfAnswersSnapshot.data ?? 0);

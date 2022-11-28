@@ -80,42 +80,41 @@ mixin ArticlePostHandle {
     return result;
   }
 
-  Future<bool> isInUserSaved(ArticlePost articlePost) async {
-    bool res = false;
-    DocumentReference docRef =
-        _db.collection('users').doc(AuthService().currentUserId);
-    await docRef.get().then((value) {
-      if (!value.exists) return;
-      final data = value.data() as Map<String, dynamic>?;
+  Stream<bool> isArticlePostSaved(String articlePostId) {
+    return _db
+        .collection('users')
+        .doc(AuthService().currentUserId)
+        .snapshots()
+        .map((documenSnapshot) {
+      final data = documenSnapshot.data();
       List<String>? savedArticlesIds = data?['savedArticles'] is Iterable
           ? List.from(data?['savedArticles'])
           : null;
-      res = savedArticlesIds?.contains(articlePost.id) ?? false;
+      return savedArticlesIds?.contains(articlePostId) ?? false;
     });
-    return res;
   }
 
-  Future<void> saveArticle(ArticlePost? article) async {
+  Future<void> saveArticle(ArticlePost article) async {
     _db
         .collection('users')
         .doc(AuthService().currentUserId)
         .update({
-          "savedArticles": FieldValue.arrayUnion([article?.id]),
+          "savedArticles": FieldValue.arrayUnion([article.id]),
         })
-        .then((_) => debugPrint('Save article completed: ${article?.id}'))
+        .then((_) => debugPrint('Save article completed: ${article.id}'))
         .onError(
             (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }
 
-  Future<void> unSaveArticle(ArticlePost? article) async {
+  Future<void> unSaveArticle(ArticlePost article) async {
     _db
         .collection('users')
         .doc(AuthService().currentUserId)
         .update({
-          "savedArticles": FieldValue.arrayRemove([article?.id]),
+          "savedArticles": FieldValue.arrayRemove([article.id]),
         })
         .then(
-            (_) => debugPrint('Remove saved article completed: ${article?.id}'))
+            (_) => debugPrint('Remove saved article completed: ${article.id}'))
         .onError(
             (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }

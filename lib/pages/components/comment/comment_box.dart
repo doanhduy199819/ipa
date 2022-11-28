@@ -20,6 +20,7 @@ class CommentBoxWidget extends StatelessWidget {
     this.voteNum,
     this.upVoteHandle,
     this.downVoteHandle,
+    required this.timeString,
   }) : super(key: key);
 
   // For user info
@@ -38,6 +39,9 @@ class CommentBoxWidget extends StatelessWidget {
   final int? voteNum;
   final void Function(bool)? upVoteHandle;
   final void Function(bool)? downVoteHandle;
+
+  // For time
+  final String timeString;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +64,7 @@ class CommentBoxWidget extends StatelessWidget {
             defaultVoteState: defaultVoteState,
             upVoteHandle: upVoteHandle,
             downVoteHandle: downVoteHandle,
+            timeString: timeString,
           ),
           Divider(),
         ],
@@ -75,10 +80,12 @@ class _buildInteractions extends StatelessWidget {
     this.defaultVoteState = 0,
     this.upVoteHandle,
     this.downVoteHandle,
+    required this.timeString,
   }) : super(key: key);
 
   final int? voteNum;
   final int? defaultVoteState;
+  final String timeString;
   final void Function(bool)? upVoteHandle;
   final void Function(bool)? downVoteHandle;
 
@@ -98,7 +105,7 @@ class _buildInteractions extends StatelessWidget {
         _buildReplyButton(),
         const SizedBox(width: 16.0),
         Text(
-          '6 hours ago',
+          timeString,
           style: TextStyle(fontSize: 12, color: Colors.grey),
         ),
       ],

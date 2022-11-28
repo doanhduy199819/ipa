@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -12,12 +14,15 @@ import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
-import 'package:flutter_interview_preparation/pages/components/bookmark.dart';
+import 'package:flutter_interview_preparation/pages/components/bookmarks/article_bookmark.dart';
+import 'package:flutter_interview_preparation/pages/components/bookmarks/bookmark.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+import 'package:flutter_interview_preparation/values/constants.dart';
+import 'package:flutter_interview_preparation/values/decoration/border_const.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
@@ -30,179 +35,145 @@ class ArticleContent extends StatefulWidget {
 }
 
 class _ArticleContentState extends State<ArticleContent> {
-  late List<ArticlePost> _post;
-  late bool like_check;
-  late bool bookmark_check;
+  late Future<List<ArticlePost>?> _dataFuture;
 
   void initData() {
-    like_check = false;
-    bookmark_check = false;
+    _dataFuture = DatabaseService().allArticlesOnce;
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     initData();
     super.initState();
-    _initSampleData();
-  }
-
-  Future<void> _pullRefresh() async {
-    List<ArticlePost>? list = await DatabaseService().allArticlesOnce;
-    setState(() {
-      _post = list ?? ArticlePost.getSampleArticlePostList();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseService().allArticlesOnce,
+      future: _dataFuture,
       builder:
           (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong :(');
-        }
-        if (snapshot.data == null ||
-            snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          );
-        }
-        _post = snapshot.data! as List<ArticlePost>;
-        return RefreshIndicator(
-          onRefresh: _pullRefresh,
-          child: Container(
-            padding: EdgeInsets.all(4.0),
-            child: _buildListViewContent(),
-          ),
-        );
+        return Helper.handleSnapshot(snapshot) ??
+            RefreshIndicator(
+              onRefresh: _pullRefresh,
+              child: Container(
+                padding: const EdgeInsets.all(4.0),
+                child: ArticlesList(aritcles: snapshot.data!),
+              ),
+            );
       },
     );
   }
 
-  void _initSampleData() {
-    _post = ArticlePost.getSampleArticlePostList();
+  Future<void> _pullRefresh() async {
+    _dataFuture = DatabaseService().allArticlesOnce;
   }
+}
 
-  void _pushTo(context, Widget widget, Object args) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        fullscreenDialog: false,
-        builder: (context) => const ArticleDetailScreen(),
-        settings: RouteSettings(
-          arguments: args,
-        ),
-      ),
-    );
-  }
+class ArticlesList extends StatelessWidget {
+  const ArticlesList({
+    Key? key,
+    required this.aritcles,
+  }) : super(key: key);
 
-  ListView _buildListViewContent() {
-    final String sampleTitle = 'No title';
-    final String photoUrl =
-        'https://images.pexels.com/photos/5245865/pexels-photo-5245865.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
-    final String articlePhotoUrl =
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPhthE22spXytCuZqX6_MiwxI16wlJV-03UA&usqp=CAU';
+  final List<ArticlePost> aritcles;
 
+  @override
+  Widget build(BuildContext context) {
     return ListView.builder(
+      itemCount: aritcles.length,
       itemBuilder: (BuildContext context, int index) {
-        BookmarkIcon bookmark = BookmarkIcon(post: _post[index]);
+        ArticlePost article = aritcles[index];
         return InkWell(
           onTap: () {
             dynamic args = {
-              "articlePost": _post[index],
-              "bookmark": bookmark,
+              "articlePost": aritcles[index],
             };
-            // _pushTo(context, const ArticleDetailScreen(), _post[index]),
-            _pushTo(context, const ArticleDetailScreen(), args);
+            Helper.pushTo(context, const ArticleDetailScreen(), args);
           },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 1,
-                  offset: Offset(0.0, 3),
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildAvatarAndAuthorName(
-                  authorId: _post[index].author_id ?? '0',
-                ),
-                _buildArticleTitleAndImage(
-                  articleTitle: _post[index].title ?? sampleTitle,
-                  articlePhotoUrl: _post[index].photoUrl ?? articlePhotoUrl,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.timer_rounded,
-                          color: Colors.grey,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 4.0),
-                        Text(
-                          _buildCreate_at(_post[index].created_at),
-                          style: HomeScreenFonts.author,
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        InkWell(
-                            onTap: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  Icons.favorite_rounded,
-                                  size: 18,
-                                  color: Colors.red.shade300,
-                                ),
-                                const SizedBox(width: 4.0),
-                                Text(
-                                  _buildLike(_post[index].liked_users?.length),
-                                  style: HomeScreenFonts.description,
-                                ),
-                              ],
-                            )),
-                        const SizedBox(width: 16.0),
-                        BookmarkIcon(post: _post[index]),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: _singleRow(
+            article: article,
           ),
         );
       },
-      itemCount: _post.length,
     );
   }
+}
 
-  String _buildLike(int? sl) {
-    return sl == null ? '0' : '${sl}';
+class _singleRow extends StatelessWidget {
+  const _singleRow({
+    Key? key,
+    required this.article,
+  }) : super(key: key);
+
+  final ArticlePost article;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: Constants.GREY_BOTTOM_SHADOW_BOX,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildAvatarAndAuthorName(authorId: article.author_id ?? '0'),
+          _buildArticleTitleAndImage(article: article),
+          const SizedBox(height: 8),
+          _buildTimeAndInteractions(article: article),
+        ],
+      ),
+    );
   }
+}
 
-  String _buildCreate_at(DateTime? dateTime) {
-    return dateTime?.year == DateTime.now().year
-        ? Jiffy(dateTime).MMMd.toString()
-        : Jiffy(dateTime).fromNow();
+class _buildTimeAndInteractions extends StatelessWidget {
+  const _buildTimeAndInteractions({
+    Key? key,
+    required this.article,
+  }) : super(key: key);
+
+  final ArticlePost article;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.timer_rounded, color: Colors.grey, size: 14),
+            const SizedBox(width: 4.0),
+            Text(Helper.toFriendlyDurationTime(article.created_at),
+                style: HomeScreenFonts.author),
+          ],
+        ),
+        const Spacer(),
+        Row(
+          children: [
+            InkWell(
+                onTap: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(
+                      Icons.favorite_rounded,
+                      size: 18,
+                      color: Colors.red.shade300,
+                    ),
+                    const SizedBox(width: 4.0),
+                    Text(
+                      article.numberOfLike.toString(),
+                      style: HomeScreenFonts.description,
+                    ),
+                  ],
+                )),
+            const SizedBox(width: 16.0),
+            ArticleBookmarkIcon(articlePost: article),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -219,7 +190,7 @@ class _buildAvatarAndAuthorName extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseService().getFirestoreUser(authorId),
       builder: (context, AsyncSnapshot<FirestoreUser?> snapshot) =>
-          Helper().handleSnapshot(snapshot) ??
+          Helper.handleSnapshot(snapshot) ??
           UserInfoBox(
             photoUrl: snapshot.data?.photoUrl,
             userName: snapshot.data?.displayName,
@@ -231,12 +202,10 @@ class _buildAvatarAndAuthorName extends StatelessWidget {
 class _buildArticleTitleAndImage extends StatelessWidget {
   const _buildArticleTitleAndImage({
     Key? key,
-    required this.articlePhotoUrl,
-    required this.articleTitle,
+    required this.article,
   }) : super(key: key);
 
-  final String articleTitle;
-  final String articlePhotoUrl;
+  final ArticlePost article;
 
   @override
   Widget build(BuildContext context) {
@@ -248,8 +217,7 @@ class _buildArticleTitleAndImage extends StatelessWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
-              text: articleTitle,
-              // text: 'a',
+              text: article.title,
               style: HomeScreenFonts.title,
             ),
           ),
@@ -259,7 +227,8 @@ class _buildArticleTitleAndImage extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerRight,
             child: Image(
-              image: NetworkImage(articlePhotoUrl),
+              image: NetworkImage(
+                  article.photoUrl ?? Constants.SAMPLE_ARTICLE_PHOTO_URL),
               height: MediaQuery.of(context).size.height * 0.1,
             ),
           ),

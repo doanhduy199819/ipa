@@ -69,7 +69,7 @@ class _QAPageState extends State<QAPage> {
                   questions = snapshot.data;
                   return RefreshIndicator(
                     onRefresh: _pullRefresh,
-                    child: Helper().handleSnapshot(snapshot) ??
+                    child: Helper.handleSnapshot(snapshot) ??
                         ListViewQAWidget(questions: questions),
                   );
                 }),

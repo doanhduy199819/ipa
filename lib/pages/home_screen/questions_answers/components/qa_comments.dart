@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,9 +9,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/components/comment/comment_box.dart';
 import 'package:flutter_interview_preparation/pages/components/up_vote_stream_builder.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/more-options_button.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
@@ -47,7 +49,7 @@ class _QACommentsState extends State<QAComments> {
             AsyncSnapshot<List<Comment>?> asyncSnapshot) {
           debugPrint(
               'rebuild qa_comments\n--------------------------------------\n');
-          return Helper().handleSnapshot(asyncSnapshot) ??
+          return Helper.handleSnapshot(asyncSnapshot) ??
               Column(
                 children: [
                   commentInput(),
@@ -70,7 +72,7 @@ class _QACommentsState extends State<QAComments> {
             keyboardType: TextInputType.multiline,
             maxLines: null,
             minLines: 1,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Comment here!',
             ),
@@ -88,12 +90,12 @@ class _QACommentsState extends State<QAComments> {
           children: [
             Spacer(),
             FlatButton(
-              child: Text(
-                'Send',
-              ),
               color: Colors.blueAccent,
               textColor: Colors.white,
               onPressed: _onSendButtonPressed,
+              child: const Text(
+                'Send',
+              ),
             ),
           ],
         )
@@ -200,7 +202,7 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
     return FutureBuilder<FirestoreUser?>(
       future: _future,
       builder: (context, userInfoSnapshot) {
-        return Helper().handleSnapshot(userInfoSnapshot) ??
+        return Helper.handleSnapshot(userInfoSnapshot) ??
             CommentBoxWidget(
               photoUrl: userInfoSnapshot.data?.photoUrl,
               userName: userInfoSnapshot.data?.displayName,
@@ -214,6 +216,8 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
               ),
               upVoteHandle: _handleUpvote,
               downVoteHandle: _handleDownvote,
+              timeString:
+                  Helper.toFriendlyDurationTime(widget.comment.created_at),
             );
       },
     );

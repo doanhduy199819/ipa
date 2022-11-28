@@ -2,10 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 
 class UserData {
   String? id;
   List<ArticlePost>? savedArticles;
+
+  static Stream<UserData?> get userData {
+    return DatabaseService().userData;
+  }
 
   UserData._({this.id, this.savedArticles});
 
@@ -25,6 +30,8 @@ class UserData {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
     return UserData.fromJson(documentSnapshot.data());
   }
+
+  void update() {}
 }
 
 abstract class UserDataFirestoreHandle {

@@ -156,4 +156,45 @@ mixin QAService {
       debugPrint('remove Downvote success');
     }
   }
+
+  Future<bool> isQuestionInUserSaved(Question question) async {
+    bool res = false;
+    DocumentReference docRef =
+        _db.collection('users').doc(AuthService().currentUserId);
+    await docRef.get().then((value) {
+      if (!value.exists) return;
+      final data = value.data() as Map<String, dynamic>?;
+      List<String>? savedArticlesIds = data?['savedQuestions'] is Iterable
+          ? List.from(data?['savedQuestions'])
+          : null;
+      res = savedArticlesIds?.contains(question.id) ?? false;
+    });
+    return res;
+  }
+
+  Future<void> saveQuestion(Question question) async {
+    _db
+        .collection('users')
+        .doc(AuthService().currentUserId)
+        .update({
+          "savedQuestions": FieldValue.arrayUnion([question.id]),
+        })
+        .then((_) => debugPrint('Save question completed: ${question.id}'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
+  }
+
+  Future<void> unSaveQuestion(Question question) async {
+    _db
+        .collection('users')
+        .doc(AuthService().currentUserId)
+        .update({
+          "savedQuestions": FieldValue.arrayRemove([question.id]),
+        })
+        .then(
+            (_) => debugPrint('Remove saved question completed: ${question.id}'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
+  }
+
 }
