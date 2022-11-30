@@ -24,6 +24,12 @@ class HomeScreenFonts {
     fontWeight: FontWeight.bold,
     color: const Color(0xff000000),
   );
+  static TextStyle articleContent = TextStyle(
+    fontSize: 12,
+    height: 1.6,
+    fontWeight: FontWeight.w400,
+    fontFamily: FontFamily.urbanist,
+  );
   static TextStyle tagsName = TextStyle(
     fontFamily: FontFamily.inter,
     fontSize: 12,

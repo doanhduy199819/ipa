@@ -36,8 +36,9 @@ class _ArticleBookmarkIconState extends State<ArticleBookmarkIcon> {
                 isAtive: isSavedSnapshot.data!,
                 onBookmarkChange: (isActive) {
                   isActive
-                      ? DatabaseService().saveArticle(widget.articlePost)
-                      : DatabaseService().unSaveArticle(widget.articlePost);
+                      ? DatabaseService()
+                          .unSaveArticle(widget.articlePost)
+                      : DatabaseService().saveArticle(widget.articlePost);
                 },
               );
         });

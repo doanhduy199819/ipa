@@ -10,6 +10,7 @@ import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/components/comment/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/components/inherited/my_inherited_data.dart';
 import 'package:flutter_interview_preparation/pages/components/up_vote_stream_builder.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/more-options_button.dart';

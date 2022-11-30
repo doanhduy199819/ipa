@@ -90,6 +90,7 @@ mixin ArticlePostHandle {
       List<String>? savedArticlesIds = data?['savedArticles'] is Iterable
           ? List.from(data?['savedArticles'])
           : null;
+      debugPrint(savedArticlesIds.toString());
       return savedArticlesIds?.contains(articlePostId) ?? false;
     });
   }

@@ -33,22 +33,26 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _getBodyWidget(tabIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).secondaryHeaderColor,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => setState(
-          () => tabIndex = index,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: _getBodyWidget(tabIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Theme.of(context).secondaryHeaderColor,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) => setState(
+            () => tabIndex = index,
+          ),
+          currentIndex: tabIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.question_answer), label: 'Q & A'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment), label: 'Quizz'),
+          ],
         ),
-        currentIndex: tabIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer), label: 'Q & A'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Quizz'),
-        ],
       ),
     );
   }

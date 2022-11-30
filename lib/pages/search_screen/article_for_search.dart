@@ -15,11 +15,10 @@ import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 import 'package:jiffy/jiffy.dart';
 
-
 class ArticleForSearch extends StatefulWidget {
   String searchTitle;
 
-  ArticleForSearch({Key? key,required this.searchTitle}) : super(key: key);
+  ArticleForSearch({Key? key, required this.searchTitle}) : super(key: key);
 
   @override
   State<ArticleForSearch> createState() => _ArticleForSearchState();
@@ -35,9 +34,12 @@ class _ArticleForSearchState extends State<ArticleForSearch> {
     bookmard_check = false;
   }
 
-  void searchFunction()
-  {
-    _post=_post.where((element) => element.title!.toLowerCase().contains(this.widget.searchTitle.toLowerCase())).toList();
+  void searchFunction() {
+    _post = _post
+        .where((element) => element.title!
+            .toLowerCase()
+            .contains(this.widget.searchTitle.toLowerCase()))
+        .toList();
   }
 
   @override
@@ -73,12 +75,13 @@ class _ArticleForSearchState extends State<ArticleForSearch> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Visibility(
-                visible: _post.length!=0,
+                visible: _post.length != 0,
                 child: Text(
-                'Article',
-                style: HomeScreenFonts.h1.copyWith(
-                    fontSize: 20, fontWeight: FontWeight.bold),
-              ),),
+                  'Article',
+                  style: HomeScreenFonts.h1
+                      .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
               SizedBox(
                 height: 5,
               ),
@@ -89,7 +92,6 @@ class _ArticleForSearchState extends State<ArticleForSearch> {
       },
     );
   }
-
 
   void _pushTo(context, Widget widget, Object args) {
     Navigator.push(
@@ -113,89 +115,88 @@ class _ArticleForSearchState extends State<ArticleForSearch> {
 
     return Column(
         children: List.generate(_post.length, (index) {
-          return InkWell(
-            onTap: () =>
-                _pushTo(context, const ArticleDetailScreen(), _post[index]),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 1,
-                    offset: Offset(0.0, 3),
-                    color: Colors.grey,
-                  ),
-                ],
+      return InkWell(
+        onTap: () =>
+            _pushTo(context, const ArticleDetailScreen(), _post[index]),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 1,
+                offset: Offset(0.0, 3),
+                color: Colors.grey,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAvatarAndAuthorName(
+                authorId: _post[index].author_id ?? '0',
+              ),
+              _buildArticleTitleAndImage(
+                articleTitle: _post[index].title ?? sampleTitle,
+                articlePhotoUrl: _post[index].photoUrl ?? articlePhotoUrl,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildAvatarAndAuthorName(
-                    authorId: _post[index].author_id ?? '0',
-                  ),
-                  _buildArticleTitleAndImage(
-                    articleTitle: _post[index].title ?? sampleTitle,
-                    articlePhotoUrl: _post[index].photoUrl ?? articlePhotoUrl,
-                  ),
-                  const SizedBox(height: 8),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.timer_rounded,
-                            color: Colors.grey,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4.0),
-                          Text(
-                            _buildCreate_at(_post[index].created_at),
-                            style: HomeScreenFonts.author,
-                          ),
-                        ],
+                      const Icon(
+                        Icons.timer_rounded,
+                        color: Colors.grey,
+                        size: 14,
                       ),
-                      const Spacer(),
-                      Row(
-                        children: [
-                          InkWell(
-                              onTap: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.favorite_rounded,
-                                    size: 18,
-                                    color: Colors.red.shade300,
-                                  ),
-                                  const SizedBox(width: 4.0),
-                                  Text(
-                                    _buildLike(_post[index].liked_users?.length),
-                                    style: HomeScreenFonts.description,
-                                  ),
-                                ],
-                              )),
-                          const SizedBox(width: 16.0),
-                          InkWell(
-                            onTap: () {},
-                            child: Icon(
-                              Icons.bookmark_border_rounded,
-                              size: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
+                      const SizedBox(width: 4.0),
+                      Text(
+                        _buildCreate_at(_post[index].created_at),
+                        style: HomeScreenFonts.author,
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      InkWell(
+                          onTap: () {},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.favorite_rounded,
+                                size: 18,
+                                color: Colors.red.shade300,
+                              ),
+                              const SizedBox(width: 4.0),
+                              Text(
+                                _buildLike(_post[index].liked_users?.length),
+                                style: HomeScreenFonts.description,
+                              ),
+                            ],
+                          )),
+                      const SizedBox(width: 16.0),
+                      InkWell(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.bookmark_border_rounded,
+                          size: 18,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
-            ),
-          );
-        }));
-
+            ],
+          ),
+        ),
+      );
+    }));
   }
 
   String _buildLike(int? sl) {
@@ -222,7 +223,7 @@ class _buildAvatarAndAuthorName extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseService().getFirestoreUser(authorId),
       builder: (context, AsyncSnapshot<FirestoreUser?> snapshot) =>
-      Helper.handleSnapshot(snapshot) ??
+          Helper.handleSnapshot(snapshot) ??
           UserInfoBox(
             photoUrl: snapshot.data?.photoUrl,
             userName: snapshot.data?.displayName,

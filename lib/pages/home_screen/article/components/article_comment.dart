@@ -23,6 +23,7 @@ class _ArticleCommentState extends State<ArticleComment> {
 
   @override
   void initState() {
+    _future =
         DatabaseService().getFirestoreUser(widget.comment.author_id ?? '0');
     super.initState();
   }

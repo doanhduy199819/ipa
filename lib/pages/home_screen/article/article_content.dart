@@ -37,13 +37,9 @@ class ArticleContent extends StatefulWidget {
 class _ArticleContentState extends State<ArticleContent> {
   late Future<List<ArticlePost>?> _dataFuture;
 
-  void initData() {
-    _dataFuture = DatabaseService().allArticlesOnce;
-  }
-
   @override
   void initState() {
-    initData();
+    _dataFuture = DatabaseService().allArticlesOnce;
     super.initState();
   }
 
@@ -87,7 +83,7 @@ class ArticlesList extends StatelessWidget {
         return InkWell(
           onTap: () {
             dynamic args = {
-              "articlePost": aritcles[index],
+              "articlePost": article,
             };
             Helper.pushTo(context, const ArticleDetailScreen(), args);
           },
