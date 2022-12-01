@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
+import 'package:flutter_interview_preparation/pages/components/up_vote_stream_builder.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/company_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 
 class buildQuestionContent extends StatelessWidget {
   const buildQuestionContent({
@@ -18,6 +21,11 @@ class buildQuestionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const defaultVoteBloc = VoteBloc(
+      numberOfAnswers: 0,
+      numberOfVotes: 0,
+    );
+
     return Row(
       crossAxisAlignment: isShowingDetail
           ? CrossAxisAlignment.start
@@ -26,9 +34,18 @@ class buildQuestionContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
               top: 8.0, bottom: 8.0, left: 4.0, right: 8.0),
-          child: VoteBloc(
-              numberOfVotes: question.voteNum ?? 0,
-              numberOfAnswers: question.numberOfAnswers ?? 0),
+          child: UpVoteStreamBuilder(
+            question: question,
+            defaultVoteBloc: defaultVoteBloc,
+            child: ((voteNum, numberOfAnswers) => VoteBloc(
+                  numberOfVotes: voteNum,
+                  numberOfAnswers: numberOfAnswers,
+                )),
+          ),
+          // child: VoteBloc(
+          //   numberOfAnswers: question.numberOfAnswers,
+          //   numberOfVotes: question.voteNum,
+          // ),
         ),
         Expanded(
           child: Padding(

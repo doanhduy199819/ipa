@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
+import 'package:flutter_interview_preparation/objects/UserData.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Helper {
-  static String toFriendlyDurationTime(DateTime date) {
+  static String _toFriendlyDurationTime(DateTime date) {
     DateTime now = DateTime.now();
     final difference = now.difference(date);
     if (difference.inMinutes <= 1) {
@@ -20,20 +22,42 @@ class Helper {
     }
   }
 
-  Widget? handleSnapshot(AsyncSnapshot<dynamic> asyncSnapshot) {
+  static Widget? handleSnapshot(AsyncSnapshot<dynamic> asyncSnapshot,
+      [Widget? waitingWidget]) {
     if (asyncSnapshot.hasError) {
       return Text('Something went wrong :(');
     }
     if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-      return Column(
-        children: [
-          const Center(child: CircularProgressIndicator()),
-        ],
-      );
+      return (waitingWidget == null)
+          ? Column(
+              children: const [
+                Center(child: CircularProgressIndicator()),
+              ],
+            )
+          : waitingWidget;
     }
     if (asyncSnapshot == null) {
       return const Icon(Icons.question_mark);
     }
     return null;
+  }
+
+  static String toFriendlyDurationTime(DateTime? dateTime) {
+    return dateTime?.year == DateTime.now().year
+        ? Jiffy(dateTime).MMMd.toString()
+        : Jiffy(dateTime).fromNow();
+  }
+
+  static void pushTo(context, Widget widget, Object args) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: false,
+        builder: (context) => widget,
+        settings: RouteSettings(
+          arguments: args,
+        ),
+      ),
+    );
   }
 }

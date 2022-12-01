@@ -114,7 +114,7 @@ class ListBoxCategories extends StatelessWidget {
         future: loadData(),
         builder: (BuildContext context,
             AsyncSnapshot<List<DataBoxCategories>?> snapshot) {
-          return Helper().handleSnapshot(snapshot) ??
+          return Helper.handleSnapshot(snapshot) ??
               MasonryGridView.count(
                 itemCount: snapshot.data!.length,
                 crossAxisCount: 2,

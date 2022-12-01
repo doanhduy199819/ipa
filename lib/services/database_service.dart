@@ -31,4 +31,5 @@ class DatabaseService
         CategoriesService,
         SetOfQuizService,
         QuizService,
-        RecentlyQuizService {}
+        RecentlyQuizService,
+        CompanyService {}

@@ -1,11 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_interview_preparation/objects/Company.dart';
 
 mixin CompanyService {
-  Image? getCompanyLogo(String companyId) {
-    return Image.asset(
-      HomeScreenAssets.lgLogo,
-      fit: BoxFit.cover,
-    );
+  FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  List<Company>? _companiesFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        return Company.fromDocumentSnapshot(documentSnapshot);
+      }
+      return Company.test();
+    }).toList();
   }
+
+  Future<List<Company>?> get allCompanyOnce {
+    return _db.collection('companies').get().then(_companiesFromQuerySnapshot);
+  }
+
+
 }

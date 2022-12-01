@@ -34,8 +34,13 @@ class HighScores extends StatelessWidget {
     return FutureBuilder(
       future: loadData(),
       builder: (context, AsyncSnapshot<int> snapshot) {
-        return Helper().handleSnapshot(snapshot) ??
-            buildItem(snapshot.data ?? 0);
+        if (snapshot.hasError) {
+          print("Error: ${snapshot.error.toString()}");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return buildItem(snapshot.data ?? 0);
+        }
+        return Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 
 import '../../objects/FirestoreUser.dart';
 import '../../objects/Comment.dart';

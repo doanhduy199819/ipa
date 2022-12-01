@@ -47,7 +47,7 @@ class NumberOfQuiz extends StatelessWidget {
     return FutureBuilder(
       future: loadData(),
       builder: (context, AsyncSnapshot<List<QuizQuestion>?> snapshot) {
-        return Helper().handleSnapshot(snapshot) ??
+        return Helper.handleSnapshot(snapshot) ??
             buildItem((snapshot.data ?? []).length);
       },
     );

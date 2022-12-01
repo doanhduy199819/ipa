@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 
 class Company {
@@ -8,22 +8,53 @@ class Company {
 
   Company(this.id, this.name, this.logoUrl);
 
-  Image? logoImage([size]) {
-    return Image.asset(logoUrl ?? HomeScreenAssets.lgLogo);
+  String get idCompany{
+    return id?? '-1';
+  }
+  factory Company.fromDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+    return Company.fromJson(documentSnapshot.data());
   }
 
-  String get idCompany {
-    return id ?? '-1';
+  factory Company.fromJson(Map<String, dynamic>? data) {
+    final String? id = data?['id'];
+    final String? name = data?['name'];
+    final String? logoUrl = data?['logoUrl'];
+
+    return Company.only(
+      id: id,
+      name: name,
+      logoUrl: logoUrl,
+    );
   }
 
-  static Company? haveIdCompanyInSample(String idCom) {
-    for (int i = 0; i < getSampleCompany().length; i++) {
-      if (getSampleCompany()[i].idCompany.compareTo(idCom) == 0) {
+  Company.only({
+    this.id,
+    this.name,
+    this.logoUrl,
+  });
+
+
+  static Company? haveIdCompanyInSample(String idCom){
+    for(int i=0;i<getSampleCompany().length;i++){
+      if(getSampleCompany()[i].idCompany.compareTo(idCom)==0){
         return getSampleCompany()[i];
       }
     }
     return null;
   }
+
+  factory Company.test() {
+    var id = 'id_test';
+    var name='no_name';
+    var logoUrl='';
+    return Company.only(
+      id: id,
+      name: name,
+      logoUrl: logoUrl,
+    );
+  }
+
 
   static List<Company> getSampleCompany() {
     List<Company> _sampleCompany = [];

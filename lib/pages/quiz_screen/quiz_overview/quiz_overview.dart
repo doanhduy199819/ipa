@@ -97,108 +97,112 @@ class QuizOverview extends StatelessWidget {
     return FutureBuilder(
         future: loadData(),
         builder: (context, AsyncSnapshot<List<RecentlyQuiz>> snapshot) {
-          return Helper().handleSnapshot(snapshot) ??
-              Stack(
-                children: [
-                  snapshot.data?.length != 0
-                      ? background(
-                          color: color,
-                          havenavigationbar: 1,
-                        )
-                      : Container(
-                          color: Color.fromRGBO(15, 20, 60, 1),
-                        ),
-                  Column(children: [
-                    snapshot.data?.length != 0
-                        ? Container(
-                            margin: EdgeInsets.only(top: 10, left: 20),
-                            padding: EdgeInsets.only(left: 15),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "Recently Quiz",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: "RobotoSlab"),
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    snapshot.data?.length != 0
-                        ? SizedBox(
-                            height: 206,
-                            child: Expanded(
-                              child: ScrollSnapList(
-                                  onItemFocus: (index) {},
-                                  itemSize: 135,
-                                  itemBuilder: (context, index) {
-                                    return buildListItemQuiz(
-                                        context, index, snapshot.data![index]);
-                                  },
-                                  itemCount: snapshot.data!.length < 7
-                                      ? snapshot.data!.length
-                                      : 7,
-                                  reverse: true,
-                                  dynamicItemSize: true,
-                                  dynamicItemOpacity: 0.9),
-                            ),
-                          )
-                        : Container(),
-                    Container(
-                      margin: EdgeInsets.only(left: 20, bottom: 5, top: 10),
-                      padding: EdgeInsets.only(left: 15),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Categories",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: "RobotoSlab"),
-                        ),
-                      ),
-                    ),
-                    TopBar(),
-                    Container(
-                      margin: EdgeInsets.only(top: 4),
-                      height: MediaQuery.of(context).size.height -
-                          138 -
-                          235 * (snapshot.data?.length != 0 ? 1 : 0),
-                      child: Stack(children: [
-                        Container(
-                          child: ListBoxCategories(),
-                        ),
-                        Column(children: [
-                          Container(
-                            height: 20,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: <Color>[
-                                  Color.fromRGBO(15, 20, 60, 1),
-                                  Color.fromRGBO(15, 20, 60, 0)
-                                ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter)),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 20,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: <Color>[
-                                  Color.fromRGBO(15, 20, 60, 0),
-                                  Color.fromRGBO(15, 20, 60, 1)
-                                ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter)),
-                          ),
-                        ]),
-                      ]),
-                    )
-                  ]),
-                ],
-              );
+          if (snapshot.hasError) {
+            print("Error: ${snapshot.error.toString()}");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return buildItem(snapshot, color, context);
+          }
+          return Center(child: CircularProgressIndicator());
         });
+  }
+
+  Stack buildItem(AsyncSnapshot<List<RecentlyQuiz>> snapshot, List<Color> color,
+      BuildContext context) {
+    return Stack(
+      children: [
+        snapshot.data?.length != 0
+            ? background(
+                color: color,
+                havenavigationbar: 1,
+              )
+            : Container(
+                color: Color.fromRGBO(15, 20, 60, 1),
+              ),
+        Column(children: [
+          snapshot.data?.length != 0
+              ? Container(
+                  margin: EdgeInsets.only(top: 10, left: 20),
+                  padding: EdgeInsets.only(left: 15),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Recently Quiz",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: "RobotoSlab"),
+                    ),
+                  ),
+                )
+              : Container(),
+          snapshot.data?.length != 0
+              ? SizedBox(
+                  height: 206,
+                  child: Expanded(
+                    child: ScrollSnapList(
+                        onItemFocus: (index) {},
+                        itemSize: 135,
+                        itemBuilder: (context, index) {
+                          return buildListItemQuiz(
+                              context, index, snapshot.data![index]);
+                        },
+                        itemCount: snapshot.data!.length < 7
+                            ? snapshot.data!.length
+                            : 7,
+                        reverse: true,
+                        dynamicItemSize: true,
+                        dynamicItemOpacity: 0.9),
+                  ),
+                )
+              : Container(),
+          Container(
+            margin: EdgeInsets.only(left: 20, bottom: 5, top: 10),
+            padding: EdgeInsets.only(left: 15),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Categories",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "RobotoSlab"),
+              ),
+            ),
+          ),
+          TopBar(),
+          Container(
+            margin: EdgeInsets.only(top: 4),
+            height: MediaQuery.of(context).size.height -
+                138 -
+                235 * (snapshot.data?.length != 0 ? 1 : 0),
+            child: Stack(children: [
+              Container(
+                child: ListBoxCategories(),
+              ),
+              Column(children: [
+                Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: <Color>[
+                    Color.fromRGBO(15, 20, 60, 1),
+                    Color.fromRGBO(15, 20, 60, 0)
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                ),
+                Spacer(),
+                Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: <Color>[
+                    Color.fromRGBO(15, 20, 60, 0),
+                    Color.fromRGBO(15, 20, 60, 1)
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                ),
+              ]),
+            ]),
+          )
+        ]),
+      ],
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/tag_fillter.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
 import '../../../values/Home_Screen_Fonts.dart';
@@ -68,7 +69,7 @@ class _QAPageState extends State<QAPage> {
                   questions = snapshot.data;
                   return RefreshIndicator(
                     onRefresh: _pullRefresh,
-                    child: Helper().handleSnapshot(snapshot) ??
+                    child: Helper.handleSnapshot(snapshot) ??
                         ListViewQAWidget(questions: questions),
                   );
                 }),
@@ -79,9 +80,9 @@ class _QAPageState extends State<QAPage> {
   }
 
   Future<void> _pullRefresh() async {
-    setState(() async {
-      questions = await DatabaseService().allQuestionsOnce;
-    });
+    // setState(() async {
+    //   questions = await DatabaseService().allQuestionsOnce;
+    // });
   }
 
   // Handle when item have image company or haven't

@@ -60,9 +60,6 @@ class ArticlePost {
     final String? title = data?['title'];
 
     final String? date_string_created = data?['created_at'];
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    // final DateTime created_at =
-    //     formatter.parse(date_string_created ?? '1/1/2001');
     final DateTime created_at = DateTime.parse(
         date_string_created ?? DateTime.utc(2001, 1, 1).toString());
 
@@ -75,19 +72,15 @@ class ArticlePost {
         ? List.from(data?['liked_users'])
         : null;
 
-    // final List<Comment>? comments =
-    //     data?['comments'] is Iterable ? List.from(data?['comments']) : null;
-
-    // return ArticlePost(id, title, created_at, content, categories, author_id,
-    //     liked_users, null);
     return ArticlePost.only(
       id: id,
-      title: title,
-      created_at: created_at,
-      content: content,
-      categories: categories,
       author_id: author_id,
+      title: title,
+      content: content,
+      created_at: created_at,
+      categories: categories,
       photoUrl: photoUrl,
+      liked_users: liked_users
     );
   }
 
@@ -122,7 +115,7 @@ class ArticlePost {
     categories!.add(category);
   }
 
-  int get numberOfLile {
+int get numberOfLike {
     return liked_users?.length ?? 0;
   }
 

@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -5,8 +9,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/components/comment_box.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/article/article_detail_screen.dart';
+import 'package:flutter_interview_preparation/pages/components/comment/comment_box.dart';
+import 'package:flutter_interview_preparation/pages/components/inherited/my_inherited_data.dart';
+import 'package:flutter_interview_preparation/pages/components/up_vote_stream_builder.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/more-options_button.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
 import '../../../../services/auth_service.dart';
@@ -26,21 +33,32 @@ class _QACommentsState extends State<QAComments> {
   final _formKey = GlobalKey<FormState>();
   final _textFieldController = TextEditingController();
   final _commentFocusNode = FocusNode();
+  late Stream<List<Comment>?> _commentsStream;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _commentsStream = DatabaseService().commentsFromQuestion(widget.questionId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: DatabaseService().commentsFromQuestion(widget.questionId),
+        stream: _commentsStream,
         builder: (BuildContext context,
-                AsyncSnapshot<List<Comment>?> asyncSnapshot) =>
-            Helper().handleSnapshot(asyncSnapshot) ??
-            Column(
-              children: [
-                commentInput(),
-                Divider(),
-                commentsList(asyncSnapshot.data),
-              ],
-            ));
+            AsyncSnapshot<List<Comment>?> asyncSnapshot) {
+          debugPrint(
+              'rebuild qa_comments\n--------------------------------------\n');
+          return Helper.handleSnapshot(asyncSnapshot) ??
+              Column(
+                children: [
+                  commentInput(),
+                  Divider(),
+                  commentsList(asyncSnapshot.data),
+                ],
+              );
+        });
   }
 
   // Where user input their comment
@@ -55,7 +73,7 @@ class _QACommentsState extends State<QAComments> {
             keyboardType: TextInputType.multiline,
             maxLines: null,
             minLines: 1,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Comment here!',
             ),
@@ -73,12 +91,12 @@ class _QACommentsState extends State<QAComments> {
           children: [
             Spacer(),
             FlatButton(
-              child: Text(
-                'Send',
-              ),
               color: Colors.blueAccent,
               textColor: Colors.white,
               onPressed: _onSendButtonPressed,
+              child: const Text(
+                'Send',
+              ),
             ),
           ],
         )
@@ -88,14 +106,12 @@ class _QACommentsState extends State<QAComments> {
 
   void _onSendButtonPressed() {
     if (_formKey.currentState!.validate()) {
-      // debugPrint('Sent comment button is pressed');
       _sendComment(commentContent);
       _clearCommentContent();
 
       // Move down to the end of screen
       ScrollController scrollControler =
           MyInheritedData.of(context).scrollController;
-      // SchedulerBinding.instance.scheduleFrameCallback((_) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         scrollControler.animateTo(
           scrollControler.position.maxScrollExtent,
@@ -147,82 +163,93 @@ class _QACommentsState extends State<QAComments> {
 
   // List of comments of this question
   Widget commentsList(List<Comment>? comments) {
-    debugPrint(comments.toString());
     return Column(
       children: <Widget>[
-        ...?comments?.map((comment) => commentBloc(comment)).toList()
+        ...?comments
+            ?.map((comment) => LoadUserInfoCommentBox(
+                  comment: comment,
+                  questionId: widget.questionId,
+                ))
+            .toList()
       ],
     );
   }
+}
 
-  // Each comment in commentsList
-  Widget commentBloc(Comment comment) {
-    return FutureBuilder(
-      future: DatabaseService().getFirestoreUser(comment.author_id ?? '0'),
-      builder: (context, AsyncSnapshot<FirestoreUser?> asyncSnapshot) =>
-          Helper().handleSnapshot(asyncSnapshot) ??
-          CommentBoxWidget(
-            photoUrl: asyncSnapshot.data?.photoUrl,
-            userName: asyncSnapshot.data?.displayName,
-            isShowingUpvote: true,
-            content: comment.content,
-            postFix: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                icon: Visibility(
-                    visible: true, child: Icon(Icons.more_horiz_rounded)),
-                items: [
-                  if (comment.author_id == AuthService().currentUserId) ...[
-                    DropdownMenuItem(
-                      value: 'delete',
-                      child: Text('Delete'),
-                    ),
-                  ],
-                  DropdownMenuItem(
-                    value: 'report',
-                    child: Text('Report'),
-                  ),
-                ],
-                onChanged: ((value) {
-                  if (value == 'report') {
-                  } else if (value == 'edit') {
-                  } else if (value == 'delete') {
-                    showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                              title: Text('Delete?'),
-                              content: Text(
-                                  'Are you sure want to delete this comment?'),
-                              actions: [
-                                FlatButton(
-                                    onPressed: () {
-                                      _dissmissAlertDialog(context);
-                                    },
-                                    child: Text('No')),
-                                FlatButton(
-                                    onPressed: () {
-                                      _dissmissAlertDialog(context);
-                                      DatabaseService()
-                                          .deleteCommentFromArticle(
-                                              comment.id!, widget.questionId);
-                                    },
-                                    child: Text(
-                                      'Yes',
-                                      style: TextStyle(color: Colors.red),
-                                    )),
-                              ],
-                            ),
-                        barrierDismissible: true);
-                  }
-                }),
+class LoadUserInfoCommentBox extends StatefulWidget {
+  const LoadUserInfoCommentBox(
+      {Key? key, required this.comment, required this.questionId})
+      : super(key: key);
+
+  final Comment comment;
+  final String questionId;
+
+  @override
+  State<LoadUserInfoCommentBox> createState() => LoadUserCommentBoxStateBox();
+}
+
+class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
+  late Future<FirestoreUser?> _future;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _future = DatabaseService().getFirestoreUser(widget.comment.author_id!);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FirestoreUser?>(
+      future: _future,
+      builder: (context, userInfoSnapshot) {
+        return Helper.handleSnapshot(userInfoSnapshot) ??
+            CommentBoxWidget(
+              photoUrl: userInfoSnapshot.data?.photoUrl,
+              userName: userInfoSnapshot.data?.displayName,
+              content: widget.comment.content,
+              voteNum: widget.comment.vote,
+              defaultVoteState: voteState,
+              postFix: MoreOptionsDropDownButton(
+                comment: widget.comment,
+                onDelete: () => DatabaseService().deleteCommentFromQuestion(
+                    widget.comment.id!, widget.questionId),
               ),
-            ),
-          ),
+              upVoteHandle: _handleUpvote,
+              downVoteHandle: _handleDownvote,
+              timeString:
+                  Helper.toFriendlyDurationTime(widget.comment.created_at),
+            );
+      },
     );
   }
 
-  void _dissmissAlertDialog(BuildContext context) {
-    // Navigator.pop(context);
-    // Navigator.of(context, rootNavigator: true).pop('dialog');
-    Navigator.of(context, rootNavigator: true).pop();
+  int get voteState {
+    if (widget.comment.upvote_users
+            ?.contains(AuthService().currentUserId ?? '') ??
+        false) {
+      return 1;
+    } else if (widget.comment.downvote_users
+            ?.contains(AuthService().currentUserId ?? '') ??
+        false) {
+      return -1;
+    }
+    return 0;
+  }
+
+  void _handleUpvote(bool isUpvote) {
+    DatabaseService()
+        .upVoteComment(widget.questionId, widget.comment.id!, !isUpvote);
+    if (!isUpvote)
+      DatabaseService()
+          .downVoteComment(widget.questionId, widget.comment.id!, false);
+  }
+
+  void _handleDownvote(bool isDownvote) {
+    DatabaseService()
+        .downVoteComment(widget.questionId, widget.comment.id!, !isDownvote);
+    if (!isDownvote)
+      DatabaseService()
+          .upVoteComment(widget.questionId, widget.comment.id!, false);
   }
 }
