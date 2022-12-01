@@ -20,7 +20,7 @@ class NumberOfQuiz extends StatelessWidget {
         frontText: number.toString(), behindText: 'Quizz');
   }
 
-  Future<List<Question>?> loadData() async {
+  Future<List<QuizQuestion>?> loadData() async {
     QuesionController.listQuestion = await DatabaseService().getQuestionOfQuiz(
         dataBoxCategories.jobid, dataBoxCategories.categoriesid, setOfQuiz.id);
     for (int i = 0; i < QuesionController.listQuestion!.length; i++) {
@@ -46,7 +46,7 @@ class NumberOfQuiz extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: loadData(),
-      builder: (context, AsyncSnapshot<List<Question>?> snapshot) {
+      builder: (context, AsyncSnapshot<List<QuizQuestion>?> snapshot) {
         return Helper().handleSnapshot(snapshot) ??
             buildItem((snapshot.data ?? []).length);
       },

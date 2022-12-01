@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/quiz_overview.dart';
 
 import '../../controller/question_controller.dart';
 import '../../quiz/object/color_quiz_theme.dart';
@@ -44,7 +45,9 @@ class SelectionBloc extends StatelessWidget {
               child: CustomBloc(Icons.auto_mode_rounded, "Play again"),
               onTap: () {
                 Navigator.pop(context);
-                QuesionController().startQuiz();
+                QuesionController().startQuiz(
+                    QuesionController.dataBoxCategories,
+                    QuesionController.setOfQuiz);
                 // QuesionController().addDataTemplate();
                 Navigator.push(
                   context,
@@ -56,7 +59,6 @@ class SelectionBloc extends StatelessWidget {
           child: GestureDetector(
               child: CustomBloc(Icons.assignment_rounded, "Home"),
               onTap: () {
-                Navigator.pop(context);
                 Navigator.pop(context);
               })),
       Expanded(

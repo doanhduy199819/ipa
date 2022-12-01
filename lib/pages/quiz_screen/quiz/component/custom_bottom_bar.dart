@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
 import '../../controller/question_controller.dart';
 import '../../quizresult/quiz_result.dart';
 

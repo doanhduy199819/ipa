@@ -22,9 +22,6 @@ class QuizDescription extends StatelessWidget {
 
   final DataBoxCategories dataBoxCategories;
   final SetOfQuiz setOfQuiz;
-  String numberOfQuizz = '30';
-  int yourHighestScores = 180;
-  int maxScoresOfQuizz = 300;
   String imgCrownPath = 'assets/icons/crown_icon.png';
   String imgTroyphyPath = 'assets/icons/trophy.png';
 
@@ -69,10 +66,7 @@ class QuizDescription extends StatelessWidget {
                         ),
                         AchievementBloc(
                           imgCrownPath: imgCrownPath,
-                          numberOfQuizz: numberOfQuizz,
                           imgTroyphyPath: imgTroyphyPath,
-                          yourHighestScores: yourHighestScores,
-                          maxScoresOfQuizz: maxScoresOfQuizz,
                           dataBoxCategories: dataBoxCategories,
                           setOfQuiz: setOfQuiz,
                         ),
@@ -99,7 +93,8 @@ class QuizDescription extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: InkWell(
                             onTap: () {
-                              QuesionController().startQuiz();
+                              QuesionController()
+                                  .startQuiz(dataBoxCategories, setOfQuiz);
                               Navigator.pop(context);
                               Navigator.push(
                                   context,

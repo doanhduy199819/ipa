@@ -1,13 +1,13 @@
-class Question {
+class QuizQuestion {
   String? questionId;
   String? question;
   List<String?>? answers;
   int? correct;
-  Question({this.questionId, this.question, this.answers, this.correct});
+  QuizQuestion({this.questionId, this.question, this.answers, this.correct});
 
-  factory Question.fromJson(Map<String, dynamic>? data, String dataId) {
+  factory QuizQuestion.fromJson(Map<String, dynamic>? data, String dataId) {
     final String content = data?['content'];
-    return Question(
+    return QuizQuestion(
         question: content, questionId: dataId, answers: [], correct: -1);
   }
 }

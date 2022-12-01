@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import '../controller/question_controller.dart';
 import '../quiz/object/color_quiz_theme.dart';
 import '../quiz/quiz.dart';
@@ -9,10 +12,38 @@ import 'component/selection_bloc.dart';
 class QuizResult extends StatelessWidget {
   const QuizResult({Key? key}) : super(key: key);
 
+  Future<String> updateData() async {
+    if (await DatabaseService().checkUserExits() == true) {
+      if (QuesionController.recentlyQuizId == "") {
+        await DatabaseService().addRecentlyQuiz();
+        return "add";
+      } else {
+        await DatabaseService().updateRecentlyQuiz();
+        return "Update";
+      }
+    }
+    return "User ko ton tai";
+  }
+
   @override
   Widget build(BuildContext context) {
     print(QuesionController.myAnswers);
     Size size = MediaQuery.of(context).size;
+    return FutureBuilder(
+        future: updateData(),
+        builder: (context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasError) {
+            print("Error: ${snapshot.error.toString()}");
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            debugPrint(snapshot.data.toString());
+            return buildItem(size, context);
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+
+  Stack buildItem(Size size, BuildContext context) {
     return Stack(children: [
       Container(
           height: size.height,

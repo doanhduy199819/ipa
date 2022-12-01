@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_description/component/high_scores.dart';
 
 import '../../../../objects/SetOfQuiz.dart';
 import '../../object/categories.dart';
@@ -8,17 +9,11 @@ import 'number_of_quiz.dart';
 
 class AchievementBloc extends StatelessWidget {
   String imgCrownPath;
-  String numberOfQuizz;
   String imgTroyphyPath;
-  int yourHighestScores;
-  int maxScoresOfQuizz;
   AchievementBloc(
       {Key? key,
       required this.imgCrownPath,
-      required this.numberOfQuizz,
       required this.imgTroyphyPath,
-      required this.yourHighestScores,
-      required this.maxScoresOfQuizz,
       required this.dataBoxCategories,
       required this.setOfQuiz})
       : super(key: key);
@@ -103,9 +98,10 @@ class AchievementBloc extends StatelessWidget {
                         const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
                     child: Row(
                       children: [
-                        BigTextInAchievement(
-                            frontText: yourHighestScores.toString(),
-                            behindText: '/$maxScoresOfQuizz'),
+                        HighScores(
+                          dataBoxCategories: dataBoxCategories,
+                          setOfQuiz: setOfQuiz,
+                        ),
                         const Spacer(),
                       ],
                     ),

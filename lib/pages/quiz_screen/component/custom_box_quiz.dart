@@ -46,6 +46,8 @@ class CustomBoxQuiz extends StatelessWidget {
         ),
       ),
       onTap: (() {
+        QuesionController.dataBoxCategories = dataBoxCategories;
+        QuesionController.setOfQuiz = setOfQuiz;
         QuesionController().reset();
         Navigator.push(
           context,

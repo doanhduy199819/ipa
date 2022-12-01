@@ -18,7 +18,8 @@ class _CustomQuestionQuizState extends State<CustomQuestionQuiz> {
       ColorQuizTheme().list[ColorQuizTheme.index].backgroundQuestionColor;
   Color textColor =
       ColorQuizTheme().list[ColorQuizTheme.index].textQuestionColor;
-  Question question = QuesionController.listQuestion![QuesionController.index];
+  QuizQuestion question =
+      QuesionController.listQuestion![QuesionController.index];
   int numberQuestion = QuesionController.numberQuestion;
   double proccess = QuesionController.process;
   double radiusCircle = 35;

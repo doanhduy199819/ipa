@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
+import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
 import '../quiz/object/question.dart';
 
 class QuesionController {
-  static late List<Question>? listQuestion;
+  static late List<QuizQuestion>? listQuestion;
   static late List<int> myAnswers;
   static int index = 0;
   static double process = 0;
   static late int numberQuestion;
+  static late DataBoxCategories dataBoxCategories;
+  static late SetOfQuiz setOfQuiz;
+  static String recentlyQuizId = "";
 
   void increaseProcess() {
     process = process + 1.0 / numberQuestion;
@@ -58,7 +63,7 @@ class QuesionController {
     listQuestion = [];
   }
 
-  void startQuiz() {
+  void startQuiz(DataBoxCategories dataBoxCategories, SetOfQuiz setOfQuiz) {
     numberQuestion = (listQuestion ?? []).length;
     myAnswers = [];
     for (int i = 0; i < numberQuestion; i++) {
@@ -66,6 +71,8 @@ class QuesionController {
     }
     index = 0;
     process = 0;
+    dataBoxCategories = dataBoxCategories;
+    setOfQuiz = setOfQuiz;
   }
 
   // void addDataTemplate() {

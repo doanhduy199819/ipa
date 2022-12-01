@@ -17,6 +17,7 @@ import 'package:flutter_interview_preparation/services/company_service.dart';
 import 'package:flutter_interview_preparation/services/qa_service.dart';
 import 'package:flutter_interview_preparation/services/job_service.dart';
 import 'package:flutter_interview_preparation/services/quiz_service.dart';
+import 'package:flutter_interview_preparation/services/recently_quiz_service.dart';
 
 import 'SetOfQuestion_service.dart';
 
@@ -29,4 +30,5 @@ class DatabaseService
         JobService,
         CategoriesService,
         SetOfQuizService,
-        QuizService {}
+        QuizService,
+        RecentlyQuizService {}

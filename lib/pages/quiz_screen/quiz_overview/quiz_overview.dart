@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/Helper.dart';
+import 'package:flutter_interview_preparation/objects/SetOfQuiz.dart';
 import 'package:flutter_interview_preparation/pages/quiz_screen/controller/job_controller.dart';
 import 'package:flutter_interview_preparation/pages/quiz_screen/object/categories.dart';
 import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/component/list_box_categories.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
+import 'package:flutter_interview_preparation/services/quiz_service.dart';
 import '../../../objects/Categories.dart';
 import '../../../objects/Job.dart';
+import '../../../objects/RecentlyQuiz.dart';
 import '../component/backgound.dart';
 import 'component/custom_box_categories.dart';
 import '../component/custom_box_quiz.dart';
@@ -54,28 +60,30 @@ class QuizOverview extends StatelessWidget {
     "PHP"
   ];
 
-  Widget _buildListItemQuiz(BuildContext context, int index) {
+  Widget buildListItemQuiz(BuildContext context, int index, RecentlyQuiz data) {
     //horizontal
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-              // child: CustomBoxQuiz(
-              //   height: 165,
-              //   width: 135,
-              //   color: listColor[index % listColor.length],
-              //   setOfQuiz: recently_quiz_name[index],
-              // ),
-              )
+            child: CustomBoxQuiz(
+              height: 165,
+              width: 135,
+              color: listColor[index % listColor.length],
+              setOfQuiz: SetOfQuiz(id: data.quizId, name: data.quizName),
+              dataBoxCategories: DataBoxCategories(
+                  jobid: data.jobId, categoriesid: data.categoriesId),
+            ),
+          )
         ],
       ),
     );
   }
 
-  // Widget listBoxCategories() {
-  //   return.whenComplete(() => null);
-  // }
+  Future<List<RecentlyQuiz>> loadData() async {
+    return await DatabaseService().getRecentlyQuiz();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,94 +93,112 @@ class QuizOverview extends StatelessWidget {
       Color.fromRGBO(39, 25, 98, 1),
       Color.fromRGBO(50, 37, 107, 1),
     ];
-    // List<Job>? data = await JobController().add();
-    // List<DataBoxCategories> tam = JobController().getDataBoxCategories();
-    // print("Categories: ${tam.length}");
-    // tam.forEach((element) {
-    //   print("specialized: ${element.specialized}, name: ${element.name}");
-    // });
 
-    return Stack(
-      children: [
-        background(
-          color: color,
-          havenavigationbar: 1,
-        ),
-        Column(children: [
-          Container(
-            margin: EdgeInsets.only(top: 10, left: 20),
-            padding: EdgeInsets.only(left: 15),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Recently Quiz",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: "RobotoSlab"),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 206,
-            child: Expanded(
-              child: ScrollSnapList(
-                  onItemFocus: (index) {},
-                  itemSize: 135,
-                  itemBuilder: _buildListItemQuiz,
-                  itemCount: recently_quiz_name.length,
-                  reverse: true,
-                  dynamicItemSize: true,
-                  dynamicItemOpacity: 0.9),
-            ),
-          ),
-
-          // Ghep vo,
-          Container(
-            margin: EdgeInsets.only(left: 20, bottom: 5),
-            padding: EdgeInsets.only(left: 15),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Categories",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: "RobotoSlab"),
-              ),
-            ),
-          ),
-          TopBar(),
-          Container(
-            margin: EdgeInsets.only(top: 4),
-            height: MediaQuery.of(context).size.height - 366,
-            child: Stack(children: [
-              Container(
-                child: ListBoxCategories(),
-              ),
-              Column(children: [
-                Container(
-                  height: (MediaQuery.of(context).size.height - 366) * 0.1,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: <Color>[
-                    Color.fromRGBO(15, 20, 60, 1),
-                    Color.fromRGBO(15, 20, 60, 0)
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-                ),
-                Spacer(),
-                Container(
-                  height: (MediaQuery.of(context).size.height - 366) * 0.1,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: <Color>[
-                    Color.fromRGBO(15, 20, 60, 0),
-                    Color.fromRGBO(15, 20, 60, 1)
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-                ),
-              ]),
-            ]),
-          )
-        ]),
-      ],
-    );
+    return FutureBuilder(
+        future: loadData(),
+        builder: (context, AsyncSnapshot<List<RecentlyQuiz>> snapshot) {
+          return Helper().handleSnapshot(snapshot) ??
+              Stack(
+                children: [
+                  snapshot.data?.length != 0
+                      ? background(
+                          color: color,
+                          havenavigationbar: 1,
+                        )
+                      : Container(
+                          color: Color.fromRGBO(15, 20, 60, 1),
+                        ),
+                  Column(children: [
+                    snapshot.data?.length != 0
+                        ? Container(
+                            margin: EdgeInsets.only(top: 10, left: 20),
+                            padding: EdgeInsets.only(left: 15),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Recently Quiz",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: "RobotoSlab"),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    snapshot.data?.length != 0
+                        ? SizedBox(
+                            height: 206,
+                            child: Expanded(
+                              child: ScrollSnapList(
+                                  onItemFocus: (index) {},
+                                  itemSize: 135,
+                                  itemBuilder: (context, index) {
+                                    return buildListItemQuiz(
+                                        context, index, snapshot.data![index]);
+                                  },
+                                  itemCount: snapshot.data!.length < 7
+                                      ? snapshot.data!.length
+                                      : 7,
+                                  reverse: true,
+                                  dynamicItemSize: true,
+                                  dynamicItemOpacity: 0.9),
+                            ),
+                          )
+                        : Container(),
+                    Container(
+                      margin: EdgeInsets.only(left: 20, bottom: 5, top: 10),
+                      padding: EdgeInsets.only(left: 15),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Categories",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "RobotoSlab"),
+                        ),
+                      ),
+                    ),
+                    TopBar(),
+                    Container(
+                      margin: EdgeInsets.only(top: 4),
+                      height: MediaQuery.of(context).size.height -
+                          138 -
+                          235 * (snapshot.data?.length != 0 ? 1 : 0),
+                      child: Stack(children: [
+                        Container(
+                          child: ListBoxCategories(),
+                        ),
+                        Column(children: [
+                          Container(
+                            height: 20,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: <Color>[
+                                  Color.fromRGBO(15, 20, 60, 1),
+                                  Color.fromRGBO(15, 20, 60, 0)
+                                ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)),
+                          ),
+                          Spacer(),
+                          Container(
+                            height: 20,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: <Color>[
+                                  Color.fromRGBO(15, 20, 60, 0),
+                                  Color.fromRGBO(15, 20, 60, 1)
+                                ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)),
+                          ),
+                        ]),
+                      ]),
+                    )
+                  ]),
+                ],
+              );
+        });
   }
 }

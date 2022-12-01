@@ -23,7 +23,6 @@ void main() async {
   );
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-    // home: InterestWidget(),
     home: MyApp(),
   ));
 }
