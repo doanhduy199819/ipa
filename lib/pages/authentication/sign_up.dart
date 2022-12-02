@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/authentication/signup_components/register_button.dart';
 import 'package:flutter_interview_preparation/pages/authentication/signup_components/signup_title.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import '../../services/auth_service.dart';
 import 'signup_components/display_name.dart';
 import 'signup_components/reenter_password.dart';
@@ -71,6 +72,8 @@ class _SignUpState extends State<SignUp> {
               validate: () {
                 if (_formStateKey.currentState!.validate()) {
                   // TODO: SIGN UP HERE
+                  AuthService()
+                      .signUpWithDisplayName(email, password, displayName);
                 }
               },
             ),

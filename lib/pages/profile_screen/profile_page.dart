@@ -180,7 +180,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextButton(
-                          onPressed: () => AuthService().signOut(),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            AuthService().signOut();
+                          },
                           child: Text('Log out'),
                         ),
                       )
