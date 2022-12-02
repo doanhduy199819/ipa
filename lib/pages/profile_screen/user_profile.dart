@@ -69,8 +69,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
             margin: EdgeInsets.only(bottom: hei * 0.1 + 4),
             child: _buildCoverImage()),
         Positioned(
-          child: _buildUserImage(),
           top: hei * 0.2,
+          child: _buildUserImage(),
         )
       ],
     );

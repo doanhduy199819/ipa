@@ -60,7 +60,7 @@ class buildQuestionContent extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.only(right: 4.0),
-          child: CompanyBloc(idCompany: question.company_id),
+          child: CompanyBloc(urlImage: question.company_id),
         ),
       ],
     );

@@ -95,6 +95,21 @@ class AuthService {
     return res;
   }
 
+  Future<bool> isCurrentPasswordValid(String password) async {
+    AuthService _auth = AuthService();
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: _auth.currentUser?.email ?? '', password: password);
+    bool result;
+    try {
+      final data =
+          await _auth.currentUser?.reauthenticateWithCredential(credential);
+      result = data?.user != null;
+    } on FirebaseAuthException catch (e) {
+      result = false;
+    }
+    return result;
+  }
+
   // register wit email & pw
   Future<User?> signUp(email, password) async {
     try {
