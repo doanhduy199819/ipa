@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_container.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/data_questions.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/search_company_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
 
@@ -138,7 +137,7 @@ class _PostAnArticleState extends State<PostAnArticle> {
                                   onPressed: () {
                                     _convertJsonAndPushToFirebase();
                                     for (var item in listArticlePost) {
-                                     ArticlePost newPost= ArticlePost(
+                                      ArticlePost newPost = ArticlePost(
                                           null,
                                           item.title,
                                           item.created_at,
@@ -147,8 +146,7 @@ class _PostAnArticleState extends State<PostAnArticle> {
                                           null,
                                           null,
                                           null);
-                                      DatabaseService()
-                                          .addArticle(newPost);
+                                      DatabaseService().addArticle(newPost);
                                     }
 
                                     //  created_at = DateTime.now();

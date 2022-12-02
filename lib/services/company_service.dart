@@ -19,5 +19,13 @@ mixin CompanyService {
     return _db.collection('companies').get().then(_companiesFromQuerySnapshot);
   }
 
-
+  Future<String?> getACompany(String? idCompany) async {
+    List<Company>? temp = await allCompanyOnce as List<Company>?;
+    for (int i = 0; i < (temp?.length ?? 0); i++) {
+      if (temp?[i].idCompany.compareTo(idCompany??'') == 0) {
+        return temp?[i].logoUrl;
+      }
+    }
+    return '';
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/tag_fillter.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
+import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/post_a_question.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
@@ -35,7 +36,7 @@ class _QAPageState extends State<QAPage> {
     fillters = <String>[
       "Interesting",
       "Hot",
-      "Weak",
+      "Week",
       "Month",
     ];
 
@@ -45,6 +46,18 @@ class _QAPageState extends State<QAPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PostAQuestion(),
+                fullscreenDialog: false,
+              ));
+        },
+        child: const Icon(Icons.add_comment),
+        backgroundColor: Colors.lightBlue.shade400,
+      ),
       appBar: _buildAppBar(),
       backgroundColor: const Color.fromARGB(255, 233, 240, 243),
       body: Column(
@@ -86,53 +99,53 @@ class _QAPageState extends State<QAPage> {
   }
 
   // Handle when item have image company or haven't
-  Row _buildItemListView(int index) {
-    // Test with random img , index%2==0
-    (index % 2 == 0) ? urlImageCompany = '' : urlImageCompany = '123';
+  // Row _buildItemListView(int index) {
+  //   // Test with random img , index%2==0
+  //   (index % 2 == 0) ? urlImageCompany = '' : urlImageCompany = '123';
 
-    return (urlImageCompany!.compareTo('') != 0)
-        ? Row(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
-                child: VoteBloc(
-                    numberOfVotes: questions?[index].voteNum ?? 0,
-                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TitleTagContentQABloc(
-                    title: questions?[index].title!,
-                    category: questions?[index].categories,
-                    content: questions?[index].content!,
-                    urlImageCompany: HomeScreenAssets.lgLogo),
-              ),
-            ],
-          )
-        : Row(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
-                child: VoteBloc(
-                    numberOfVotes: questions?[index].voteNum ?? 0,
-                    numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TitleTagContentQABloc(
-                    title: questions?[index].title!,
-                    category: questions?[index].categories,
-                    content: questions?[index].content!,
-                    urlImageCompany: urlImageCompany),
-              ),
-              const Spacer(),
-              CompanyBloc(urlImage: questions?[index].company_id),
-              const Spacer(),
-            ],
-          );
-  }
+  //   return (urlImageCompany?.compareTo('') != 0)
+  //       ? Row(
+  //           children: [
+  //             Padding(
+  //               padding:
+  //                   const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
+  //               child: VoteBloc(
+  //                   numberOfVotes: questions?[index].voteNum ?? 0,
+  //                   numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //               child: TitleTagContentQABloc(
+  //                   title: questions?[index].title!,
+  //                   category: questions?[index].categories,
+  //                   content: questions?[index].content!,
+  //                   urlImageCompany: HomeScreenAssets.lgLogo),
+  //             ),
+  //           ],
+  //         )
+  //       : Row(
+  //           children: [
+  //             Padding(
+  //               padding:
+  //                   const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
+  //               child: VoteBloc(
+  //                   numberOfVotes: questions?[index].voteNum ?? 0,
+  //                   numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //               child: TitleTagContentQABloc(
+  //                   title: questions?[index].title!,
+  //                   category: questions?[index].categories,
+  //                   content: questions?[index].content!,
+  //                   urlImageCompany: urlImageCompany),
+  //             ),
+  //             const Spacer(),
+  //             //CompanyBloc(urlImage: questions?[index].company_id),
+  //             const Spacer(),
+  //           ],
+  //         );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(
