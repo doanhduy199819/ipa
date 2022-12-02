@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/post_a_question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_page.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/quiz_overview.dart';
@@ -33,22 +32,26 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _getBodyWidget(tabIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Theme.of(context).secondaryHeaderColor,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => setState(
-          () => tabIndex = index,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: _getBodyWidget(tabIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Theme.of(context).secondaryHeaderColor,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) => setState(
+            () => tabIndex = index,
+          ),
+          currentIndex: tabIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.question_answer), label: 'Q & A'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment), label: 'Quizz'),
+          ],
         ),
-        currentIndex: tabIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer), label: 'Q & A'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Quizz'),
-        ],
       ),
     );
   }
