@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
+import 'package:flutter_interview_preparation/objects/UserData.dart';
+import 'package:flutter_interview_preparation/pages/profile_screen/saved_articles.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
@@ -28,6 +31,20 @@ mixin ArticlePostHandle {
 
   Future<List<ArticlePost>?> get allArticlesOnce {
     return _db.collection('articles').get().then(_articlesFromQuerySnapshot);
+  }
+
+  Future<List<ArticlePost>?> get savedArticles async {
+    final docSnapshot = await _db
+        .collection('users')
+        .doc(AuthService().currentUser?.uid ?? '')
+        .get();
+    final userData = UserData.fromFirestore(docSnapshot);
+
+    return await _db
+        .collection('articles')
+        .where("id", whereIn: userData.savedArticles)
+        .get()
+        .then(_articlesFromQuerySnapshot);
   }
 
   void addListArticles(List<ArticlePost> list) {

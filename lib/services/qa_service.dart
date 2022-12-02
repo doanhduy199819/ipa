@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
+import 'package:flutter_interview_preparation/objects/UserData.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/data_questions.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
@@ -197,4 +198,17 @@ mixin QAService {
             (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }
 
+  Future<List<Question>?> get savedQuestions async {
+    final docSnapshot = await _db
+        .collection('users')
+        .doc(AuthService().currentUser?.uid ?? '')
+        .get();
+    final userData = UserData.fromFirestore(docSnapshot);
+
+    return await _db
+        .collection('questions')
+        .where("id", whereIn: userData.savedArticles)
+        .get()
+        .then(_questionsListFromQuerySnapshot);
+  }
 }

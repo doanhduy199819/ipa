@@ -7,15 +7,15 @@ import 'package:flutter_interview_preparation/services/database_service.dart';
 
 class UserData {
   String? id;
-  List<ArticlePost>? savedArticles;
-  List<Question>? savedQuestions;
+  List<String>? savedArticles;
+  List<String>? savedQuestions;
   List<String>? followingUsers;
 
   static Stream<UserData?> get userData {
     return DatabaseService().userData;
   }
 
-  UserData._(
+  UserData(
       {this.id,
       this.savedArticles,
       required savedQuestions,
@@ -29,7 +29,7 @@ class UserData {
       };
 
   factory UserData.fromJson(Map<String, dynamic>? data) {
-    return UserData._(
+    return UserData(
       id: data?['id'],
       savedArticles: data?['savedArticles'] is Iterable
           ? List.from(data?['savedArticles'])
