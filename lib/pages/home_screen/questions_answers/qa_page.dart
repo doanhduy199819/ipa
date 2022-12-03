@@ -55,8 +55,8 @@ class _QAPageState extends State<QAPage> {
                 fullscreenDialog: false,
               ));
         },
-        child: const Icon(Icons.add_comment),
         backgroundColor: Colors.lightBlue.shade400,
+        child: const Icon(Icons.add_comment),
       ),
       appBar: _buildAppBar(),
       backgroundColor: const Color.fromARGB(255, 233, 240, 243),

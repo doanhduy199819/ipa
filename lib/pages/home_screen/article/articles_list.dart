@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
@@ -23,6 +24,8 @@ class ArticlesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      primary: false,
+      physics: const BouncingScrollPhysics(),
       itemCount: aritcles.length,
       itemBuilder: (BuildContext context, int index) {
         ArticlePost article = aritcles[index];
@@ -39,6 +42,9 @@ class ArticlesList extends StatelessWidget {
         );
       },
     );
+    // return ListView(
+    //   children: aritcles.map((e) => _singleRow(article: e)).toList(),
+    // );
   }
 }
 
@@ -182,10 +188,11 @@ class _buildArticleTitleAndImage extends StatelessWidget {
           flex: 4,
           child: Align(
             alignment: Alignment.centerRight,
-            child: Image(
-              image: NetworkImage(
-                  article.photoUrl ?? Constants.SAMPLE_ARTICLE_PHOTO_URL),
-              height: MediaQuery.of(context).size.height * 0.1,
+            child: CachedNetworkImage(
+              imageUrl: article.photoUrl ?? Constants.SAMPLE_ARTICLE_PHOTO_URL,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const LinearProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
         ),

@@ -55,6 +55,7 @@ dependencies:
   flutter_switch: ^0.3.2
   screenshot: ^1.2.3
   share: ^2.0.4
+  cached_network_image: ^3.2.1
   #--> Quiz
 
 dev_dependencies:

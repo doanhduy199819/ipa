@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/question_content.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/title_tag_content_bloc.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/vote_bloc.dart';
 
-import '../../../../values/Home_Screen_Assets.dart';
 import '../qa_detail_screen.dart';
-import 'company_bloc.dart';
 
 class ListViewQAWidget extends StatelessWidget {
   final List<Question>? questions;

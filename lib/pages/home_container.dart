@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/experiences_screen/screens/experiences_home_screen.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/homepage.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_page.dart';
-import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/pages/quiz_screen/quiz_overview/quiz_overview.dart';
 import 'package:flutter_interview_preparation/pages/search_screen/search_page.dart';
-import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 class HomeContainerWidget extends StatefulWidget {
   const HomeContainerWidget({Key? key}) : super(key: key);
@@ -20,7 +16,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
   int tabIndex = 0;
   Widget _getBodyWidget(int index) {
     if (index == 0) {
-      return HomePage();
+      return const HomePage();
     } else if (index == 1) {
       // return QAContent();
       return const QAPage();

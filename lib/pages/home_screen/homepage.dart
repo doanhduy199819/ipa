@@ -1,14 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
-import 'package:flutter_interview_preparation/pages/home_screen/post_an_article.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
-import 'package:flutter_interview_preparation/pages/profile_screen/user_profile.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
-import 'package:flutter_interview_preparation/values/Home_Screen_Colors.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+
 import '../../objects/Question.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   AppBar _buildAppBar() {
+    debugPrint('Rebuild Appbar');
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text(
@@ -55,15 +50,14 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.notifications),
-          onPressed: () {
-          },
+          icon: const Icon(Icons.notifications),
+          onPressed: () {},
         ),
         IconButton(
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProfilePage()));
+                MaterialPageRoute(builder: (context) => const ProfilePage()));
           },
         ),
       ],
@@ -71,6 +65,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMenu() {
+    debugPrint('Rebuild Menu');
+
     // return SingleChildScrollView(
     //   scrollDirection: Axis.horizontal,
     //   child: Row(
@@ -88,24 +84,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    return Container(
-      child: Column(
-        //list articles post
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildMenu(), // Extract to method for short code
-          ),
-          Expanded(
-            child: ArticleContent(),
-            flex: 9,
-          )
-        ],
-      ),
+    debugPrint('Rebuild Body');
+    return  Column(
+      //list articles post
+      children: [
+        Expanded(
+          flex: 1,
+          child: _buildMenu(), // Extract to method for short code
+        ),
+        const Expanded(
+          flex: 9,
+          child: ArticleContent(),
+        )
+      ],
     );
   }
 
   Card _cardCategory(String string) {
+    debugPrint('Rebuild Card catergory');
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(48.0),
@@ -114,7 +110,7 @@ class _HomePageState extends State<HomePage> {
       color: Colors.lightBlue[100],
       elevation: 2,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: FlatButton(
           child: Text(
             '${string}',
@@ -131,9 +127,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   ListView _buildListCategories() {
-    // return ListView.custom(
-    //     childrenDelegate:
-    //         SliverChildBuilderDelegate((BuildContext context, int index) {}));
+    debugPrint('Rebuild List catergories');
     return ListView.builder(
       itemBuilder: (_, index) {
         return _cardCategory(categories[index]);

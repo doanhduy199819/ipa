@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -32,7 +33,10 @@ class UserInfoBox extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
           child: CircleAvatar(
             radius: avatarRadius,
-            backgroundImage: NetworkImage(photoUrl ?? samplephotoUrl),
+            // backgroundImage: NetworkImage(photoUrl ?? samplephotoUrl),
+            backgroundImage: CachedNetworkImageProvider(
+              photoUrl ?? samplephotoUrl,
+            ),
           ),
         ),
         Text(
