@@ -198,6 +198,14 @@ mixin QAService {
             (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }
 
+  Future<List<Question>?> getQuestionsWithIds(List<String>? ids) {
+    return _db
+        .collection('articles')
+        .where("id", whereIn: ids)
+        .get()
+        .then(_questionsListFromQuerySnapshot);
+  }
+
   Future<List<Question>?> get savedQuestions async {
     final docSnapshot = await _db
         .collection('users')

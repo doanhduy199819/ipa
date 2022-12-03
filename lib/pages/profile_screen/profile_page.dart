@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/user_profile.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/saved_articles.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/saved_qa.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -21,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? userAvatarUrl;
 
   String backgroundImageurl = "assets/images/bg_profile.png";
+  final Stream<FirestoreUser?> _stream = DatabaseService().userData;
 
   @override
   void initState() {
@@ -29,14 +32,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User?>.value(
-        value: FirebaseAuth.instance.userChanges(),
+    return StreamProvider<FirestoreUser?>.value(
+        value: _stream,
         initialData: null,
         builder: (context, snapshot) {
-          User? user = Provider.of<User?>(context);
-          userName = user?.displayName;
-          userEmail = user?.email;
-          userAvatarUrl = user?.photoURL ?? "assets/images/avatar.png";
+          User? userAuth = Provider.of<User?>(context);
+          FirestoreUser? userData = Provider.of<FirestoreUser?>(context);
+          debugPrint(userData?.savedArticles.toString());
+
+          userName = userAuth?.displayName;
+          userEmail = userAuth?.email;
+          userAvatarUrl = userAuth?.photoURL ?? "assets/images/avatar.png";
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -76,15 +83,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             ]),
                         child: ListTile(
                           leading: Icon(Icons.article),
-                          title: Text('Saved article'),
+                          title: Text('Saved articles'),
                           onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SavedArticle(),
-                                fullscreenDialog: false,
-                              ),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SavedArticle(),
+                                  fullscreenDialog: false,
+                                  settings: RouteSettings(
+                                    arguments: userData,
+                                  ),
+                                ));
                           },
                         ),
                       ),
@@ -105,10 +114,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           title: Text('Saved questions'),
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    fullscreenDialog: false,
-                                    builder: (context) => SavedQuestion()));
+                              context,
+                              MaterialPageRoute(
+                                fullscreenDialog: false,
+                                builder: (context) => const SavedQuestion(),
+                                settings: RouteSettings(
+                                  arguments: userData,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -148,8 +162,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    fullscreenDialog: false,
-                                    builder: (context) => UserProfilePage()));
+                                  fullscreenDialog: false,
+                                  builder: (context) => const UserProfilePage(),
+                                  settings: RouteSettings(
+                                    arguments: userData,
+                                  ),
+                                ));
                           },
                         ),
                       ),
@@ -165,26 +183,26 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        child: ListTile(
+                        child: const ListTile(
+                          // TODO: FOLLWING USERS
+
                           leading: Icon(Icons.supervised_user_circle),
-                          title: Text('Following User'),
+                          title: Text('Following Users'),
                         ),
                       ),
-                      SizedBox(
-                        height: 16,
-                      ),
+                      const SizedBox(height: 16),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             AuthService().signOut();
                           },
-                          child: Text('Log out'),
+                          child: const Text('Log out'),
                         ),
                       )
                     ],

@@ -33,6 +33,14 @@ mixin ArticlePostHandle {
     return _db.collection('articles').get().then(_articlesFromQuerySnapshot);
   }
 
+  Future<List<ArticlePost>?> getArticlesWithIds(List<String>? ids) {
+    return _db
+        .collection('articles')
+        .where("id", whereIn: ids)
+        .get()
+        .then(_articlesFromQuerySnapshot);
+  }
+
   Future<List<ArticlePost>?> get savedArticles async {
     final docSnapshot = await _db
         .collection('users')

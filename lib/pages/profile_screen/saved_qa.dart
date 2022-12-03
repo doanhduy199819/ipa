@@ -1,4 +1,7 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/qa_detail_screen.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
@@ -14,18 +17,17 @@ class SavedQuestion extends StatefulWidget {
 }
 
 class _SavedQuestionState extends State<SavedQuestion> {
-  // List<Question> display_list_question = List.from(listQuestion);
-  // final display_list_question = Question.getSampleQuestions();
-  late List<Question>? display_list_question;
-  final _future = DatabaseService().savedQuestions;
-  // late List<Question> display_list_question;
-
   @override
   Widget build(BuildContext context) {
+    final userData =
+        ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
+    final _future =
+        DatabaseService().getQuestionsWithIds(userData?.savedArticles);
+
     return FutureBuilder<List<Question>?>(
         future: _future,
         builder: (context, snapshot) {
-          display_list_question = snapshot.data;
+          final display_list_question = snapshot.data;
           return Helper.handleSnapshot(snapshot) ??
               Scaffold(
                 appBar: PreferredSize(
