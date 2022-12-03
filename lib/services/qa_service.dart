@@ -28,6 +28,8 @@ mixin QAService {
   Stream<List<Question>?> get allQuestions {
     return _db
         .collection('questions')
+        .orderBy('created_at')
+        .limit(10)
         .snapshots()
         .map(_questionsListFromQuerySnapshot);
   }
@@ -35,6 +37,8 @@ mixin QAService {
   Future<List<Question>?> get allQuestionsOnce {
     return _db
         .collection('questions')
+        .orderBy('created_at')
+        .limit(10)
         .get()
         .then(_questionsListFromQuerySnapshot);
   }
@@ -192,8 +196,8 @@ mixin QAService {
         .update({
           "savedQuestions": FieldValue.arrayRemove([question.id]),
         })
-        .then(
-            (_) => debugPrint('Remove saved question completed: ${question.id}'))
+        .then((_) =>
+            debugPrint('Remove saved question completed: ${question.id}'))
         .onError(
             (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }

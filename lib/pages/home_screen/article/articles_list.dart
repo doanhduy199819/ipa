@@ -1,8 +1,11 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/components/bookmarks/article_bookmark.dart';
+import 'package:flutter_interview_preparation/pages/components/favourites/article_favourite_icon.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_details.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
@@ -66,13 +69,30 @@ class _singleRow extends StatelessWidget {
   }
 }
 
-class _buildTimeAndInteractions extends StatelessWidget {
+class _buildTimeAndInteractions extends StatefulWidget {
   const _buildTimeAndInteractions({
     Key? key,
     required this.article,
   }) : super(key: key);
 
   final ArticlePost article;
+
+  @override
+  State<_buildTimeAndInteractions> createState() =>
+      _buildTimeAndInteractionsState();
+}
+
+class _buildTimeAndInteractionsState extends State<_buildTimeAndInteractions> {
+  late Stream<int> _likesStream;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _likesStream = DatabaseService()
+        .getArticle(widget.article.id ?? '')
+        .map((article) => article.numberOfLike);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,32 +103,29 @@ class _buildTimeAndInteractions extends StatelessWidget {
           children: [
             const Icon(Icons.timer_rounded, color: Colors.grey, size: 14),
             const SizedBox(width: 4.0),
-            Text(Helper.toFriendlyDurationTime(article.created_at),
+            Text(Helper.toFriendlyDurationTime(widget.article.created_at),
                 style: HomeScreenFonts.author),
           ],
         ),
         const Spacer(),
         Row(
           children: [
-            InkWell(
-                onTap: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(
-                      Icons.favorite_rounded,
-                      size: 18,
-                      color: Colors.red.shade300,
-                    ),
-                    const SizedBox(width: 4.0),
-                    Text(
-                      article.numberOfLike.toString(),
-                      style: HomeScreenFonts.description,
-                    ),
-                  ],
-                )),
-            const SizedBox(width: 16.0),
-            ArticleBookmarkIcon(articlePost: article),
+            ArticleFavouriteIcon(articlePost: widget.article),
+            const SizedBox(width: 4.0),
+            StreamBuilder<int>(
+                stream: _likesStream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return const Text('0', style: TextStyle(fontSize: 12));
+                  }
+                  return Text(
+                    snapshot.data?.toString() ?? '0',
+                    style: const TextStyle(fontSize: 12),
+                  );
+                }),
+            const SizedBox(width: 4.0),
+            ArticleBookmarkIcon(articlePost: widget.article),
           ],
         ),
       ],

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/components/interaction_icon.dart';
 
-class BookmarkIcon extends StatelessWidget {
-  const BookmarkIcon({
+class FavouriteIcon extends StatelessWidget {
+  const FavouriteIcon({
     Key? key,
-    this.onBookmarkChange,
+    this.onFavouriteChange,
     this.isAtive = false,
   }) : super(key: key);
 
-  final Function(bool)? onBookmarkChange;
+  final Function(bool)? onFavouriteChange;
   final bool isAtive;
 
   @override
   Widget build(BuildContext context) {
     return InterractionIcon(
-      activeIcon: const Icon(
-        Icons.bookmark_sharp,
-        color: Colors.blueAccent,
+      activeIcon: Icon(
+        Icons.favorite_rounded,
+        color: Colors.red.shade300,
       ),
       unActiveIcon: const Icon(
-        Icons.bookmark_add_sharp,
+        Icons.favorite_outline_rounded,
         color: Colors.grey,
       ),
       hasBackgroundDecoration: false,
       isActive: isAtive,
-      onActiveChange: onBookmarkChange,
+      onActiveChange: onFavouriteChange,
     );
   }
 }

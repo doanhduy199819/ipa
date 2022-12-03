@@ -1,23 +1,18 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/ArticlePost.dart';
 import 'package:flutter_interview_preparation/objects/Comment.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
-import 'package:flutter_interview_preparation/pages/components/bookmarks/article_bookmark.dart';
-import 'package:flutter_interview_preparation/pages/components/bookmarks/bookmark.dart';
-import 'package:flutter_interview_preparation/pages/components/buttons/follow_button.dart';
 import 'package:flutter_interview_preparation/pages/components/inherited/my_inherited_data.dart';
 import 'package:flutter_interview_preparation/pages/components/user_info_box.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/components/account_part.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/components/article_comments_part.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/constants.dart';
+
 import '../../../values/Home_Screen_Fonts.dart';
-import 'package:intl/intl.dart';
 
 class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({Key? key}) : super(key: key);

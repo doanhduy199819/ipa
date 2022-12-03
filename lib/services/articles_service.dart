@@ -25,12 +25,19 @@ mixin ArticlePostHandle {
   Stream<List<ArticlePost>?> get allArticles {
     return _db
         .collection('articles')
+        .orderBy('created_at')
+        .limit(10)
         .snapshots()
         .map(_articlesFromQuerySnapshot);
   }
 
   Future<List<ArticlePost>?> get allArticlesOnce {
-    return _db.collection('articles').get().then(_articlesFromQuerySnapshot);
+    return _db
+        .collection('articles')
+        .orderBy('created_at')
+        .limit(10)
+        .get()
+        .then(_articlesFromQuerySnapshot);
   }
 
   Future<List<ArticlePost>?> getArticlesWithIds(List<String>? ids) {
@@ -105,6 +112,28 @@ mixin ArticlePostHandle {
     return result;
   }
 
+  Stream<ArticlePost> getArticle(String articleId) {
+    return _db
+        .collection('articles')
+        .doc(articleId)
+        .snapshots()
+        .map(ArticlePost.fromDocumentSnapshot);
+  }
+
+  Stream<bool> isArticlePostLiked(String articlePostId) {
+    return _db
+        .collection('articles')
+        .doc(articlePostId)
+        .snapshots()
+        .map((documenSnapshot) {
+      final data = documenSnapshot.data();
+      List<String>? likedUsers = data?['liked_users'] is Iterable
+          ? List.from(data?['liked_users'])
+          : null;
+      return likedUsers?.contains(AuthService().currentUserId) ?? false;
+    });
+  }
+
   Stream<bool> isArticlePostSaved(String articlePostId) {
     return _db
         .collection('users')
@@ -115,9 +144,32 @@ mixin ArticlePostHandle {
       List<String>? savedArticlesIds = data?['savedArticles'] is Iterable
           ? List.from(data?['savedArticles'])
           : null;
-      debugPrint(savedArticlesIds.toString());
       return savedArticlesIds?.contains(articlePostId) ?? false;
     });
+  }
+
+  Future<void> likeArticle(String articleId) async {
+    _db
+        .collection('articles')
+        .doc(articleId)
+        .update({
+          "liked_users": FieldValue.arrayUnion([AuthService().currentUserId]),
+        })
+        .then((_) => debugPrint('Like article completed: $articleId'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
+  }
+
+  Future<void> unLikeArticle(String articleId) async {
+    _db
+        .collection('articles')
+        .doc(articleId)
+        .update({
+          "liked_users": FieldValue.arrayRemove([AuthService().currentUserId]),
+        })
+        .then((_) => debugPrint('Remove liked article completed: $articleId'))
+        .onError(
+            (error, stackTrace) => debugPrint('Error ${error.toString()}'));
   }
 
   Future<void> saveArticle(ArticlePost article) async {
