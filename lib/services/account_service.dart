@@ -34,15 +34,16 @@ mixin AccountService {
   }
 
   Future<void> _updateUserNameCollectionFirestoreData(
-      User user, String oldUserName) async {
+      User user, String? oldUserName) async {
     Map<String, String> toJSONData = {
       'user-id': user.uid,
     };
     // Add new
     _db.collection('usernames').doc(user.displayName).set(toJSONData);
 
-    // Delete old name
-    _db.collection('usernames').doc(oldUserName).delete();
+    // Delete old name if existing
+    if (oldUserName != null)
+      _db.collection('usernames').doc(oldUserName).delete();
   }
 
   Future<void> _updatePublicInfodata(User user) async {
@@ -52,7 +53,7 @@ mixin AccountService {
         .set(FirestoreUser.fromFirebaseUser(user).toJson());
   }
 
-  Future<void> updateUserAuthInfo(User user, String oldDisplayName) async {
+  Future<void> updateUserAuthInfo(User user, [String? oldDisplayName]) async {
     _updatePublicInfodata(user);
     _updateUserNameCollectionFirestoreData(user, oldDisplayName);
   }

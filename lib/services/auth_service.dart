@@ -136,10 +136,16 @@ class AuthService {
             CustomFirebaseAuthException.DUPLICATE_DISPLAY_NAME);
       }
       // NO dup displayName
+
+      // Data in authentication
       User? res = await signUp(email, password);
       if (res != null) {
+        // Add display name
         await res.updateDisplayName(displayName);
+
+        // Add authen info to firestore
         DatabaseService().createNewUserDoc(_auth.currentUser!);
+        DatabaseService().updateUserAuthInfo(_auth.currentUser!);
       }
       return res;
     } on CustomFirebaseAuthException catch (e) {
