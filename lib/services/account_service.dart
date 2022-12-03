@@ -58,11 +58,11 @@ mixin AccountService {
     _updateUserNameCollectionFirestoreData(user, oldDisplayName);
   }
 
-  Stream<UserData> get userData {
+  Stream<FirestoreUser> get userData {
     return _db
         .collection('users')
         .doc(AuthService().currentUserId)
         .snapshots()
-        .map(UserData.fromFirestore);
+        .map(FirestoreUser.fromDocumentSnapshot);
   }
 }

@@ -11,10 +11,6 @@ class UserData {
   List<String>? savedQuestions;
   List<String>? followingUsers;
 
-  static Stream<UserData?> get userData {
-    return DatabaseService().userData;
-  }
-
   UserData(
       {this.id,
       this.savedArticles,

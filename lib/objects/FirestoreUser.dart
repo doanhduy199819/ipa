@@ -6,30 +6,33 @@ class FirestoreUser {
   String? displayName;
   String? photoUrl;
 
-  // String? avatar;
-  // String? name;
-  int? numberOfPost;
-  int? numberOfGold;
-  int? numberOfSilver;
-  int? numberOfBronze;
+  List<String>? savedArticles;
+  List<String>? savedQuestions;
+  List<String>? followingUsers;
 
-  FirestoreUser(
-      {
-      // this.avatar,
-      // this.name,
-      this.numberOfPost,
-      this.numberOfGold,
-      this.numberOfSilver,
-      this.numberOfBronze,
-      this.uid,
-      this.displayName,
-      this.photoUrl});
+  FirestoreUser({
+    this.uid,
+    this.displayName,
+    this.photoUrl,
+    this.savedArticles,
+    this.savedQuestions,
+    this.followingUsers,
+  });
 
   factory FirestoreUser.fromJson(Map<String, dynamic>? data) {
     return FirestoreUser(
       uid: data?['uid'],
       displayName: data?['displayName'],
       photoUrl: data?['photoUrl'],
+      savedArticles: data?['savedArticles'] is Iterable
+          ? List.from(data?['savedArticles'])
+          : null,
+      savedQuestions: data?['savedQuestions'] is Iterable
+          ? List.from(data?['savedQuestions'])
+          : null,
+      followingUsers: data?['followingUsers'] is Iterable
+          ? List.from(data?['followingUsers'])
+          : null,
     );
   }
 
@@ -38,6 +41,7 @@ class FirestoreUser {
       uid: user?.uid,
       displayName: user?.displayName,
       photoUrl: user?.photoURL,
+      
     );
   }
 
@@ -50,12 +54,8 @@ class FirestoreUser {
         if (uid != null) 'uid': uid,
         if (displayName != null) 'displayName': displayName,
         if (photoUrl != null) 'photoUrl': photoUrl.toString(),
+        if (savedArticles != null) 'savedArticles': savedArticles,
+        if (savedQuestions != null) 'savedQuestions': savedQuestions,
+        if (followingUsers != null) 'followingUsers': followingUsers,
       };
 }
-
-// List<Account> listAccount = [
-//   Account('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360',
-//       'Trong Huy', 1010, 100, 100, 100),
-//   Account('https://cdn-icons-png.flaticon.com/512/1077/1077114.png?w=360',
-//       'Nhat Tan', 2871, 100, 100, 100)
-// ];

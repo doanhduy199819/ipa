@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/objects/FirestoreUser.dart';
 import 'package:flutter_interview_preparation/objects/UserProfile.dart';
 import 'package:flutter_interview_preparation/pages/components/birthday_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/components/gender_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/components/name_menu_box.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/change_password_page.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
+import 'package:provider/provider.dart';
 
 import '../../values/Home_Screen_Fonts.dart';
 
@@ -20,10 +23,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   late double wid;
   late bool followCheck;
   late TextEditingController controller;
-  late User? userProfile;
+  late FirestoreUser? userData;
   void initData() {
     followCheck = false;
   }
+
+  final Stream<FirestoreUser?> _stream = DatabaseService().userData;
 
   @override
   void initState() {
@@ -38,10 +43,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
     hei = MediaQuery.of(context).size.height;
     wid = MediaQuery.of(context).size.width;
 
-    return StreamBuilder<User?>(
-      stream: AuthService().userChanges,
+    return StreamProvider.value(
+      value: _stream,
+      initialData: null,
       builder: (context, snapshot) {
-        userProfile = AuthService().currentUser;
+        userData = Provider.of<FirestoreUser?>(context);
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -51,8 +57,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
             padding: EdgeInsets.zero,
             children: [
               _buildTop(),
-              _buildBody(
-                  userProfile?.displayName ?? '', userProfile?.email ?? ''),
+              _buildBody(userData?.displayName ?? '',
+                  AuthService().currentUser?.email ?? ''),
             ],
           ),
         );
