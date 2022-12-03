@@ -27,6 +27,7 @@ class buildReenterPassword extends StatelessWidget {
   }
 
   String? _validatorReenterPassword(String? reenterPassword) {
+    debugPrint('validator call ${password} ${reenterPassword}');
     if (password.compareTo(reenterPassword ?? '') != 0) {
       return 'Password does not match';
     }

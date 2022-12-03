@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/pages/authentication/signup_components/register_button.dart';
 import 'package:flutter_interview_preparation/pages/authentication/signup_components/signup_title.dart';
-import 'package:flutter_interview_preparation/services/database_service.dart';
+
 import '../../services/auth_service.dart';
 import 'signup_components/display_name.dart';
 import 'signup_components/reenter_password.dart';
@@ -50,34 +49,33 @@ class _SignUpState extends State<SignUp> {
             const buildSignUpTitle(),
             Form(
               key: _formStateKey,
-              child: buildInfoBox(
-                emailOnChanged: (value) => setState(() => email = value),
-                passwordOnChanged: (value) => setState(() => password = value),
-                reenterPasswordOnChanged: (value) =>
-                    setState(() => reEnterPassword = value),
-                displayNameOnChanged: (value) =>
-                    setState(() => displayName = value),
-                password: password ?? '',
-                emailOnEditingComplete: () {
-                  // TODO: To check before user press Sign up button
-                },
+              child: Column(
+                children: [
+                  buildInfoBox(
+                    emailOnChanged: (value) => setState(() => email = value),
+                    passwordOnChanged: (value) =>
+                        setState(() => password = value),
+                    reenterPasswordOnChanged: (value) =>
+                        setState(() => reEnterPassword = value),
+                    displayNameOnChanged: (value) =>
+                        setState(() => displayName = value),
+                    password: password ?? '',
+                    emailOnEditingComplete: () {
+                      // TODO: To check before user press Sign up button
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                  buildRegisterButton(
+                    email: email ?? '',
+                    password: password ?? '',
+                    reenterPassword: reEnterPassword ?? '',
+                    displayName: displayName ?? '',
+                    formKey: _formStateKey,
+                  ),
+                  const SizedBox(height: 48),
+                ],
               ),
             ),
-            const SizedBox(height: 16.0),
-            buildRegisterButton(
-              email: email ?? '',
-              password: password ?? '',
-              reenterPassword: reEnterPassword ?? '',
-              displayName: displayName ?? '',
-              validate: () {
-                if (_formStateKey.currentState!.validate()) {
-                  // TODO: SIGN UP HERE
-                  AuthService()
-                      .signUpWithDisplayName(email, password, displayName);
-                }
-              },
-            ),
-            const SizedBox(height: 48),
           ],
         ),
       ),

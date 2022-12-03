@@ -10,15 +10,15 @@ class buildRegisterButton extends StatefulWidget {
     required this.email,
     required this.password,
     required this.reenterPassword,
-    required this.validate,
     required this.displayName,
+    required this.formKey,
   }) : super(key: key);
 
   final String email;
   final String password;
   final String reenterPassword;
   final String displayName;
-  final void Function() validate;
+  final GlobalKey<FormState> formKey;
 
   @override
   State<buildRegisterButton> createState() => _buildRegisterButtonState();
@@ -43,22 +43,11 @@ class _buildRegisterButtonState extends State<buildRegisterButton> {
                   height: 48.0,
                   child: ElevatedButton(
                     style: roundedButtonStyle,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      // TODO: check signUpWihtEmailAndPassword
-
-                      User? result = await AuthService().signUpWithDisplayName(
-                          widget.email, widget.password, widget.displayName);
-                      debugPrint(
-                          "Email: ${widget.email}, Password: ${widget.password}, DisplayName: ${widget.displayName}");
-                      widget.validate();
-                      setState(() {
-                        isLoading = false;
-                      });
-                      if (result != null) {
-                        Navigator.pop(context);
+                    onPressed: () {
+                      if (widget.formKey.currentState!.validate()) {
+                        Fluttertoast.showToast(
+                            msg: '${widget.email} ${widget.password}');
+                        _signUp();
                       }
                     },
                     child: Text(
@@ -74,5 +63,25 @@ class _buildRegisterButtonState extends State<buildRegisterButton> {
             ],
           )
         : Center(child: CircularProgressIndicator());
+  }
+
+  void _signUp() async {
+    setState(() {
+      isLoading = true;
+    });
+    User? result = await AuthService().signUpWithDisplayName(
+        widget.email, widget.password, widget.displayName);
+    debugPrint(
+        "Email: ${widget.email}, Password: ${widget.password}, DisplayName: ${widget.displayName}");
+    setState(() {
+      isLoading = false;
+    });
+
+    // Navigate to HOME if signup successfully
+    if (result != null) {
+      debugPrint(
+          'Sign up successfully with Email:${widget.email}, DisplayName:${widget.displayName}');
+      Navigator.pop(context);
+    }
   }
 }

@@ -130,6 +130,7 @@ class AuthService {
   // register wit email & pw & displayName
   Future<User?> signUpWithDisplayName(email, password, displayName) async {
     try {
+      // Check whether display name exist
       if (await isDisplayNameExist(displayName)) {
         throw CustomFirebaseAuthException(
             CustomFirebaseAuthException.DUPLICATE_DISPLAY_NAME);
