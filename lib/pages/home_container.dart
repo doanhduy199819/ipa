@@ -47,8 +47,9 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.question_answer), label: 'Q & A'),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Experience'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.assignment), label: 'Quizz'),
+                icon: Icon(Icons.assignment), label: 'Quiz'),
           ],
         ),
       ),
