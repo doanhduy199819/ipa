@@ -41,6 +41,7 @@ class SearchCompanyBloc extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.rectangle,
                   color: Color(0xffEDEAEA),
+
                 ),
                 child: textFieldBloc(),
               ),

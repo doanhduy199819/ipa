@@ -13,9 +13,19 @@ class ExperiencePost {
   List<String>? liked_users;
   List<Comment>? comments;
   int? number_of_view;
+  bool? isApproved=false;
 
-  ExperiencePost(this.post_id, this.topic_id, this.title, this.created_at,
-      this.content, this.liked_users, this.comments, this.number_of_view);
+  ExperiencePost(
+      this.post_id,
+      this.topic_id,
+      this.title,
+      this.created_at,
+      this.content,
+      this.liked_users,
+      this.comments,
+      this.number_of_view,
+      this.isApproved,
+      );
   ExperiencePost.only(
       {this.post_id,
         this.topic_id,
@@ -23,8 +33,9 @@ class ExperiencePost {
         this.created_at,
         this.content,
         this.liked_users,
-        this.comments,
-        this.number_of_view});
+        // this.comments,
+        this.number_of_view,
+        this.isApproved});
 
   void setPostId(String? id) {
     this.post_id = id;
@@ -36,6 +47,9 @@ class ExperiencePost {
 
   void setComments(List<Comment>? comments) => this.comments = comments;
 
+  int get numberOfComments {
+    return comments?.length ?? 0;
+  }
 
   factory ExperiencePost.test() {
     var idPost = 'id_post';
@@ -43,21 +57,22 @@ class ExperiencePost {
       Comment(content: 'sample comment 1'),
       Comment(content: 'sample comment 2')
     ];
-    var likes = ['bakakAcsaCB'];
+    //var likes = ['bakakAcsaCB'];
     var idTopic = 'id_topic';
     var content = 'sample content';
     var created_at = DateTime.now();
     var title = 'This is a test experience';
     var number_of_view = 10;
+    var isApproved=false;
     return ExperiencePost.only(
       post_id: idPost,
       topic_id: idTopic,
       title: title,
       content: content,
       created_at: created_at,
-      comments: comments,
-      liked_users: likes,
+      //liked_users: likes,
       number_of_view: number_of_view,
+      isApproved:isApproved,
     );
   }
 
@@ -77,25 +92,27 @@ class ExperiencePost {
     // final List<Comment>? comments =
     // data?['comments'] is Iterable ? List.from(data?['comments']) : null;
 
-    final List<Comment>? comments =
-    [
-      Comment(content: 'sample comment 1'),
-      Comment(content: 'sample comment 2')
-    ];
+    // final List<Comment>? comments =
+    // [
+    //   Comment(content: 'sample comment 1'),
+    //   Comment(content: 'sample comment 2')
+    // ];
     final int? number_of_view = data?['number_of_view'];
-    final String? author_id = data?['author_id'];
+    final bool? isApproved=data?['isApproved'];
+    // final String? author_id = data?['author_id'];
 
-    return ExperiencePost.only(
-      post_id: post_id,
-      topic_id: topic_id,
-      title: title,
-      created_at: created_at,
-      content: content,
-      liked_users: liked_users,
-      comments: comments,
-      number_of_view: number_of_view,
-    );
+    // return ExperiencePost.only(
+    //   post_id: post_id,
+    //   topic_id: topic_id,
+    //   title: title,
+    //   created_at: created_at,
+    //   content: content,
+    //   liked_users: liked_users,
+    //   number_of_view: number_of_view,
+    // );
+    return ExperiencePost(post_id, topic_id, title, created_at, content, liked_users, null, number_of_view,isApproved);
   }
+
 
   factory ExperiencePost.fromDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
@@ -106,11 +123,12 @@ class ExperiencePost {
     if (post_id != null) 'post_id': post_id,
     if (topic_id != null) 'topic_id': topic_id,
     if (title != null) 'title': title,
-    if (created_at != null) 'created_at': created_at,
+    if (created_at != null) 'created_at': created_at.toString(),
     if (content != null) 'content': content,
     if (liked_users != null) 'liked_users': liked_users,
     if (comments != null) 'comments': comments,
     if (number_of_view != null) 'number_of_view': number_of_view,
+    if(isApproved!=null) 'isApproved':isApproved,
   };
 
   void addLikedUser(String userId) {
@@ -120,21 +138,29 @@ class ExperiencePost {
     liked_users!.add(userId);
   }
 
+  String displayLikedUsers() {
+    String rs = '';
+    liked_users?.map((element) {
+      rs += element;
+    });
+    return rs;
+  }
+
   int get numberOfLike {
     return liked_users?.length ?? 0;
   }
 
   @override
   String toString() {
-    return '${this.title} , ${this.content}';
+    return '${this.title} , ${this.content} , Like: ${liked_users?.length ?? 0}';
   }
 
   static List<ExperiencePost> getSampleExperiencePostList() {
     List<ExperiencePost>? _post = [];
     _post.add(ExperiencePost('1', '1', 'Chia sẻ về một số kinh nghiệm phỏng vấn tại công ty ABC', DateTime.now(), 'Hôm nay tôi đi phỏng vấn',
-        [], [], 0));
+        [], [], 0,false));
     return _post;
   }
 
-
 }
+
