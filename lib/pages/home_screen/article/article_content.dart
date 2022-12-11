@@ -5,6 +5,8 @@ import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/articles_list.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
+import '../../../objects/FirestoreUser.dart';
+
 class ArticleContent extends StatefulWidget {
   const ArticleContent({Key? key}) : super(key: key);
 
@@ -23,19 +25,25 @@ class _ArticleContentState extends State<ArticleContent> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _dataFuture,
-      builder:
-          (BuildContext context, AsyncSnapshot<List<ArticlePost>?> snapshot) {
-        return Helper.handleSnapshot(snapshot) ??
-            RefreshIndicator(
-              onRefresh: _pullRefresh,
-              child: Container(
-                padding: const EdgeInsets.all(4.0),
-                child: ArticlesList(aritcles: snapshot.data!),
-              ),
-            );
-      },
+    final userData =
+    ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
+    final _future =
+    DatabaseService().getArticlesWithIds(userData?.savedArticles);
+    return FutureBuilder<List<ArticlePost>?>(
+      future: _future,
+      builder: ((context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Column(
+            children: const [
+              Center(
+                child: CircularProgressIndicator(),
+              )
+            ],
+          );
+        }
+        return ArticlesList(
+            aritcles: (snapshot.hasData) ? snapshot.data! : []);
+      }),
     );
   }
 
