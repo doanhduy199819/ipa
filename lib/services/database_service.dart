@@ -12,6 +12,7 @@ import 'package:flutter_interview_preparation/services/account_service.dart';
 import 'package:flutter_interview_preparation/services/articles_service.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/categories_service.dart';
+import 'package:flutter_interview_preparation/services/comment_report_service.dart';
 import 'package:flutter_interview_preparation/services/comment_service.dart';
 import 'package:flutter_interview_preparation/services/company_service.dart';
 import 'package:flutter_interview_preparation/services/qa_service.dart';
@@ -36,5 +37,6 @@ class DatabaseService
         RecentlyQuizService,
         CompanyService,
         ExperienceService,
-        TopicService
+        TopicService,
+        CommentReportService
 {}

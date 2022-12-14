@@ -214,6 +214,7 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
                 comment: widget.comment,
                 onDelete: () => DatabaseService().deleteCommentFromQuestion(
                     widget.comment.id!, widget.questionId),
+                idQuestion: widget.questionId,
               ),
               upVoteHandle: _handleUpvote,
               downVoteHandle: _handleDownvote,

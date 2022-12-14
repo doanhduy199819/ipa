@@ -253,7 +253,10 @@ class _PostsState extends State<Posts> {
                                           .width *
                                           0.65,
                                       child: Text(
-                                        eachPost.title ?? 'Title is null',
+                                          eachPost.title==null?'No title':
+                                          (eachPost.title?.length ?? 0) > 30
+                                          ? "${eachPost.title?.substring(0, 30)}.."
+                                          : "${eachPost.title}",
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
