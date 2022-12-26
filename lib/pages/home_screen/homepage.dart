@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/pages/authentication/sign_in.dart';
 import 'package:flutter_interview_preparation/pages/home_screen/article/article_content.dart';
 import 'package:flutter_interview_preparation/pages/profile_screen/profile_page.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../objects/Question.dart';
 
@@ -85,7 +88,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody() {
     debugPrint('Rebuild Body');
-    return  Column(
+    return Column(
       //list articles post
       children: [
         Expanded(

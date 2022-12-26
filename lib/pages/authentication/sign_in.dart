@@ -62,7 +62,7 @@ class _SignInState extends State<SignIn> {
                 buildPassword(
                     mainColor: mainColor,
                     onChanged: (val) => setState(() => password = val ?? '')),
-                const buildForgotPassword(),
+                const SizedBox(height: 16.0),
                 buildLoginButton(
                   email: email,
                   password: password,

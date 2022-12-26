@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             secondaryHeaderColor: Color.fromARGB(255, 5, 94, 195)),
         // color: Color.fromARGB(255, 11, 5, 104),
         // home: const HomeContainerWidget(),
-        home: Wrapper(),
+        home: const Wrapper(),
         debugShowCheckedModeBanner: false,
       ),
     );
