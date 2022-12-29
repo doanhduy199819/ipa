@@ -3,8 +3,6 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_interview_preparation/experiences_screen/components/interactive_bloc.dart';
 import 'package:flutter_interview_preparation/objects/ExperiencePost.dart';
-
-
 import '../../../objects/Helper.dart';
 import '../../../services/database_service.dart';
 

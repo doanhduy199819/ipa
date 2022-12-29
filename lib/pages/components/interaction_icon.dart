@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../../objects/UserBlocked.dart';
+import '../../services/auth_service.dart';
+
 class InterractionIcon extends StatelessWidget {
-  const InterractionIcon(
+   InterractionIcon(
       {Key? key,
       // this.activeIconData = Icons.arrow_upward_rounded,
       this.onTap,
@@ -30,11 +34,43 @@ class InterractionIcon extends StatelessWidget {
   final void Function()? onTap;
   final void Function(bool)? onActiveChange;
 
+    late Future<List<UserBlocked>?> _userBlockedFuture;
+
+
+    List<UserBlocked>? _userBlockedsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('exits');
+        return UserBlocked.fromDocumentSnapshot(documentSnapshot);
+      }
+      return UserBlocked.test();
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
     return InkWell(
-      onTap: () {
-        // (onTap != null) ? onTap!() : null;
+      onTap: () async {
+        if(AuthService().currentUser?.isAnonymous ==true){
+          return;
+        }
+        print('====USER UID GG ${AuthService().currentUser!.uid}');
+        var usersblocked = await _userBlockedFuture;
+        for(int i=0;i<usersblocked!.length;i++){
+          print('====USER UID MINE ${usersblocked[i].id_user}');
+          if(usersblocked[i].id_user==AuthService().currentUser!.uid){
+            return;
+          }
+        }
+
         (onActiveChange != null) ? onActiveChange!(isActive) : null;
       },
       child: Container(

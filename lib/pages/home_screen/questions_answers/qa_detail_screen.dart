@@ -93,7 +93,19 @@ class _QaDetailScreenState extends State<QaDetailScreen> {
                   padding: const EdgeInsets.all(2.0),
                   child: answersAndSortByBloc(question),
                 ),
-                QAComments(questionId: question.id ?? '0')
+                (AuthService().currentUser?.isAnonymous == true)
+                    ? Center(
+                        child: TextButton(
+                          child: const Text(
+                            'Login To Comment',
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            AuthService().signOut();
+                          },
+                        ),
+                      )
+                    : QAComments(questionId: question.id ?? '0')
               ],
             ),
           ),

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -16,7 +17,9 @@ import 'package:flutter_interview_preparation/pages/home_screen/article/article_
 import 'package:flutter_interview_preparation/pages/home_screen/questions_answers/components/more-options_button.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 
+import '../../../../objects/UserBlocked.dart';
 import '../../../../services/auth_service.dart';
+
 //
 // class QAComments extends StatefulWidget {
 //   String questionId;
@@ -270,12 +273,31 @@ class _QACommentsState extends State<QAComments> {
   final _textFieldController = TextEditingController();
   final _commentFocusNode = FocusNode();
   late Stream<List<Comment>?> _commentsStream;
+  late Future<List<UserBlocked>?> _userBlockedFuture;
 
   @override
   void initState() {
     // TODO: implement initState
     _commentsStream = DatabaseService().commentsFromQuestion(widget.questionId);
+     FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
     super.initState();
+  }
+
+  List<UserBlocked>? _userBlockedsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('exits');
+        return UserBlocked.fromDocumentSnapshot(documentSnapshot);
+      }
+      return UserBlocked.test();
+    }).toList();
   }
 
   @override
@@ -325,7 +347,7 @@ class _QACommentsState extends State<QAComments> {
         ),
         Row(
           children: [
-            Spacer(),
+            const Spacer(),
             FlatButton(
               color: Colors.blueAccent,
               textColor: Colors.white,
@@ -340,7 +362,31 @@ class _QACommentsState extends State<QAComments> {
     );
   }
 
-  void _onSendButtonPressed() {
+  void _onSendButtonPressed() async {
+    var usersblocked = await _userBlockedFuture;
+    for (int i = 0; i < usersblocked!.length; i++) {
+      if (usersblocked[i].id_user == AuthService().currentUser!.uid) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                scrollable: true,
+                title: const Text('Ban'),
+                content: const Center(
+                  child: Text('User was banned'),
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text("Return"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            });
+
+        return;
+      }
+    }
     if (_formKey.currentState!.validate()) {
       _sendComment(commentContent);
       _clearCommentContent();
@@ -403,9 +449,9 @@ class _QACommentsState extends State<QAComments> {
       children: <Widget>[
         ...?comments
             ?.map((comment) => LoadUserInfoCommentBox(
-          comment: comment,
-          questionId: widget.questionId,
-        ))
+                  comment: comment,
+                  questionId: widget.questionId,
+                ))
             .toList()
       ],
     );
@@ -456,7 +502,7 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
               upVoteHandle: _handleUpvote,
               downVoteHandle: _handleDownvote,
               timeString:
-              Helper.toFriendlyDurationTime(widget.comment.created_at),
+                  Helper.toFriendlyDurationTime(widget.comment.created_at),
             );
       },
     );
@@ -464,11 +510,11 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
 
   int get voteState {
     if (widget.comment.upvote_users
-        ?.contains(AuthService().currentUserId ?? '') ??
+            ?.contains(AuthService().currentUserId ?? '') ??
         false) {
       return 1;
     } else if (widget.comment.downvote_users
-        ?.contains(AuthService().currentUserId ?? '') ??
+            ?.contains(AuthService().currentUserId ?? '') ??
         false) {
       return -1;
     }
@@ -491,4 +537,3 @@ class LoadUserCommentBoxStateBox extends State<LoadUserInfoCommentBox> {
           .upVoteComment(widget.questionId, widget.comment.id!, false);
   }
 }
-

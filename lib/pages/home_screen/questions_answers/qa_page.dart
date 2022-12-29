@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/Helper.dart';
 import 'package:flutter_interview_preparation/objects/Question.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_interview_preparation/pages/home_screen/questions_answer
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:flutter_interview_preparation/values/Home_Screen_Assets.dart';
+import '../../../objects/UserBlocked.dart';
 import '../../../values/Home_Screen_Fonts.dart';
 import 'components/company_bloc.dart';
 
@@ -24,6 +26,7 @@ class _QAPageState extends State<QAPage> {
   late List<Question>? questions;
   late List<String> fillters;
   late String? urlImageCompany;
+  late Future<List<UserBlocked>?> _userBlockedFuture;
 
   @override
   void initState() {
@@ -40,43 +43,80 @@ class _QAPageState extends State<QAPage> {
       "Month",
     ];
 
-    // questions = Question.getSampleQuestions();
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
+  }
+
+  List<UserBlocked>? _userBlockedsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('exits');
+        return UserBlocked.fromDocumentSnapshot(documentSnapshot);
+      }
+      return UserBlocked.test();
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if(AuthService().currentUser?.isAnonymous == true){
+        onPressed: () async {
+          if (AuthService().currentUser?.isAnonymous == true) {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     scrollable: true,
-                    title: Text(
+                    title: const Text(
                       'You Need Login To Post A Question',
                     ),
                     actions: [
                       TextButton(
                         child: const Text("Cancle"),
-                        onPressed: () =>
-                            Navigator.pop(context),
+                        onPressed: () => Navigator.pop(context),
                       ),
                       TextButton(
                           child: const Text("Login"),
                           onPressed: () {
-                           Navigator.pop(context);
-                           AuthService().signOut();
-                          }
-
-                      ),
-
+                            Navigator.pop(context);
+                            AuthService().signOut();
+                          }),
                     ],
                   );
                 });
             return;
           }
+
+          var usersblocked = await _userBlockedFuture;
+          for (int i = 0; i < usersblocked!.length; i++) {
+            if (usersblocked[i].id_user == AuthService().currentUser!.uid) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      scrollable: true,
+                      title: const Text(
+                        'USER WAS BANNED',
+                      ),
+                      actions: [
+                        TextButton(
+                          child: const Text("Cancel"),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    );
+                  });
+              return;
+            }
+          }
+          // ignore: use_build_context_synchronously
           Navigator.push(
               context,
               MaterialPageRoute(

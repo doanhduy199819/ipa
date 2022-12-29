@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
+import '../../../objects/UserBlocked.dart';
+import '../../../services/auth_service.dart';
 
 class CommentInput extends StatefulWidget {
   const CommentInput(
@@ -19,12 +23,31 @@ class _CommentInputState extends State<CommentInput> {
   final _textFieldController = TextEditingController();
   final _commentFocusNode = FocusNode();
   late String content;
+  late Future<List<UserBlocked>?> _userBlockedFuture;
 
   @override
   void initState() {
     // TODO: implement initState
     content = '';
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
     super.initState();
+  }
+
+  List<UserBlocked>? _userBlockedsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('exits');
+        return UserBlocked.fromDocumentSnapshot(documentSnapshot);
+      }
+      return UserBlocked.test();
+    }).toList();
   }
 
   @override
@@ -55,14 +78,41 @@ class _CommentInputState extends State<CommentInput> {
         ),
         Row(
           children: [
-            Spacer(),
+            const Spacer(),
             FlatButton(
-              child: Text(
+              // ignore: sort_child_properties_last
+              child: const Text(
                 'Send',
               ),
               color: Colors.blueAccent,
               textColor: Colors.white,
-              onPressed: () {
+              onPressed: () async {
+                var usersblocked = await _userBlockedFuture;
+                for (int i = 0; i < usersblocked!.length; i++) {
+                  if (usersblocked[i].id_user ==
+                      AuthService().currentUser!.uid) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            scrollable: true,
+                            title: const Text('Ban'),
+                            content: const Center(
+                              child: Text('User was banned'),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text("Return"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ],
+                          );
+                        });
+
+                    return;
+                  }
+                }
+
                 widget.onSendButtonPressed(content);
                 _clearCommentContent();
                 _scrollDownToEndList();
