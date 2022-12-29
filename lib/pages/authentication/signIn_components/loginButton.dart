@@ -44,6 +44,9 @@ class _buildLoginButtonState extends State<buildLoginButton> {
                       UserCredential? result = await AuthService()
                           .signInWithEmailAndPassword(
                               widget.email, widget.password);
+                      if (result == null) {
+                        Fluttertoast.showToast(msg: 'Wrong email or password');
+                      }
                       debugPrint(
                           "Email: ${widget.email}', Password: '${widget.password}'");
                       setState(() {

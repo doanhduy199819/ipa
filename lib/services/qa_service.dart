@@ -37,8 +37,7 @@ mixin QAService {
   Future<List<Question>?> get allQuestionsOnce {
     return _db
         .collection('questions')
-        .orderBy('created_at')
-        .limit(10)
+        .orderBy('created_at',descending: true)
         .get()
         .then(_questionsListFromQuerySnapshot);
   }

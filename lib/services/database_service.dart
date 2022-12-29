@@ -12,6 +12,7 @@ import 'package:flutter_interview_preparation/services/account_service.dart';
 import 'package:flutter_interview_preparation/services/articles_service.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
 import 'package:flutter_interview_preparation/services/categories_service.dart';
+import 'package:flutter_interview_preparation/services/comment_report_service.dart';
 import 'package:flutter_interview_preparation/services/comment_service.dart';
 import 'package:flutter_interview_preparation/services/company_service.dart';
 import 'package:flutter_interview_preparation/services/qa_service.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_interview_preparation/services/job_service.dart';
 import 'package:flutter_interview_preparation/services/quiz_service.dart';
 import 'package:flutter_interview_preparation/services/recently_quiz_service.dart';
 import 'package:flutter_interview_preparation/services/topic_service.dart';
+import 'package:flutter_interview_preparation/services/userblocked_service.dart';
 
 import 'SetOfQuestion_service.dart';
 import 'experience_service.dart';
@@ -36,5 +38,7 @@ class DatabaseService
         RecentlyQuizService,
         CompanyService,
         ExperienceService,
-        TopicService
+        TopicService,
+        CommentReportService,
+        UserBlockedService
 {}

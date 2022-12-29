@@ -42,6 +42,8 @@ class _ArticleCommentState extends State<ArticleComment> {
               comment: widget.comment,
               onDelete: () => DatabaseService().deleteCommentFromArticle(
                   widget.comment.id!, widget.articleId),
+              idQuestion: widget.articleId,
+              screen: 'articles',
             ),
             timeString:
                 Helper.toFriendlyDurationTime(widget.comment.created_at),

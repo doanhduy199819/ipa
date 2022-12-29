@@ -9,24 +9,28 @@ class buildExtraLoginMethods extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SignInButton(
-          Buttons.GoogleDark,
-          onPressed: () => AuthService().signInWithGoogleEmail(),
+    return Center(
+      child: IntrinsicWidth(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SignInButton(
+              Buttons.GoogleDark,
+              onPressed: () => AuthService().signInWithGoogleEmail(),
+            ),
+            const SizedBox(height: 4.0),
+            TextButton(
+              onPressed: () => AuthService().signInAnonymous(),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              child: const Text('Continue as Guest'),
+            ),
+          ],
         ),
-        const SizedBox(height: 4.0),
-        SignInButton(
-          Buttons.Apple,
-          onPressed: () => AuthService().signInAnonymous(),
-        ),
-        const SizedBox(height: 4.0),
-        SignInButton(
-          Buttons.GitHub,
-          onPressed: () => AuthService().signInAnonymous(),
-        ),
-      ],
+      ),
     );
   }
 }

@@ -47,12 +47,22 @@ class _ArticleCommentsPartState extends State<ArticleCommentsPart> {
                   SizedBox(
                     height: 10,
                   ),
-                  CommentInput(
-                    scrollController:
-                        MyInheritedData.of(context).scrollController,
-                    onSendButtonPressed: (content) => DatabaseService()
-                        .addCommentToArticle(content, widget.articleId),
-                  ),
+                  (AuthService().currentUser?.isAnonymous == true)
+                      ? TextButton(
+                          child: const Text(
+                            'Login To Comment',
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            AuthService().signOut();
+                          },
+                        )
+                      : CommentInput(
+                          scrollController:
+                              MyInheritedData.of(context).scrollController,
+                          onSendButtonPressed: (content) => DatabaseService()
+                              .addCommentToArticle(content, widget.articleId),
+                        ),
                   Divider(),
                   _buildCommentsList(
                     comments: comments,

@@ -1,18 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/experiences_screen/components/comment_bloc.dart';
+import 'package:flutter_interview_preparation/experiences_screen/components/like_handle.dart';
+import 'package:flutter_interview_preparation/experiences_screen/components/number_comments.dart';
+import 'package:flutter_interview_preparation/experiences_screen/components/number_likes.dart';
 import 'package:flutter_interview_preparation/objects/ExperiencePost.dart';
+import 'package:flutter_interview_preparation/pages/authentication/authenticate.dart';
+import 'package:flutter_interview_preparation/pages/components/comment/comment_input.dart';
+import 'package:flutter_interview_preparation/services/account_service.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
+import 'package:flutter_interview_preparation/services/database_service.dart';
 import 'package:intl/intl.dart';
 
+import '../../../objects/FirestoreUser.dart';
+import '../../../objects/Helper.dart';
 
 class PostScreen extends StatefulWidget {
   @override
   final ExperiencePost? experiencePost;
   PostScreen({this.experiencePost});
+  late var isAnonymous;
+  late var user;
   _PostScreenState createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
   @override
+  void initState() {
+    widget.user = AuthService().currentUser;
+    widget.isAnonymous = DatabaseService().isNewUser(widget.user);
+    print('User: ${widget.user}');
+    print('Anonymous: ${widget.isAnonymous}');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(widget.experiencePost?.post_id ?? 'null');
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -20,7 +43,7 @@ class _PostScreenState extends State<PostScreen> {
           children: <Widget>[
             Container(
               padding:
-              const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               child: Row(
                 children: <Widget>[
                   IconButton(
@@ -65,7 +88,7 @@ class _PostScreenState extends State<PostScreen> {
                             children: <Widget>[
                               const CircleAvatar(
                                 backgroundImage:
-                                AssetImage('assets/images/avatar.png'),
+                                    AssetImage('assets/images/avatar.png'),
                                 radius: 22,
                               ),
                               Padding(
@@ -75,9 +98,10 @@ class _PostScreenState extends State<PostScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Container(
-                                      child: const Text(
-                                        'Admin',
-                                        style: TextStyle(
+                                      child: Text(
+                                        widget.experiencePost?.author_name ??
+                                            'Admin',
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             letterSpacing: .4),
@@ -88,7 +112,7 @@ class _PostScreenState extends State<PostScreen> {
                                       parseDateTime(
                                           widget.experiencePost?.created_at),
                                       style:
-                                      const TextStyle(color: Colors.grey),
+                                          const TextStyle(color: Colors.grey),
                                     )
                                   ],
                                 ),
@@ -118,27 +142,45 @@ class _PostScreenState extends State<PostScreen> {
                           letterSpacing: .2),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              IconButton(onPressed: (){}, icon: Icon(
-                                Icons.favorite,
-                                color: Colors.grey.withOpacity(0.5),
-                                size: 22,
-                              ),),
+                              FutureBuilder<int>(
+                                future: _getDefaultLikeState(),
+                                builder: (context, snapshot) {
+                                  return Helper.handleSnapshot(snapshot) ??
+                                      LikePost(
+                                        isHorizontal: true,
+                                        likeHandle: _handleLike,
+                                        defaultVoteState: snapshot.data ?? 0,
+                                      );
+                                },
+                              ),
+                              // IconButton(
+                              //   onPressed: () {
 
-                              SizedBox(width: 4.0),
-                              Text(
-                                "${widget.experiencePost?.liked_users?.length ?? '0'} like",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.withOpacity(0.5),
-                                ),
-                              )
+                              //   },
+                              //   icon: Icon(
+                              //     Icons.favorite,
+                              //     color: Colors.grey.withOpacity(0.5),
+                              //     size: 22,
+                              //   ),
+                              // ),
+
+                              const SizedBox(width: 4.0),
+                              // Text(
+                              //   "${widget.experiencePost?.liked_users?.length ?? '0'} like",
+                              //   style: TextStyle(
+                              //     fontSize: 14,
+                              //     color: Colors.grey.withOpacity(0.5),
+                              //   ),
+                              // )
+                              NumberLikesExperiencePost(
+                                  experiencePost: widget.experiencePost),
                             ],
                           ),
                         ],
@@ -148,145 +190,45 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding:
-              const EdgeInsets.only(left: 12.0, top: 16.0, bottom: 8.0),
-              child: Text(
-                "Replies (${widget.experiencePost?.comments?.length ?? '0'})",
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+
+            NumberCommentsOfPost(experiencePost: widget.experiencePost),
 
             //Comments
-            (widget.experiencePost != null)
-                ? (widget.experiencePost!.comments != null)
-                ? Column(
-              children: widget.experiencePost!.comments!
-                  .map((reply) => Container(
-                  margin: const EdgeInsets.only(
-                      left: 12.0, right: 12.0, top: 20.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black26.withOpacity(0.2),
-                          offset: const Offset(0.0, 4.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 0.10)
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: 60,
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  const CircleAvatar(
-                                    backgroundImage:
-                                    AssetImage('author1.jpg'),
-                                    radius: 18,
-                                  ),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(
-                                        left: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .center,
-                                      children: <Widget>[
-                                        Container(
-                                          child: const Text(
-                                            'Admin',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w600,
-                                                letterSpacing:
-                                                .4),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                            height: 2.0),
-                                        Text(
-                                          widget.experiencePost
-                                              ?.created_at
-                                              .toString() ??
-                                              '01/01/2001',
-                                          style: TextStyle(
-                                              color: Colors.grey
-                                                  .withOpacity(
-                                                  0.4)),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15.0),
-                          child: Text(
-                            reply.content ?? 'content is null',
-                            style: TextStyle(
-                              color:
-                              Colors.black.withOpacity(0.25),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              Icons.favorite,
-                              color: Colors.grey.withOpacity(0.5),
-                              size: 20,
-                            ),
-                            const SizedBox(width: 4.0),
-                            Text(
-                              "${(reply.upvote_users?.length ?? 0) - (reply.downvote_users?.length ?? 0)}",
-                              style: TextStyle(
-                                  color: Colors.grey
-                                      .withOpacity(0.5)),
-                            )
-                          ],
-                        )
-                      ],
+
+            (widget.user.isAnonymous == false)
+                ? CommentInput(
+                    onSendButtonPressed: (content) => DatabaseService()
+                        .addCommentToExperiencePost(
+                            content, widget.experiencePost?.post_id ?? 'error'))
+                : Center(
+                    child: TextButton(
+                      child: const Text(
+                        'Login To Comment',
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        AuthService().signOut();
+                      },
                     ),
-                  )))
-                  .toList(),
-            )
-                : Container()
-                : const Center(
-              child: Text('Something went wrong'),
-            )
+                  ),
+            CommentExperiencePostBloc(experiencePost: widget.experiencePost)
           ],
         ),
       ),
     );
+  }
+
+  Future<int> _getDefaultLikeState() async {
+    if (await DatabaseService().isAlreadyLikeExperiencePost(
+        widget.experiencePost ?? ExperiencePost.test())) {
+      return 1;
+    }
+    return 0;
+  }
+
+  void _handleLike(bool isLike) {
+    DatabaseService().likeExperiencePost(
+        widget.experiencePost ?? ExperiencePost.test(), !isLike);
   }
 
   String parseDateTime(DateTime? date) {
