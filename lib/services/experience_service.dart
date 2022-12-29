@@ -82,8 +82,9 @@ mixin ExperienceService{
   }
 
   Future<List<ExperiencePost>?> get allExperiencePostsOnce {
-    return _db.collection('experience').get().then(_experienceFromQuerySnapshot);
+    return _db.collection('experience').orderBy('created_at',descending: true).get().then(_experienceFromQuerySnapshot);
   }
+
 
   void addListExperiencePosts(List<ExperiencePost> list) {
     list.forEach((experiencePost) => addExperiencePost(experiencePost));

@@ -308,6 +308,7 @@ import 'package:flutter_interview_preparation/experiences_screen/components/like
 import 'package:flutter_interview_preparation/experiences_screen/components/number_comments.dart';
 import 'package:flutter_interview_preparation/experiences_screen/components/number_likes.dart';
 import 'package:flutter_interview_preparation/objects/ExperiencePost.dart';
+import 'package:flutter_interview_preparation/pages/authentication/authenticate.dart';
 import 'package:flutter_interview_preparation/pages/components/comment/comment_input.dart';
 import 'package:flutter_interview_preparation/services/account_service.dart';
 import 'package:flutter_interview_preparation/services/auth_service.dart';
@@ -502,7 +503,12 @@ class _PostScreenState extends State<PostScreen> {
                 onSendButtonPressed: (content) => DatabaseService()
                     .addCommentToExperiencePost(
                     content, widget.experiencePost?.post_id ?? 'error'))
-                : Center(child: const Text('Login to Comment')),
+                : Center(child:  TextButton(child: Text('Login To Comment',),
+            onPressed: (){
+                  print('hehe');
+                  Navigator.pop(context);
+                  AuthService().signOut();
+            },)),
             CommentExperiencePostBloc(experiencePost: widget.experiencePost)
           ],
         ),
@@ -534,3 +540,4 @@ class _PostScreenState extends State<PostScreen> {
     return created_at;
   }
 }
+

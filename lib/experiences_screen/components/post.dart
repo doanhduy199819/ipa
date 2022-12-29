@@ -173,14 +173,15 @@
 //     return created_at;
 //   }
 // }
-
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/experiences_screen/components/interactive_bloc.dart';
 import 'package:flutter_interview_preparation/experiences_screen/components/interactive_stream_builder.dart';
 import 'package:flutter_interview_preparation/objects/ExperiencePost.dart';
 import 'package:intl/intl.dart';
 
+import '../../objects/UserBlocked.dart';
+import '../../services/auth_service.dart';
 import '../screens/detail_post_screen.dart';
 import '../screens/experiences_home_screen.dart';
 
@@ -192,17 +193,88 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
+  late Future<List<UserBlocked>?> _userBlockedFuture;
   var defaultInteractiveBloc =
   InteractiveBloc(numberOfComments: 0, numberOfLikes: 0);
+
+  List<UserBlocked>? _userBlockedsFromQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+    return querySnapshot.docs
+        .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('exits');
+        return UserBlocked.fromDocumentSnapshot(documentSnapshot);
+      }
+      return UserBlocked.test();
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<ExperiencePost>? postUserCanSee=widget.post!.where((p) => p.isApproved == true).toList();
+    List<ExperiencePost>? postUserCanSee =
+    widget.post!.where((p) => p.isApproved == true).toList();
     return Column(
         children: postUserCanSee
             .map(
               (eachPost) => GestureDetector(
-            onTap: () {
+            onTap: () async {
               print(eachPost.toString());
+              var usersblocked = await _userBlockedFuture;
+              try {
+                for (int i = 0; i < usersblocked!.length; i++) {
+                  if (usersblocked[i].id_user ==
+                      AuthService().currentUser!.uid) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            scrollable: true,
+                            title: const Text('Ban'),
+                            content: const Center(
+                              child: Text('User was banned'),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text("Return"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ],
+                          );
+                        });
+                    return;
+                  }
+                }
+              } catch (error) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        scrollable: true,
+                        title: const Text('Error'),
+                        content: Center(
+                          child: Text('${error.toString()}'),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text("Return"),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      );
+                    });
+              }
+              ;
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -253,10 +325,7 @@ class _PostsState extends State<Posts> {
                                           .width *
                                           0.65,
                                       child: Text(
-                                          eachPost.title==null?'No title':
-                                          (eachPost.title?.length ?? 0) > 30
-                                          ? "${eachPost.title?.substring(0, 30)}.."
-                                          : "${eachPost.title}",
+                                          (eachPost.title?.length ?? 0) > 40 ? "${eachPost.title?.substring(0, 40)}...":"${eachPost.title}"  ?? 'Title is null',
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -267,7 +336,7 @@ class _PostsState extends State<Posts> {
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          'Admin',
+                                          eachPost.author_name??'Admin',
                                           style: TextStyle(
                                               color: Colors.grey
                                                   .withOpacity(0.6)),
@@ -313,46 +382,7 @@ class _PostsState extends State<Posts> {
                               numberOfLikes: numberOfLikes,
                               numberOfComments: numberOfComments,
                             )),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: <Widget>[
-                    //     Row(
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: <Widget>[
-                    //         Icon(
-                    //           Icons.favorite,
-                    //           color: Colors.grey.withOpacity(0.6),
-                    //           size: 22,
-                    //         ),
-                    //         const SizedBox(width: 4.0),
-                    //         Text(
-                    //           "${eachPost.liked_users?.length ?? 0} likes",
-                    //           style: TextStyle(
-                    //               fontSize: 14,
-                    //               color: Colors.grey.withOpacity(0.6),
-                    //               fontWeight: FontWeight.w600),
-                    //         )
-                    //       ],
-                    //     ),
-                    //     Row(
-                    //       children: <Widget>[
-                    //         Icon(
-                    //           Icons.comment,
-                    //           color: Colors.grey.withOpacity(0.6),
-                    //           size: 16,
-                    //         ),
-                    //         const SizedBox(width: 4.0),
-                    //         Text(
-                    //           "${eachPost.comments?.length ?? 0} comment",
-                    //           style: TextStyle(
-                    //               fontSize: 14,
-                    //               color: Colors.grey.withOpacity(0.6)),
-                    //         )
-                    //       ],
-                    //     ),
 
-                    //   ],
-                    // )
                   ],
                 ),
               ),

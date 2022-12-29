@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview_preparation/services/auth_service.dart';
 
 class LikeIcon extends StatelessWidget {
   LikeIcon({
@@ -20,6 +21,9 @@ class LikeIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        if(AuthService().currentUser?.isAnonymous ==true){
+          return;
+        }
         (onActiveChange != null) ? onActiveChange!(isActive) : null;
       },
       child: isActive ? activeIcon : unActiveIcon,

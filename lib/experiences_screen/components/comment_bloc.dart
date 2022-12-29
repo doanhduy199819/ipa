@@ -10,8 +10,8 @@ import '../../../objects/Helper.dart';
 import '../../../services/database_service.dart';
 import 'package:intl/intl.dart';
 
+import '../../pages/home_screen/questions_answers/components/more-options_button.dart';
 import 'like_handle.dart';
-
 class CommentExperiencePostBloc extends StatefulWidget {
   ExperiencePost? experiencePost;
 
@@ -103,44 +103,25 @@ class _buildCommentsListState extends State<_buildCommentsList> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        // Row(
-                        //   children: <Widget>[
-                        //     const CircleAvatar(
-                        //       backgroundImage: AssetImage('author1.jpg'),
-                        //       radius: 18,
-                        //     ),
-                        //     Padding(
-                        //       padding: const EdgeInsets.only(left: 8.0),
-                        //       child: Column(
-                        //         crossAxisAlignment:
-                        //             CrossAxisAlignment.start,
-                        //         mainAxisAlignment: MainAxisAlignment.center,
-                        //         children: <Widget>[
-                        //           Container(
-                        //             child: const Text(
-                        //               'Admin',
-                        //               style: TextStyle(
-                        //                   fontSize: 16,
-                        //                   fontWeight: FontWeight.w600,
-                        //                   letterSpacing: .4),
-                        //             ),
-                        //           ),
-                        //           const SizedBox(height: 2.0),
-                        //           Text(
-                        //             reply.created_at.toString(),
-                        //             style: TextStyle(
-                        //                 color:
-                        //                     Colors.grey.withOpacity(0.4)),
-                        //           )
-                        //         ],
-                        //       ),
-                        //     )
-                        //   ],
-                        // ),
                         UserInfoCommentBox(
                           comment: reply,
                           experiencePostId:
-                          widget.experiencePost.post_id ?? 'Anonymous',
+                          widget.experiencePost.post_id ?? 'NONAME',
+                        ),
+                        Expanded(
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: MoreOptionsDropDownButton(
+                                comment: reply,
+                                idQuestion: widget.experiencePost.post_id ??
+                                    'Error',
+                                onDelete: () => DatabaseService()
+                                    .deleteCommentFromExperiencePost(
+                                    reply.id ?? 'Error',
+                                    widget.experiencePost.post_id ??
+                                        'Error'),
+                                screen: 'experience',
+                              )),
                         ),
                       ],
                     ),
@@ -242,7 +223,7 @@ class UserCommentBoxStateBox extends State<UserInfoCommentBox> {
     _future = DatabaseService().getFirestoreUser(widget.comment.author_id!);
 
     //Xac dinh xem user co phai user moi k
-    _futureAnonymous = DatabaseService().isNewUser(AuthService().currentUser!);
+    _futureAnonymous = DatabaseService().isNewUser(AuthService().currentUser);
 
     super.initState();
   }
@@ -258,6 +239,7 @@ class UserCommentBoxStateBox extends State<UserInfoCommentBox> {
               future: _futureAnonymous,
               builder: (context, snapshot) {
                 print(' UID USer: ${userInfoSnapshot.data?.uid}');
+                print('Full infor:${userInfoSnapshot.data}');
                 print('IS NEW ACCOUNT: ${snapshot}');
                 return Helper.handleSnapshot(snapshot) ??
                     Padding(
@@ -266,16 +248,15 @@ class UserCommentBoxStateBox extends State<UserInfoCommentBox> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-
+                          // TK khong co UID thi de la noname
                           (userInfoSnapshot.data?.uid == null)
                               ? const Text('NONAME')
                               : Text(
                               userInfoSnapshot.data?.displayName ?? 'Null'),
                           const SizedBox(height: 2.0),
                           Text(
-                            // Helper.toFriendlyDurationTime(
-                            //     widget.comment.created_at),
-                            '${widget.comment.created_at?.day ?? 1} - ${widget.comment.created_at?.month?? 1}',
+                            Helper.toFriendlyDurationTime(
+                                widget.comment.created_at),
                             style:
                             TextStyle(color: Colors.grey.withOpacity(0.4)),
                           )
@@ -284,65 +265,6 @@ class UserCommentBoxStateBox extends State<UserInfoCommentBox> {
                     );
               },
             );
-        // Row(
-        //   children: <Widget>[
-        //     //Todo
-        //     // Fix Image to NetworkImage
-        //     userInfoSnapshot.data?.displayName != null
-        //         ? const CircleAvatar(
-        //             backgroundImage: AssetImage('author1.jpg'),
-        //             radius: 18,
-        //           )
-        //         : const CircleAvatar(
-        //             backgroundImage: AssetImage('author1.jpg'),
-        //             radius: 18,
-        //           ),
-        //     Padding(
-        //       padding: const EdgeInsets.only(left: 8.0),
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: <Widget>[
-
-        //           Container(
-        //             child: Text(userInfoSnapshot.data?.displayName ?? userInfoSnapshot.data?.uid ?? 'Null'),
-        //           ),
-        //           // Container(
-        //           //   child: (userInfoSnapshot.data?.displayName == null)
-        //           //       // ignore: unrelated_type_equality_checks
-        //           //       ? (DatabaseService().isNewUser(
-        //           //                   AuthService().currentUser!) ==
-        //           //               true)
-        //           //           ? Container()
-        //           //           : const Text(
-        //           //               // Hide email to protect
-        //           //               // (widget.user.email) ?? ,
-        //           //               'Anonymous',
-        //           //               style: TextStyle(
-        //           //                   fontSize: 16,
-        //           //                   fontWeight: FontWeight.w600,
-        //           //                   letterSpacing: .4),
-        //           //             )
-        //           //       : Text(
-        //           //           (userInfoSnapshot.data?.displayName) ??
-        //           //               'Anonymous',
-        //           //           style: const TextStyle(
-        //           //               fontSize: 16,
-        //           //               fontWeight: FontWeight.w600,
-        //           //               letterSpacing: .4),
-        //           //         ),
-        //           // ),
-        //           const SizedBox(height: 2.0),
-        //           Text(
-        //             Helper.toFriendlyDurationTime(
-        //                 widget.comment.created_at),
-        //             style: TextStyle(color: Colors.grey.withOpacity(0.4)),
-        //           )
-        //         ],
-        //       ),
-        //     )
-        //   ],
-        // );
       },
     );
   }

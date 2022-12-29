@@ -269,7 +269,6 @@ class _MyDialogState extends State<MyDialog> {
     return AlertDialog(
       content: Container(
         height: 180,
-        width: 240,
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
@@ -278,7 +277,7 @@ class _MyDialogState extends State<MyDialog> {
                       children: [
                         InkWell(
                           child: Container(
-                            width: 240,
+                            width: 200,
                             height: 60,
                             padding: EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 12),

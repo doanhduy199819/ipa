@@ -19,9 +19,9 @@ mixin AccountService {
     return user;
   }
 
-  Future<bool> isNewUser(User user) async {
+  Future<bool> isNewUser(User? user) async {
     bool res = false;
-    await _db.collection('users').doc(user.uid).get().then((value) {
+    await _db.collection('users').doc(user?.uid).get().then((value) {
       res = value.exists;
     });
     return res;

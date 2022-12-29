@@ -48,6 +48,35 @@ class _QAPageState extends State<QAPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          if(AuthService().currentUser?.isAnonymous == true){
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Text(
+                      'You Need Login To Post A Question',
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text("Cancle"),
+                        onPressed: () =>
+                            Navigator.pop(context),
+                      ),
+                      TextButton(
+                          child: const Text("Login"),
+                          onPressed: () {
+                           Navigator.pop(context);
+                           AuthService().signOut();
+                          }
+
+                      ),
+
+                    ],
+                  );
+                });
+            return;
+          }
           Navigator.push(
               context,
               MaterialPageRoute(

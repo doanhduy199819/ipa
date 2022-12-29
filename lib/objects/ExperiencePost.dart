@@ -14,6 +14,7 @@ class ExperiencePost {
   List<Comment>? comments;
   int? number_of_view;
   bool? isApproved=false;
+  String? author_name;
 
   ExperiencePost(
       this.post_id,
@@ -25,6 +26,7 @@ class ExperiencePost {
       this.comments,
       this.number_of_view,
       this.isApproved,
+      this.author_name,
       );
   ExperiencePost.only(
       {this.post_id,
@@ -35,7 +37,8 @@ class ExperiencePost {
         this.liked_users,
         // this.comments,
         this.number_of_view,
-        this.isApproved});
+        this.isApproved,
+        this.author_name,});
 
   void setPostId(String? id) {
     this.post_id = id;
@@ -51,6 +54,10 @@ class ExperiencePost {
     return comments?.length ?? 0;
   }
 
+  void setAuthorName(String? name){
+    this.author_name=name;
+  }
+
   factory ExperiencePost.test() {
     var idPost = 'id_post';
     var comments = [
@@ -64,6 +71,7 @@ class ExperiencePost {
     var title = 'This is a test experience';
     var number_of_view = 10;
     var isApproved=false;
+    var author_name='NONAME';
     return ExperiencePost.only(
       post_id: idPost,
       topic_id: idTopic,
@@ -73,6 +81,7 @@ class ExperiencePost {
       //liked_users: likes,
       number_of_view: number_of_view,
       isApproved:isApproved,
+      author_name: author_name,
     );
   }
 
@@ -99,6 +108,7 @@ class ExperiencePost {
     // ];
     final int? number_of_view = data?['number_of_view'];
     final bool? isApproved=data?['isApproved'];
+    final String? author_name= data?['author_name'];
     // final String? author_id = data?['author_id'];
 
     // return ExperiencePost.only(
@@ -110,7 +120,7 @@ class ExperiencePost {
     //   liked_users: liked_users,
     //   number_of_view: number_of_view,
     // );
-    return ExperiencePost(post_id, topic_id, title, created_at, content, liked_users, null, number_of_view,isApproved);
+    return ExperiencePost(post_id, topic_id, title, created_at, content, liked_users, null, number_of_view,isApproved,author_name);
   }
 
 
@@ -129,6 +139,7 @@ class ExperiencePost {
     if (comments != null) 'comments': comments,
     if (number_of_view != null) 'number_of_view': number_of_view,
     if(isApproved!=null) 'isApproved':isApproved,
+    if(author_name != null) 'author_name':author_name,
   };
 
   void addLikedUser(String userId) {
@@ -158,7 +169,7 @@ class ExperiencePost {
   static List<ExperiencePost> getSampleExperiencePostList() {
     List<ExperiencePost>? _post = [];
     _post.add(ExperiencePost('1', '1', 'Chia sẻ về một số kinh nghiệm phỏng vấn tại công ty ABC', DateTime.now(), 'Hôm nay tôi đi phỏng vấn',
-        [], [], 0,false));
+        [], [], 0,false,'hehe'));
     return _post;
   }
 

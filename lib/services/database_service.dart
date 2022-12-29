@@ -20,6 +20,7 @@ import 'package:flutter_interview_preparation/services/job_service.dart';
 import 'package:flutter_interview_preparation/services/quiz_service.dart';
 import 'package:flutter_interview_preparation/services/recently_quiz_service.dart';
 import 'package:flutter_interview_preparation/services/topic_service.dart';
+import 'package:flutter_interview_preparation/services/userblocked_service.dart';
 
 import 'SetOfQuestion_service.dart';
 import 'experience_service.dart';
@@ -38,5 +39,6 @@ class DatabaseService
         CompanyService,
         ExperienceService,
         TopicService,
-        CommentReportService
+        CommentReportService,
+        UserBlockedService
 {}
