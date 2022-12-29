@@ -15,6 +15,7 @@ class QuesionController {
 
   void increaseProcess() {
     process = process + 1.0 / numberQuestion;
+    if (process > 1) process = 1;
   }
 
   int checkStatusAnswerOption(int option) {

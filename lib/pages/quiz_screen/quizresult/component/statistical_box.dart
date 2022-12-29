@@ -56,7 +56,7 @@ class StatisticalBox extends StatelessWidget {
           Spacer(),
           statisticalCustom(
               ColorQuizTheme().list[ColorQuizTheme.index].circleHeaderColor,
-              (QuesionController.process * 100).toString() + "%",
+              (QuesionController.process * 100).toStringAsFixed(2) + "%",
               "Completation"),
           Spacer(),
           statisticalCustom(

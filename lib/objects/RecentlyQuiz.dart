@@ -45,11 +45,11 @@ class RecentlyQuiz {
 
   Map<String, dynamic> toJson() {
     return {
-      'jobId': jobId,
-      'categoriesId': categoriesId,
-      'quizId': quizId,
-      'quizName': quizName,
-      'highScore': highScore,
+      'jobid': jobId,
+      'categoriesid': categoriesId,
+      'quizid': quizId,
+      'quizname': quizName,
+      'highscore': highScore,
       'timecreated': Timestamp.now(),
     };
   }
@@ -61,11 +61,12 @@ class RecentlyQuiz {
     String quizName = data?['quizname'];
     int highScore = data?['highscore'];
     return RecentlyQuiz(
-        id: id,
-        jobId: jobId,
-        categoriesId: categoriesId,
-        quizId: quizId,
-        quizName: quizName,
-        highScore: highScore);
+      id: id,
+      jobId: jobId,
+      categoriesId: categoriesId,
+      quizId: quizId,
+      quizName: quizName,
+      highScore: highScore,
+    );
   }
 }

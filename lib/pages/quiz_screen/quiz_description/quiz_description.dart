@@ -93,6 +93,7 @@ class QuizDescription extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: InkWell(
                             onTap: () {
+                              if (QuesionController.numberQuestion == 0) return;
                               QuesionController()
                                   .startQuiz(dataBoxCategories, setOfQuiz);
                               Navigator.pop(context);

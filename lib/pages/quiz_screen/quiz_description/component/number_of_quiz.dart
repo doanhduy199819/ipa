@@ -16,6 +16,7 @@ class NumberOfQuiz extends StatelessWidget {
   final SetOfQuiz setOfQuiz;
 
   Widget buildItem(int number) {
+    QuesionController.numberQuestion = number;
     return BigTextInAchievement(
         frontText: number.toString(), behindText: 'Quizz');
   }
