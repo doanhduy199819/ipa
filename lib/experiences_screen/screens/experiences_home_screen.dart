@@ -312,6 +312,13 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                 TextButton(
                                                     child: Text("Submit"),
                                                     onPressed: () {
+                                                      if (topicId == '' ||
+                                                          titleController
+                                                              .text ==
+                                                              '') {
+                                                        return;
+                                                      }
+
                                                       ExperiencePost
                                                       experiencePost =
                                                       ExperiencePost(

@@ -116,8 +116,12 @@ class _ArticleForSearchState extends State<ArticleForSearch> {
     return Column(
         children: List.generate(_post.length, (index) {
       return InkWell(
-        onTap: () =>
-            _pushTo(context, const ArticleDetailScreen(), _post[index]),
+        onTap: () {
+          dynamic args = {
+            "articlePost": _post[index],
+          };
+          Helper.pushTo(context, const ArticleDetailScreen(), args);
+        },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           margin: const EdgeInsets.only(bottom: 8),

@@ -27,7 +27,15 @@ class _CompanyQAState extends State<CompanyQA> {
 
   void getQuestion()
   {
-    questions=questions.where((element) => element.company_id!.contains(this.widget.idCompany)).toList();
+    List<Question> filter=[];
+    for(int i=0;i<questions.length;i++)
+      {
+        if(questions[i].company_id!.compareTo(this.widget.idCompany)==0)
+          {
+            filter.add(questions[i]);
+          }
+      }
+    questions= filter.length==0?questions:filter;
 
   }
 
