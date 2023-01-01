@@ -269,7 +269,7 @@ class _PostOfTopicState extends State<PostOfTopic> {
 
   void getPostOfTopic()
   {
-    _post=_post?.where((element) => element.topic_id!.contains(widget.idTopic)).toList();
+    _post=_post?.where((element) => element.topic_id!.contains(widget.idTopic) && element.isApproved==true).toList();
 
   }
 
@@ -317,8 +317,6 @@ class _PostOfTopicState extends State<PostOfTopic> {
                 );
               }
               _post = snapshot.data! as List<ExperiencePost>;
-
-
               getPostOfTopic();
               return topicBuilder();
             },
@@ -383,8 +381,7 @@ class _PostOfTopicState extends State<PostOfTopic> {
                                           .width *
                                           0.65,
                                       child: Text(
-                                        eachPost.title ??
-                                            'Title is null',
+                                         (eachPost.title?.length ?? 0) > 40 ? "${eachPost.title?.substring(0, 40)}...":"${eachPost.title}",
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -395,7 +392,7 @@ class _PostOfTopicState extends State<PostOfTopic> {
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          'Admin',
+                                         eachPost.author_name??'Admin',
                                           style: TextStyle(
                                               color: Colors.grey
                                                   .withOpacity(0.6)),

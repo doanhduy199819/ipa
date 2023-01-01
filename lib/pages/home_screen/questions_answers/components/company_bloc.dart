@@ -66,7 +66,8 @@ class _CompanyBlocState extends State<CompanyBloc> {
             fit: BoxFit.cover,
             errorBuilder: (BuildContext context, Object exception,
                 StackTrace? stackTrace) {
-              return Image.asset('assets/images/LG_logo.jpg');
+              //return Image.asset('assets/images/LG_logo.jpg');
+              return Image.network('https://turbologo.com/articles/wp-content/uploads/2019/05/no-logo.png');
             },
           ),
         );

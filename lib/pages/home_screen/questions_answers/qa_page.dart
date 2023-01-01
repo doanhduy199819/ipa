@@ -167,54 +167,7 @@ class _QAPageState extends State<QAPage> {
     // });
   }
 
-  // Handle when item have image company or haven't
-  // Row _buildItemListView(int index) {
-  //   // Test with random img , index%2==0
-  //   (index % 2 == 0) ? urlImageCompany = '' : urlImageCompany = '123';
-
-  //   return (urlImageCompany?.compareTo('') != 0)
-  //       ? Row(
-  //           children: [
-  //             Padding(
-  //               padding:
-  //                   const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0),
-  //               child: VoteBloc(
-  //                   numberOfVotes: questions?[index].voteNum ?? 0,
-  //                   numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //               child: TitleTagContentQABloc(
-  //                   title: questions?[index].title!,
-  //                   category: questions?[index].categories,
-  //                   content: questions?[index].content!,
-  //                   urlImageCompany: HomeScreenAssets.lgLogo),
-  //             ),
-  //           ],
-  //         )
-  //       : Row(
-  //           children: [
-  //             Padding(
-  //               padding:
-  //                   const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
-  //               child: VoteBloc(
-  //                   numberOfVotes: questions?[index].voteNum ?? 0,
-  //                   numberOfAnswers: questions?[index].numberOfAnswers ?? 0),
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //               child: TitleTagContentQABloc(
-  //                   title: questions?[index].title!,
-  //                   category: questions?[index].categories,
-  //                   content: questions?[index].content!,
-  //                   urlImageCompany: urlImageCompany),
-  //             ),
-  //             const Spacer(),
-  //             //CompanyBloc(urlImage: questions?[index].company_id),
-  //             const Spacer(),
-  //           ],
-  //         );
-  // }
+  
 
   AppBar _buildAppBar() {
     return AppBar(

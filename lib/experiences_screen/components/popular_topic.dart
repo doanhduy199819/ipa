@@ -208,7 +208,6 @@
 //   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 // }
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../objects/Comment.dart';
@@ -242,28 +241,23 @@ class _PopularTopicsState extends State<PopularTopics> {
     Color.fromARGB(255, 241, 165, 165)
   ];
 
-
   @override
-  void initState()  {
+  void initState() {
     // TODO: implement initState
     super.initState();
-    _post=[];
-    _topic=[];
+    _post = [];
+    _topic = [];
   }
 
-  String getNumberOfPostTopic(String id)
-  {
-    int count=0;
-    for(int i=0;i<_post.length;i++)
-    {
-      if(_post[i].topic_id!.compareTo(id)==0)
-        count++;
+  String getNumberOfPostTopic(String id) {
+    int count = 0;
+    for (int i = 0; i < _post.length; i++) {
+      if (_post[i].topic_id!.compareTo(id) == 0 && _post[i].isApproved==true) count++;
     }
     return count.toString();
   }
 
-  Container buildTag()
-  {
+  Container buildTag() {
     return Container(
       height: 150,
       child: ListView.builder(
@@ -271,18 +265,20 @@ class _PopularTopicsState extends State<PopularTopics> {
         itemCount: _topic.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => PostOfTopic(idTopic: _topic[index].idTopic, name: _topic[index].topic_name!) ));
+                      builder: (_) => PostOfTopic(
+                          idTopic: _topic[index].idTopic,
+                          name: _topic[index].topic_name!)));
             },
             child: Container(
               //padding: const EdgeInsets.all(8.0),
               margin: const EdgeInsets.only(left: 20.0),
               width: 170,
               decoration: BoxDecoration(
-                color: colors[index%4],
+                color: colors[index % 4],
                 gradient: LinearGradient(colors: <Color>[
                   colors[index % colors.length],
                   colors1[index % colors.length],
@@ -310,7 +306,8 @@ class _PopularTopicsState extends State<PopularTopics> {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          getNumberOfPostTopic(_topic[index].idTopic)+" posts",
+                          getNumberOfPostTopic(_topic[index].idTopic) +
+                              " posts",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -323,17 +320,17 @@ class _PopularTopicsState extends State<PopularTopics> {
               ),
             ),
           );
-
         },
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: DatabaseService().allExperiencePostsOnce,
-      builder:
-          (BuildContext context, AsyncSnapshot<List<ExperiencePost>?> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ExperiencePost>?> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong :(((((())))) ${snapshot.error}');
         }
@@ -365,19 +362,12 @@ class _PopularTopicsState extends State<PopularTopics> {
             _topic = snapshot.data! as List<Topic>;
 
             return buildTag();
-
           },
         );
-
       },
     );
-
   }
-
-
 }
-
-
 
 class WavyHeader extends StatelessWidget {
   const WavyHeader(
@@ -391,7 +381,7 @@ class WavyHeader extends StatelessWidget {
     return ClipPath(
         clipper: TopWaveClipper,
         child: Container(
-          width: MediaQuery.of(context).size.width/ 2.5,
+          width: MediaQuery.of(context).size.width / 2.5,
           height: MediaQuery.of(context).size.height / 2.5,
           decoration: BoxDecoration(
             color: color,
@@ -400,18 +390,19 @@ class WavyHeader extends StatelessWidget {
   }
 }
 
-
 class TopWaveClipper2 extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    path.moveTo(size.width * 1, size.height * 0.15*(-1));
-    path.lineTo(size.width * 1, size.height * 0.35*(-1));
-    path.lineTo(size.width * 0.25*(-1), size.height * 0.35*(-1));
-    path.quadraticBezierTo(size.width * 0.26*(-1), size.height * 0.348*(-1), size.width * 0.27*(-1), size.height * 0.345*(-1));
-    path.lineTo(size.width * 0.27*(-1), size.height * 1);
+    path.moveTo(size.width * 1, size.height * 0.15 * (-1));
+    path.lineTo(size.width * 1, size.height * 0.35 * (-1));
+    path.lineTo(size.width * 0.25 * (-1), size.height * 0.35 * (-1));
+    path.quadraticBezierTo(size.width * 0.26 * (-1), size.height * 0.348 * (-1),
+        size.width * 0.27 * (-1), size.height * 0.345 * (-1));
+    path.lineTo(size.width * 0.27 * (-1), size.height * 1);
     path.lineTo(size.width * 0.175, size.height * 1);
-    path.quadraticBezierTo(size.width * 1,  size.height * 1, size.width * 1, size.height * 0.15*(-1));
+    path.quadraticBezierTo(size.width * 1, size.height * 1, size.width * 1,
+        size.height * 0.15 * (-1));
     return path;
   }
 
