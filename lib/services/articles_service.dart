@@ -26,7 +26,7 @@ mixin ArticlePostHandle {
     return _db
         .collection('articles')
         .orderBy('created_at')
-        .limit(10)
+        // .limit(10)
         .snapshots()
         .map(_articlesFromQuerySnapshot);
   }
@@ -35,12 +35,12 @@ mixin ArticlePostHandle {
     return _db
         .collection('articles')
         .orderBy('created_at')
-        .limit(10)
+        // .limit(10)
         .get()
         .then(_articlesFromQuerySnapshot);
   }
 
-  Future<List<ArticlePost>?> getArticlesWithIds(List<String>? ids) {
+  Future<List<ArticlePost>?> getArticlesWithIds(List<String> ids) {
     return _db
         .collection('articles')
         .where("id", whereIn: ids)
@@ -54,6 +54,7 @@ mixin ArticlePostHandle {
         .doc(AuthService().currentUser?.uid ?? '')
         .get();
     final userData = UserData.fromFirestore(docSnapshot);
+    if (userData.savedArticles?.isEmpty ?? true) return [];
 
     return await _db
         .collection('articles')

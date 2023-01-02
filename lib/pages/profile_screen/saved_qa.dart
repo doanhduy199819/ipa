@@ -19,15 +19,12 @@ class SavedQuestion extends StatefulWidget {
 class _SavedQuestionState extends State<SavedQuestion> {
   @override
   Widget build(BuildContext context) {
-    final userData =
-        ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
-    final _future =
-        DatabaseService().getQuestionsWithIds(userData?.savedArticles);
+    final _future = DatabaseService().savedQuestions;
 
     return FutureBuilder<List<Question>?>(
         future: _future,
         builder: (context, snapshot) {
-          final display_list_question = snapshot.data;
+          final displayListQuestion = snapshot.data;
           return Helper.handleSnapshot(snapshot) ??
               Scaffold(
                 appBar: PreferredSize(
@@ -119,7 +116,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                                           padding: const EdgeInsets.only(
                                               left: 5, bottom: 2),
                                           child: Text(
-                                            display_list_question![index]
+                                            displayListQuestion![index]
                                                     .answers
                                                     ?.length
                                                     .toString() ??
@@ -154,7 +151,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(
-                                          text: display_list_question![index]
+                                          text: displayListQuestion![index]
                                               .title!,
                                           style: const TextStyle(
                                             color: Colors.black,
@@ -167,7 +164,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                                     Row(
                                       children: [
                                         for (var item
-                                            in display_list_question![index]
+                                            in displayListQuestion![index]
                                                     .categories ??
                                                 [])
                                           Padding(
@@ -205,7 +202,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(
-                                          text: display_list_question![index]
+                                          text: displayListQuestion![index]
                                               .content!,
                                           style: const TextStyle(
                                             color: Colors.black,
@@ -241,7 +238,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                                       padding:
                                           const EdgeInsets.only(bottom: 10.0),
                                       child: Text(
-                                        display_list_question![index]
+                                        displayListQuestion![index]
                                             .created_at
                                             .toString(),
                                         style: const TextStyle(
@@ -257,7 +254,7 @@ class _SavedQuestionState extends State<SavedQuestion> {
                         ),
                       );
                     },
-                    childCount: display_list_question!.length,
+                    childCount: displayListQuestion!.length,
                   ),
                 ),
               );

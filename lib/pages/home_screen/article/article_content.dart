@@ -26,11 +26,11 @@ class _ArticleContentState extends State<ArticleContent> {
   @override
   Widget build(BuildContext context) {
     final userData =
-    ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
-    final _future =
-    DatabaseService().getArticlesWithIds(userData?.savedArticles);
+        ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
+    // final _future =
+    // DatabaseService().getArticlesWithIds(userData?.savedArticles);
     return FutureBuilder<List<ArticlePost>?>(
-      future: _future,
+      future: _dataFuture,
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Column(
@@ -41,8 +41,7 @@ class _ArticleContentState extends State<ArticleContent> {
             ],
           );
         }
-        return ArticlesList(
-            aritcles: (snapshot.hasData) ? snapshot.data! : []);
+        return ArticlesList(aritcles: (snapshot.hasData) ? snapshot.data! : []);
       }),
     );
   }
@@ -51,4 +50,3 @@ class _ArticleContentState extends State<ArticleContent> {
     _dataFuture = DatabaseService().allArticlesOnce;
   }
 }
-

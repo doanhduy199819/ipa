@@ -17,10 +17,7 @@ class SavedArticle extends StatefulWidget {
 class _SavedArticleState extends State<SavedArticle> {
   @override
   Widget build(BuildContext context) {
-    final userData =
-        ModalRoute.of(context)!.settings.arguments as FirestoreUser?;
-    final _future =
-        DatabaseService().getArticlesWithIds(userData?.savedArticles);
+    final _future = DatabaseService().savedArticles;
 
     return Scaffold(
       appBar: AppBar(

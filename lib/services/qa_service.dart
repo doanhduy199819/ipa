@@ -29,7 +29,7 @@ mixin QAService {
     return _db
         .collection('questions')
         .orderBy('created_at')
-        .limit(10)
+        // .limit(10)
         .snapshots()
         .map(_questionsListFromQuerySnapshot);
   }
@@ -37,7 +37,7 @@ mixin QAService {
   Future<List<Question>?> get allQuestionsOnce {
     return _db
         .collection('questions')
-        .orderBy('created_at',descending: true)
+        .orderBy('created_at', descending: true)
         .get()
         .then(_questionsListFromQuerySnapshot);
   }
@@ -215,6 +215,7 @@ mixin QAService {
         .doc(AuthService().currentUser?.uid ?? '')
         .get();
     final userData = UserData.fromFirestore(docSnapshot);
+    if (userData.savedQuestions?.isEmpty ?? true) return [];
 
     return await _db
         .collection('questions')
