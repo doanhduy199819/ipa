@@ -20,6 +20,7 @@ class buildPassword extends StatelessWidget {
       hintText: 'Password',
       hintTextColor: Colors.black,
       onChanged: passwordOnChanged,
+      obscureText: true,
       validator: passwordValidator ?? _validatePassword,
     );
   }

@@ -21,6 +21,7 @@ class buildReenterPassword extends StatelessWidget {
       textColor: Colors.black,
       hintText: 'Re-enter Password',
       hintTextColor: Colors.black,
+      obscureText: true,
       onChanged: reenterPasswordOnChanged,
       validator: reenterPasswordValidator ?? _validatorReenterPassword,
     );

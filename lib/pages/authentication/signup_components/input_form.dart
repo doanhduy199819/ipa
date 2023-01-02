@@ -3,23 +3,25 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class InputFormWidget extends StatelessWidget {
-  const InputFormWidget(
-      {Key? key,
-      this.iconData,
-      this.mainColor,
-      this.hintText,
-      this.hintTextColor,
-      this.onChanged,
-      this.validator,
-      this.textColor,
-      this.onEditingComplete})
-      : super(key: key);
+  const InputFormWidget({
+    Key? key,
+    this.iconData,
+    this.mainColor,
+    this.hintText,
+    this.hintTextColor,
+    this.onChanged,
+    this.validator,
+    this.textColor,
+    this.onEditingComplete,
+    this.obscureText = false,
+  }) : super(key: key);
 
   final IconData? iconData;
   final Color? mainColor;
   final String? hintText;
   final Color? hintTextColor;
   final Color? textColor;
+  final bool obscureText;
   final dynamic Function(String)? onChanged;
   final String? Function(String?)? validator;
   final Function()? onEditingComplete;
@@ -46,6 +48,7 @@ class InputFormWidget extends StatelessWidget {
           ),
           style: TextStyle(color: textColor),
           onChanged: onChanged,
+          obscureText: obscureText,
           validator: validator,
           onEditingComplete: onEditingComplete,
           textInputAction: TextInputAction.next,
