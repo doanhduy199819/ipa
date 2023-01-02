@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview_preparation/objects/ExperiencePost.dart';
@@ -12,7 +10,6 @@ import '../../services/auth_service.dart';
 import '../components/popular_topic.dart';
 import '../components/post.dart';
 import '../components/top_bar.dart';
-
 
 class ExperienceHome extends StatefulWidget {
   @override
@@ -28,13 +25,17 @@ class _ExperienceHomeState extends State<ExperienceHome> {
   late bool isAnonymous;
   late Future<List<UserBlocked>?> _userBlockedFuture;
 
+
   @override
   void initState() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
     _dataFuture =
         _db.collection('experience').get().then(_experienceFromQuerySnapshot);
     _topicFuture = _db.collection('topic').get().then(_topicsFromQuerySnapshot);
-    _userBlockedFuture= _db.collection('userwasblocked').get().then(_userBlockedsFromQuerySnapshot);
+    _userBlockedFuture = _db
+        .collection('userwasblocked')
+        .get()
+        .then(_userBlockedsFromQuerySnapshot);
     AuthService authService = AuthService();
 
     isAnonymous = authService.currentUser!.isAnonymous;
@@ -42,7 +43,6 @@ class _ExperienceHomeState extends State<ExperienceHome> {
     print('EMAIL:${authService.currentUser!.email}');
     super.initState();
   }
-
 
   List<UserBlocked>? _userBlockedsFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
@@ -55,6 +55,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
       return UserBlocked.test();
     }).toList();
   }
+
   List<Topic>? _topicsFromQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> querySnapshot) {
     return querySnapshot.docs
@@ -127,68 +128,76 @@ class _ExperienceHomeState extends State<ExperienceHome> {
         return Scaffold(
           body: SafeArea(
               child: Container(
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: <Color>[
-                      Color.fromRGBO(165, 204, 255, 1),
-                      Color.fromRGBO(115, 104, 226, 1)
-                    ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
-                child: ListView(
-                  children: <Widget>[
-                    Container(
-                      height: 160,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: <Color>[
-                            Color.fromRGBO(165, 204, 255, 1),
-                            Color.fromRGBO(115, 104, 226, 1)
-                          ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: <Color>[
+              Color.fromRGBO(165, 204, 255, 1),
+              Color.fromRGBO(115, 104, 226, 1)
+            ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  height: 160,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(colors: <Color>[
+                    Color.fromRGBO(165, 204, 255, 1),
+                    Color.fromRGBO(115, 104, 226, 1)
+                  ], begin: Alignment.centerLeft, end: Alignment.centerRight)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Text(
+                          "Have a good day!",
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            const Text(
-                              "Have a good day!",
+                            Text(
+                              "What do you think?",
                               style: TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: 14.0,
+                              ),
                             ),
-                            const SizedBox(height: 8.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "What do you think?",
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.6),
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                (isAnonymous == false)
-                                    ? IconButton(
+                            (isAnonymous == false)
+                                ? IconButton(
                                     onPressed: () async {
                                       var topics = await _topicFuture;
-                                      var usersblocked= await _userBlockedFuture;
-                                      try{
-                                        for(int i=0;i<usersblocked!.length;i++){
-                                          if(usersblocked[i].id_user==AuthService().currentUser!.uid){
+                                      var usersblocked =
+                                          await _userBlockedFuture;
+
+                                      try {
+                                        for (int i = 0;
+                                            i < usersblocked!.length;
+                                            i++) {
+                                          if (usersblocked[i].id_user ==
+                                              AuthService().currentUser!.uid) {
                                             showDialog(
                                                 context: context,
-                                                builder: (BuildContext context) {
+                                                builder:
+                                                    (BuildContext context) {
                                                   return AlertDialog(
                                                     scrollable: true,
-                                                    title: const Text(
-                                                        'Ban'),
+                                                    title: const Text('Ban'),
                                                     content: const Center(
-                                                      child: Text('User was banned'),
+                                                      child: Text(
+                                                          'User was banned'),
                                                     ),
                                                     actions: [
                                                       TextButton(
-                                                        child: const Text("Return"),
+                                                        child: const Text(
+                                                            "Return"),
                                                         onPressed: () =>
-                                                            Navigator.pop(context),
+                                                            Navigator.pop(
+                                                                context),
                                                       ),
                                                     ],
                                                   );
@@ -196,17 +205,16 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                             return;
                                           }
                                         }
-                                      }catch(error){
+                                      } catch (error) {
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-
                                               return AlertDialog(
                                                 scrollable: true,
-                                                title: const Text(
-                                                    'Error'),
+                                                title: const Text('Error'),
                                                 content: Center(
-                                                  child: Text('${error.toString()}'),
+                                                  child: Text(
+                                                      '${error.toString()}'),
                                                 ),
                                                 actions: [
                                                   TextButton(
@@ -217,6 +225,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                 ],
                                               );
                                             });
+                                        return;
                                       }
 
                                       //print('Topic: ${topics?.length ?? 0}');
@@ -225,9 +234,9 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                           builder: (BuildContext context) {
                                             String content = "";
                                             var titleController =
-                                            TextEditingController();
+                                                TextEditingController();
                                             var contentController =
-                                            TextEditingController();
+                                                TextEditingController();
 
                                             return AlertDialog(
                                               scrollable: true,
@@ -235,7 +244,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                   'Add Experience Post'),
                                               content: Padding(
                                                 padding:
-                                                const EdgeInsets.all(8.0),
+                                                    const EdgeInsets.all(8.0),
                                                 child: Form(
                                                   child: Column(
                                                     children: <Widget>[
@@ -248,13 +257,13 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                                 topics![i]);
                                                           },
                                                           itemCount:
-                                                          topics!.length,
+                                                              topics!.length,
                                                           scrollDirection:
-                                                          Axis.horizontal,
+                                                              Axis.horizontal,
                                                           physics:
-                                                          const ScrollPhysics(
-                                                              parent:
-                                                              AlwaysScrollableScrollPhysics()),
+                                                              const ScrollPhysics(
+                                                                  parent:
+                                                                      AlwaysScrollableScrollPhysics()),
                                                         ),
                                                       ),
                                                       // Row(
@@ -265,30 +274,30 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                       // ),
                                                       TextFormField(
                                                         decoration:
-                                                        const InputDecoration(
+                                                            const InputDecoration(
                                                           labelText: 'Topic',
                                                           //icon: Icon(Icons.account_box),
                                                         ),
                                                         controller:
-                                                        topicController,
+                                                            topicController,
                                                       ),
                                                       TextFormField(
                                                         decoration:
-                                                        const InputDecoration(
+                                                            const InputDecoration(
                                                           labelText: 'Title',
                                                           //icon: Icon(Icons.account_box),
                                                         ),
                                                         controller:
-                                                        titleController,
+                                                            titleController,
                                                       ),
                                                       Container(
                                                         height: 10 * 24.0,
                                                         child: TextField(
                                                           controller:
-                                                          contentController,
+                                                              contentController,
                                                           maxLines: 10,
                                                           decoration:
-                                                          InputDecoration(
+                                                              InputDecoration(
                                                             hintText: "Content",
                                                             fillColor: Colors
                                                                 .lightBlue[100],
@@ -314,93 +323,103 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                     onPressed: () {
                                                       if (topicId == '' ||
                                                           titleController
-                                                              .text ==
+                                                                  .text ==
                                                               '') {
                                                         return;
                                                       }
 
-                                                      ExperiencePost
-                                                      experiencePost =
-                                                      ExperiencePost(
-                                                          null,
-                                                          topicId,
-                                                          titleController
-                                                              .text,
-                                                          DateTime.now(),
-                                                          contentController
-                                                              .text,
-                                                          null,
-                                                          null,
-                                                          0,
-                                                          false,
-                                                      AuthService().currentUser?.displayName ??'NONAME');
+                                                      ExperiencePost experiencePost =
+                                                          ExperiencePost(
+                                                              null,
+                                                              topicId,
+                                                              titleController
+                                                                  .text,
+                                                              DateTime.now(),
+                                                              contentController
+                                                                  .text,
+                                                              null,
+                                                              null,
+                                                              0,
+                                                              false,
+                                                              AuthService()
+                                                                      .currentUser
+                                                                      ?.displayName ??
+                                                                  'NONAME');
                                                       print(experiencePost
                                                           .toString());
-                                                      // experiencePost.setContent(contentController.text);
-                                                      // experiencePost.setTitle(titleController.text);
-                                                      // experiencePost.setCreated_at(DateTime.now());
-                                                      // ExperiencePost.fromJson(
-                                                      //     jsonDecode(jsonEncode(experiencePost)));
                                                       DatabaseService()
                                                           .addExperiencePost(
-                                                          experiencePost);
-
-                                                      Navigator.pop(context);
+                                                              experiencePost);
+                                                      // Navigator.pop(context);
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     })
                                               ],
                                             );
-                                          });
+                                          }).then((value) {
+                        _showToast(context);
+                      });;
                                     },
                                     icon: const Icon(Icons.add,
                                         color: Colors.white))
-                                    : Container(),
-                              ],
-                            )
+                                : Container(),
                           ],
-                        ),
-                      ),
+                        )
+                      ],
                     ),
-                    Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(35.0),
-                                topRight: Radius.circular(35.0))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            TopBar(),
-                            const Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Text(
-                                "Popular Topics",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                            ),
-                            PopularTopics(),
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 20.0, top: 20.0, bottom: 10.0),
-                              child: Text(
-                                "Trending Posts",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Posts(post: _post),
-                          ],
-                        ))
-                  ],
+                  ),
                 ),
-              )),
+                Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35.0),
+                            topRight: Radius.circular(35.0))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TopBar(),
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                            "Popular Topics",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ),
+                        PopularTopics(),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20.0, top: 20.0, bottom: 10.0),
+                          child: Text(
+                            "Trending Posts",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Posts(post: _post),
+                      ],
+                    ))
+              ],
+            ),
+          )),
         );
       },
     );
   }
+}
+void _showToast(BuildContext context) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      content: const Text('Post Successful'),
+      action:
+          SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+    ),
+  );
 }
