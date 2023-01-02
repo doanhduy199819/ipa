@@ -155,7 +155,8 @@ class _buildAvatarAndAuthorName extends StatelessWidget {
           Helper.handleSnapshot(snapshot) ??
           UserInfoBox(
             photoUrl: snapshot.data?.photoUrl,
-            userName: snapshot.data?.displayName,
+            // userName: snapshot.data?.displayName,
+            userName: "Admin",
           ),
     );
   }

@@ -40,7 +40,8 @@ class _AccountPartState extends State<AccountPart> {
       children: [
         UserInfoBox(
           photoUrl: widget.account?.photoUrl,
-          userName: widget.account?.displayName,
+          //userName: widget.account?.displayName,
+          userName: "Admin",
           avatarRadius: 20.0,
           fontSize: 16.0,
         ),

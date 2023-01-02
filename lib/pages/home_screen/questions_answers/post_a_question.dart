@@ -32,7 +32,7 @@ List<Company>? listCompany = [];
 
 class _PostAQuestionState extends State<PostAQuestion> {
   bool isShowCompany = false;
-
+  bool isPost = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +150,7 @@ class _PostAQuestionState extends State<PostAQuestion> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
+                                  isPost = true;
                                   author_id = AuthService().currentUserId;
                                   company_id = getIdCompany();
                                   categories = tags?.split(",");
@@ -174,8 +175,11 @@ class _PostAQuestionState extends State<PostAQuestion> {
                           ],
                         ),
                       ).then((value) {
-                        _showToast(context);
-                        Navigator.pop(context);
+                        if (isPost == true) {
+                          _showToast(context);
+                          isPost = false;
+                          Navigator.pop(context);
+                        }
                       });
                     }),
               ),

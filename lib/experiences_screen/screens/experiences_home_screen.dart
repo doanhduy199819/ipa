@@ -24,7 +24,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
   late Future<List<Topic>?> _topicFuture;
   late bool isAnonymous;
   late Future<List<UserBlocked>?> _userBlockedFuture;
-
+  bool isPost = false;
 
   @override
   void initState() {
@@ -321,6 +321,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                                 TextButton(
                                                     child: Text("Submit"),
                                                     onPressed: () {
+                                                      isPost = true;
                                                       if (topicId == '' ||
                                                           titleController
                                                                   .text ==
@@ -357,8 +358,12 @@ class _ExperienceHomeState extends State<ExperienceHome> {
                                               ],
                                             );
                                           }).then((value) {
-                        _showToast(context);
-                      });;
+                                        if (isPost == true) {
+                                          _showToast(context);
+                                          isPost = false;
+                                        }
+                                      });
+                                      ;
                                     },
                                     icon: const Icon(Icons.add,
                                         color: Colors.white))
@@ -413,6 +418,7 @@ class _ExperienceHomeState extends State<ExperienceHome> {
     );
   }
 }
+
 void _showToast(BuildContext context) {
   final scaffold = ScaffoldMessenger.of(context);
   scaffold.showSnackBar(
